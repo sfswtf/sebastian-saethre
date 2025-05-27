@@ -121,27 +121,25 @@ function HomePage() {
           />
           <div className="absolute inset-0 bg-black opacity-60"></div>
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center">
-          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl mb-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-start items-center pt-20">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 text-center leading-tight" style={{wordBreak: 'break-word'}}>
             Velkommen til
           </h1>
           <img
             src="/images/logo.jpg"
             alt="Hovden Musikklubb Logo"
-            className="w-[32rem] h-[32rem] mb-16 rounded-full"
-            style={{
-              filter: 'contrast(1.1)'
-            }}
+            className="w-[20rem] sm:w-[28rem] md:w-[32rem] h-auto mb-4 rounded-full"
+            style={{ filter: 'contrast(1.1)' }}
           />
           <div className="text-center mx-auto max-w-3xl">
-            <p className="text-xl text-gray-300">
+            <p className="text-xl text-gray-300 mb-6">
               Der fjellånden møter musikksjelen. Bli med oss på intime konserter i vårt unike lokale.
             </p>
-            <div className="mt-10 flex justify-center gap-5">
-              <Link to="/events" className="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-3">
+              <Link to="/events" className="inline-block min-w-[180px] px-6 py-3 text-base font-semibold rounded-full bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 transition-all text-center shadow-md">
                 Kommende Arrangementer
               </Link>
-              <Link to="/membership" className="px-8 py-3 border border-transparent text-base font-medium rounded-md text-emerald-700 bg-white hover:bg-gray-50">
+              <Link to="/membership" className="inline-block min-w-[180px] px-6 py-3 text-base font-semibold rounded-full bg-white text-emerald-700 border border-emerald-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 transition-all text-center shadow-md">
                 Bli Medlem
               </Link>
             </div>
@@ -378,7 +376,6 @@ function MembershipPage() {
         <ul className="list-none mb-8 text-gray-700 space-y-3">
           <li>Prioritert tilgang til billetter</li>
           <li>Eksklusive medlemsarrangementer</li>
-          <li>Rabatterte priser i baren</li>
           <li>Støtt lokal musikkultur</li>
         </ul>
         {!showForm && (

@@ -1,3 +1,9 @@
+-- Drop the page_content table and all its dependencies
+DROP TABLE IF EXISTS page_content CASCADE;
+
+-- Drop the update_updated_at_column function if it exists
+DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
+
 -- First, delete existing content
 DELETE FROM page_content;
 

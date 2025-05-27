@@ -6,8 +6,8 @@ const AGE_GROUPS = [
   'Under 18',
   '18-25',
   '26-35',
-  '36-50',
-  'Over 50'
+  '36-60',
+  'Over 60'
 ];
 
 const MUSIC_GENRES = [
@@ -31,7 +31,6 @@ export function MembershipForm() {
     phone: '',
     location: '',
     ageGroup: '',
-    musicGenres: [] as string[],
     motivation: ''
   });
 
@@ -44,7 +43,6 @@ export function MembershipForm() {
       phone: '',
       location: '',
       ageGroup: '',
-      musicGenres: [],
       motivation: ''
     });
   };
@@ -125,24 +123,6 @@ export function MembershipForm() {
             </select>
           </div>
 
-          {/* Music Genres */}
-          <div>
-            <label className="block text-gray-700 mb-2">Musikksjangre (velg minst én) *</label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {MUSIC_GENRES.map(genre => (
-                <label key={genre} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={formData.musicGenres.includes(genre)}
-                    onChange={() => handleGenreToggle(genre)}
-                    className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
-                  />
-                  <span className="text-sm text-gray-700">{genre}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
           {/* Motivation */}
           <div>
             <label className="block text-gray-700 mb-2">
@@ -159,8 +139,7 @@ export function MembershipForm() {
 
         <button
           type="submit"
-          disabled={formData.musicGenres.length === 0}
-          className="w-full mt-6 bg-emerald-600 text-white py-2 px-4 rounded hover:bg-emerald-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="w-full mt-6 bg-emerald-600 text-white py-2 px-4 rounded hover:bg-emerald-700 transition-colors"
         >
           Send Søknad
         </button>

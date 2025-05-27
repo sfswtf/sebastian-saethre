@@ -17,8 +17,8 @@ export interface MembershipFormData {
   name: string;
   email: string;
   phone?: string;
+  location: string;
   ageGroup: string;
-  musicGenres: string[];
   motivation?: string;
 }
 
@@ -50,8 +50,8 @@ export const useFormStore = create<FormState>((set) => ({
         name: data.name,
         email: data.email,
         phone: data.phone,
+        location: data.location,
         age_group: data.ageGroup,
-        music_genres: data.musicGenres,
         motivation: data.motivation
       });
 
@@ -62,8 +62,8 @@ export const useFormStore = create<FormState>((set) => ({
             name: data.name,
             email: data.email,
             phone: data.phone,
+            location: data.location,
             age_group: data.ageGroup,
-            music_genres: data.musicGenres,
             motivation: data.motivation
           },
         ])
