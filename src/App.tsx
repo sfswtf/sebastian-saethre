@@ -77,6 +77,16 @@ function App() {
           </div>
         </footer>
       </div>
+      {/* Fixed credit/contact link in bottom left */}
+      <div className="fixed bottom-4 left-4 z-50 bg-stone-900 bg-opacity-90 text-gray-300 text-sm rounded-md px-4 py-2 shadow-lg flex items-center gap-2">
+        <span>Created by Sebastian Saethre - Need a site like this?</span>
+        <a
+          href="mailto:sebastian.saethre@gmail.com"
+          className="text-emerald-400 underline hover:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded"
+        >
+          Contact me
+        </a>
+      </div>
     </Router>
   );
 }
