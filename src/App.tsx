@@ -39,7 +39,7 @@ function App() {
           <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <div className="flex items-center gap-2 text-emerald-500">
+                <div className="flex items-center gap-2 text-[#1d4f4d]">
                   <Music2 size={24} />
                   <span className="font-bold text-xl">HOVDEN MUSIKKLUBB</span>
                 </div>
@@ -75,7 +75,7 @@ function App() {
               </p>
               <p className="text-center text-gray-400 text-sm mt-4">
                 Created by Sebastian Saethre - Need a site like this?{' '}
-                <a href="mailto:sebastian.saethre@gmail.com" className="text-emerald-400 underline hover:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded">
+                <a href="mailto:sebastian.saethre@gmail.com" className="text-[#1d4f4d] underline hover:text-[#1d4f4d] focus:outline-none focus:ring-2 focus:ring-[#1d4f4d] rounded">
                   Contact me
                 </a>
               </p>
@@ -142,10 +142,10 @@ function HomePage() {
               Der fjellånden møter musikksjelen. Bli med oss på intime konserter i vårt unike lokale.
             </p>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-3">
-              <Link to="/events" className="inline-block min-w-[180px] px-6 py-3 text-base font-semibold rounded-full bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 transition-all text-center shadow-md">
+              <Link to="/events" className="inline-block min-w-[180px] px-6 py-3 text-base font-semibold rounded-full bg-[#1d4f4d] text-white hover:bg-[#1d4f4d] focus:outline-none focus:ring-2 focus:ring-[#1d4f4d] focus:ring-offset-2 transition-all text-center shadow-md">
                 Kommende Arrangementer
               </Link>
-              <Link to="/membership" className="inline-block min-w-[180px] px-6 py-3 text-base font-semibold rounded-full bg-white text-emerald-700 border border-emerald-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 transition-all text-center shadow-md">
+              <Link to="/membership" className="inline-block min-w-[180px] px-6 py-3 text-base font-semibold rounded-full bg-white text-[#1d4f4d] border border-[#1d4f4d] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#1d4f4d] focus:ring-offset-2 transition-all text-center shadow-md">
                 Bli Medlem
               </Link>
             </div>
@@ -159,13 +159,13 @@ function HomePage() {
           <div className="max-w-3xl mx-auto space-y-6">
             <Link 
               to="/events" 
-              className="bg-emerald-100 rounded-lg p-8 transition-transform hover:scale-105 block"
+              className="bg-[#1d4f4d] rounded-lg p-8 transition-transform hover:scale-105 block"
             >
-              <Music2 className="h-8 w-8 text-emerald-600" />
-              <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
+              <Music2 className="h-8 w-8 text-[#1d4f4d]" />
+              <h2 className="mt-6 text-3xl font-bold tracking-tight text-white">
                 {loading ? 'Laster...' : (nextEvent ? 'Neste Arrangement' : 'Ingen planlagte arrangementer')}
               </h2>
-              <p className="mt-4 text-lg text-gray-500">
+              <p className="mt-4 text-lg text-white">
                 {nextEvent ? (
                   <>
                     {nextEvent.title} - {new Date(nextEvent.event_date).toLocaleDateString('no-NO', {
@@ -228,7 +228,7 @@ function EventsPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-500 border-r-transparent"></div>
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#1d4f4d] border-r-transparent"></div>
           <p className="mt-2 text-gray-500">Laster arrangementer...</p>
         </div>
       </div>
@@ -281,7 +281,7 @@ function EventsPage() {
                     href={event.tickets_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700"
+                    className="inline-block bg-[#1d4f4d] text-white px-4 py-2 rounded-md hover:bg-[#1d4f4d]"
                   >
                     Kjøp Billetter
                   </a>
@@ -328,7 +328,7 @@ function AboutPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-500 border-r-transparent"></div>
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#1d4f4d] border-r-transparent"></div>
           <p className="mt-2 text-gray-500">Laster innhold...</p>
         </div>
       </div>
@@ -387,7 +387,7 @@ function MembershipPage() {
         {!showForm && (
           <button 
             onClick={() => setShowForm(true)}
-            className="bg-emerald-600 text-white py-4 px-8 text-lg rounded-lg hover:bg-emerald-700 transform hover:scale-105 transition-transform"
+            className="bg-[#1d4f4d] text-white py-4 px-8 text-lg rounded-lg hover:bg-[#1d4f4d] transform hover:scale-105 transition-transform"
           >
             Bli Medlem Nå
           </button>
