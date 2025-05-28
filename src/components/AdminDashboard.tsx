@@ -168,7 +168,7 @@ export function AdminDashboard() {
               onClick={() => setActiveTab('events')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'events'
-                  ? 'border-emerald-500 text-emerald-600'
+                  ? 'border-[#1d4f4d] text-[#1d4f4d]'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -178,7 +178,7 @@ export function AdminDashboard() {
               onClick={() => setActiveTab('about')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'about'
-                  ? 'border-emerald-500 text-emerald-600'
+                  ? 'border-[#1d4f4d] text-[#1d4f4d]'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -188,7 +188,7 @@ export function AdminDashboard() {
               onClick={() => setActiveTab('messages')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'messages'
-                  ? 'border-emerald-500 text-emerald-600'
+                  ? 'border-[#1d4f4d] text-[#1d4f4d]'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -198,7 +198,7 @@ export function AdminDashboard() {
               onClick={() => setActiveTab('members')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'members'
-                  ? 'border-emerald-500 text-emerald-600'
+                  ? 'border-[#1d4f4d] text-[#1d4f4d]'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -208,7 +208,7 @@ export function AdminDashboard() {
               onClick={() => setActiveTab('social')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'social'
-                  ? 'border-emerald-500 text-emerald-600'
+                  ? 'border-[#1d4f4d] text-[#1d4f4d]'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -228,13 +228,13 @@ export function AdminDashboard() {
                 <div className="flex gap-4">
                   <button
                     onClick={() => setShowAddMember(true)}
-                    className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700"
+                    className="bg-[#1d4f4d] text-white px-4 py-2 rounded-md hover:bg-[#2a6f6d]"
                   >
                     Legg til medlem
                   </button>
                   <button
                     onClick={() => setShowEmailForm(true)}
-                    className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700"
+                    className="bg-[#1d4f4d] text-white px-4 py-2 rounded-md hover:bg-[#2a6f6d]"
                   >
                     Send Email
                   </button>
@@ -293,7 +293,7 @@ export function AdminDashboard() {
 
               {loading ? (
                 <div className="text-center py-12">
-                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-500 border-r-transparent"></div>
+                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#1d4f4d] border-r-transparent"></div>
                   <p className="mt-2 text-gray-500">Laster søknader...</p>
                 </div>
               ) : applications.length === 0 ? (
@@ -372,7 +372,7 @@ export function AdminDashboard() {
                               <select
                                 value={application.member_type}
                                 onChange={(e) => updateMemberType(application.id, e.target.value as 'local' | 'casual')}
-                                className="mt-1 text-sm rounded-md border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                                className="mt-1 text-sm rounded-md border-gray-300 focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
                               >
                                 <option value="local">Lokal</option>
                                 <option value="casual">Tilreisende</option>
@@ -416,7 +416,7 @@ export function AdminDashboard() {
                   type="text"
                   value={emailSubject}
                   onChange={e => setEmailSubject(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
                 />
               </div>
               <div>
@@ -427,7 +427,7 @@ export function AdminDashboard() {
                   value={emailContent}
                   onChange={e => setEmailContent(e.target.value)}
                   rows={6}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
                 />
               </div>
               <div>
@@ -469,7 +469,7 @@ export function AdminDashboard() {
                 </button>
                 <button
                   onClick={handleSendEmail}
-                  className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700"
+                  className="px-4 py-2 bg-[#1d4f4d] text-white rounded-md hover:bg-[#2a6f6d]"
                 >
                   Send Email
                 </button>

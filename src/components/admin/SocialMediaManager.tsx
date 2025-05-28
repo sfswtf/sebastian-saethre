@@ -149,7 +149,7 @@ export function SocialMediaManager() {
               required
               value={formData.platform}
               onChange={e => setFormData({ ...formData, platform: e.target.value as SocialMediaPost['platform'] })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
             >
               <option value="instagram">Instagram</option>
               <option value="youtube">YouTube</option>
@@ -165,7 +165,7 @@ export function SocialMediaManager() {
               required
               value={formData.url || ''}
               onChange={e => setFormData({ ...formData, url: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
               placeholder={
                 formData.platform === 'instagram' ? 'https://www.instagram.com/p/...' :
                 formData.platform === 'youtube' ? 'https://www.youtube.com/watch?v=...' :
@@ -182,13 +182,13 @@ export function SocialMediaManager() {
               required
               value={formData.title || ''}
               onChange={e => setFormData({ ...formData, title: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
             />
           </div>
 
           <button
             type="submit"
-            className="bg-emerald-600 text-white py-2 px-4 rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+            className="bg-[#1d4f4d] text-white py-2 px-4 rounded-md hover:bg-[#1d4f4d] focus:outline-none focus:ring-2 focus:ring-[#1d4f4d] focus:ring-offset-2"
           >
             Legg til innlegg
           </button>

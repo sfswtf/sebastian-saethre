@@ -148,7 +148,7 @@ export function EventManager() {
               required
               value={formData.title || ''}
               onChange={e => setFormData({ ...formData, title: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
             />
           </div>
           
@@ -159,7 +159,7 @@ export function EventManager() {
               value={formData.description || ''}
               onChange={e => setFormData({ ...formData, description: e.target.value })}
               rows={4}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
             />
           </div>
 
@@ -170,7 +170,7 @@ export function EventManager() {
               required
               value={formData.event_date || ''}
               onChange={e => setFormData({ ...formData, event_date: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
             />
           </div>
 
@@ -180,7 +180,7 @@ export function EventManager() {
               type="text"
               value={formData.location || ''}
               onChange={e => setFormData({ ...formData, location: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
             />
           </div>
 
@@ -190,7 +190,7 @@ export function EventManager() {
               type="url"
               value={formData.image_url || ''}
               onChange={e => setFormData({ ...formData, image_url: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
               placeholder="https://example.com/image.jpg"
             />
           </div>
@@ -201,7 +201,7 @@ export function EventManager() {
               type="number"
               value={formData.ticket_price || ''}
               onChange={e => setFormData({ ...formData, ticket_price: e.target.value ? Number(e.target.value) : null })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
               placeholder="300"
             />
           </div>
@@ -212,7 +212,7 @@ export function EventManager() {
               type="url"
               value={formData.tickets_url || ''}
               onChange={e => setFormData({ ...formData, tickets_url: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
               placeholder="https://ticketmaster.com/event/..."
             />
           </div>
@@ -220,7 +220,7 @@ export function EventManager() {
           <div className="flex gap-4">
             <button
               type="submit"
-              className="bg-emerald-600 text-white py-2 px-4 rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+              className="bg-[#1d4f4d] text-white py-2 px-4 rounded-md hover:bg-[#1d4f4d] focus:outline-none focus:ring-2 focus:ring-[#1d4f4d] focus:ring-offset-2"
             >
               {editingEvent ? 'Oppdater Arrangement' : 'Opprett Arrangement'}
             </button>
@@ -284,7 +284,7 @@ export function EventManager() {
                 <select
                   value={event.status}
                   onChange={e => handleStatusChange(event.id, e.target.value as Event['status'])}
-                  className="rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+                  className="rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
                 >
                   <option value="draft">Draft</option>
                   <option value="published">Published</option>

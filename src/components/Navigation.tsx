@@ -10,7 +10,7 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 text-[#1d4f4d]">
+          <Link to="/" className="flex items-center gap-2 text-[#f2e1c5]">
             <Music2 size={24} />
             <span className="font-bold text-xl">HOVDEN MUSIKKLUBB</span>
           </Link>
@@ -18,19 +18,19 @@ export function Navigation() {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
-              <Link to="/events" className="text-gray-300 hover:text-white px-3 py-2 rounded-md">
+              <Link to="/events" className="text-[#f2e1c5] hover:text-white px-3 py-2 rounded-md">
                 Arrangementer
               </Link>
-              <Link to="/about" className="text-gray-300 hover:text-white px-3 py-2 rounded-md">
+              <Link to="/about" className="text-[#f2e1c5] hover:text-white px-3 py-2 rounded-md">
                 Om Oss
               </Link>
-              <Link to="/membership" className="text-gray-300 hover:text-white px-3 py-2 rounded-md">
+              <Link to="/membership" className="text-[#f2e1c5] hover:text-white px-3 py-2 rounded-md">
                 Medlemskap
               </Link>
-              <Link to="/gallery" className="text-gray-300 hover:text-white px-3 py-2 rounded-md">
+              <Link to="/gallery" className="text-[#f2e1c5] hover:text-white px-3 py-2 rounded-md">
                 Galleri
               </Link>
-              <Link to="/contact" className="text-gray-300 hover:text-white px-3 py-2 rounded-md">
+              <Link to="/contact" className="text-[#f2e1c5] hover:text-white px-3 py-2 rounded-md">
                 Kontakt
               </Link>
             </div>
