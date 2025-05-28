@@ -39,7 +39,7 @@ function App() {
           <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <div className="flex items-center gap-2 text-[#1d4f4d]">
+                <div className="flex items-center gap-2 text-[#f2e1c5]">
                   <Music2 size={24} />
                   <span className="font-bold text-xl">HOVDEN MUSIKKLUBB</span>
                 </div>
@@ -159,9 +159,8 @@ function HomePage() {
           <div className="max-w-3xl mx-auto space-y-6">
             <Link 
               to="/events" 
-              className="bg-[#1d4f4d] rounded-lg p-8 transition-transform hover:scale-105 block"
+              className="bg-[#1d4f4d] rounded-lg p-8 transition-transform hover:scale-105 flex flex-col justify-center items-center text-center min-h-[180px]"
             >
-              <Music2 className="h-8 w-8 text-[#1d4f4d]" />
               <h2 className="mt-6 text-3xl font-bold tracking-tight text-white">
                 {loading ? 'Laster...' : (nextEvent ? 'Neste Arrangement' : 'Ingen planlagte arrangementer')}
               </h2>
@@ -184,9 +183,8 @@ function HomePage() {
             </Link>
             <Link 
               to="/membership" 
-              className="bg-stone-100 rounded-lg p-8 transition-transform hover:scale-105 block"
+              className="bg-stone-100 rounded-lg p-8 transition-transform hover:scale-105 flex flex-col justify-center items-center text-center min-h-[180px]"
             >
-              <Music2 className="h-8 w-8 text-stone-600" />
               <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">Medlemskap</h2>
               <p className="mt-4 text-lg text-gray-500">
                 Bli medlem for eksklusiv tilgang til intime konserter og spesielle arrangementer.
