@@ -88,6 +88,28 @@ export function SocialMediaGallery() {
     );
   };
 
+  const InstagramEmbedWrapper = ({ url }: { url: string }) => {
+    return (
+      <div className="instagram-embed-container">
+        <InstagramEmbed 
+          url={url}
+          width="100%"
+          style={{
+            maxWidth: '100%',
+            width: '100%',
+            minHeight: '400px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#fafafa',
+            borderRadius: '0.5rem',
+            overflow: 'hidden'
+          }}
+        />
+      </div>
+    );
+  };
+
   const socialMediaPosts = posts.filter(post => ['instagram', 'tiktok'].includes(post.platform));
   const imagePosts = posts.filter(post => post.platform === 'image');
   const videoPosts = posts.filter(post => post.platform === 'youtube');
@@ -111,7 +133,7 @@ export function SocialMediaGallery() {
             {socialMediaPosts.map((post) => (
               <div key={post.id} className="w-full">
                 {post.platform === 'instagram' && (
-                  <InstagramEmbed url={post.url} width="100%" />
+                  <InstagramEmbedWrapper url={post.url} />
                 )}
                 {post.platform === 'tiktok' && (
                   <TikTokEmbed url={post.url} />
