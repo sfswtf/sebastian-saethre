@@ -21,9 +21,6 @@ export function Navigation() {
               <Link to="/events" className="text-[#f2e1c5] hover:text-white px-3 py-2 rounded-md">
                 Arrangementer
               </Link>
-              <Link to="/about" className="text-[#f2e1c5] hover:text-white px-3 py-2 rounded-md">
-                Om Oss
-              </Link>
               <Link to="/membership" className="text-[#f2e1c5] hover:text-white px-3 py-2 rounded-md">
                 Medlemskap
               </Link>
@@ -58,13 +55,6 @@ export function Navigation() {
               onClick={() => setIsOpen(false)}
             >
               Arrangementer
-            </Link>
-            <Link
-              to="/about"
-              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md"
-              onClick={() => setIsOpen(false)}
-            >
-              Om Oss
             </Link>
             <Link
               to="/membership"

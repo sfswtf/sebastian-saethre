@@ -128,9 +128,6 @@ function HomePage() {
           <div className="absolute inset-0 bg-black opacity-60"></div>
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-start items-center pt-20">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 text-center leading-tight" style={{wordBreak: 'break-word'}}>
-            Velkommen til
-          </h1>
           <img
             src="/images/logo.jpg"
             alt="Hovden Musikklubb Logo"

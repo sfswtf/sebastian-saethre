@@ -175,16 +175,6 @@ export function AdminDashboard() {
               Arrangementer
             </button>
             <button
-              onClick={() => setActiveTab('about')}
-              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'about'
-                  ? 'border-[#1d4f4d] text-[#1d4f4d]'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Om Oss
-            </button>
-            <button
               onClick={() => setActiveTab('messages')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'messages'
@@ -219,7 +209,6 @@ export function AdminDashboard() {
 
         <div className="p-6">
           {activeTab === 'events' && <EventManager />}
-          {activeTab === 'about' && <AboutEditor />}
           {activeTab === 'messages' && <ContactMessages />}
           {activeTab === 'members' && (
             <div className="space-y-8">
