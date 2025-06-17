@@ -22,6 +22,7 @@ export interface Database {
           location: string | null
           status: 'draft' | 'published' | 'cancelled'
           tickets_url: string | null
+          festival: string | null
         }
         Insert: {
           id?: string
@@ -35,6 +36,7 @@ export interface Database {
           location?: string | null
           status?: 'draft' | 'published' | 'cancelled'
           tickets_url?: string | null
+          festival?: string | null
         }
         Update: {
           id?: string
@@ -48,6 +50,7 @@ export interface Database {
           location?: string | null
           status?: 'draft' | 'published' | 'cancelled'
           tickets_url?: string | null
+          festival?: string | null
         }
       }
       about_page: {

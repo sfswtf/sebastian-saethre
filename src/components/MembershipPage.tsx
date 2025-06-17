@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { MembershipForm } from './MembershipForm';
+import { MembershipFormSkeleton } from './SkeletonLoader';
 
 interface PageContent {
   id: string;
@@ -61,11 +63,19 @@ export function MembershipPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-500 border-r-transparent"></div>
-          <p className="mt-2 text-gray-500">Laster innhold...</p>
+          <img
+            src="/images/logo.jpg"
+            alt="Hovden Musikklubb Logo"
+            className="w-64 h-64 mx-auto mb-8 rounded-full"
+            style={{
+              filter: 'contrast(1.1)'
+            }}
+          />
+          <h1 className="text-3xl font-bold mb-8">Bli Medlem</h1>
         </div>
+        <MembershipFormSkeleton />
       </div>
     );
   }

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { InstagramEmbed } from 'react-social-media-embed';
 import { X } from 'lucide-react';
+import { GallerySkeleton } from './SkeletonLoader';
 
 interface SocialMediaPost {
   id: string;
@@ -115,12 +116,7 @@ export function SocialMediaGallery() {
   const videoPosts = posts.filter(post => post.platform === 'youtube');
 
   if (loading) {
-    return (
-      <div className="text-center py-12">
-        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-500 border-r-transparent"></div>
-        <p className="mt-2 text-gray-500">Laster innhold...</p>
-      </div>
-    );
+    return <GallerySkeleton />;
   }
 
   return (
@@ -128,7 +124,7 @@ export function SocialMediaGallery() {
       {/* Social Media Content */}
       {socialMediaPosts.length > 0 && (
         <div>
-          <h3 className="text-xl font-semibold mb-6">Sosiale Medier</h3>
+          <h3 className="text-2xl font-bold mb-6">Sosiale Medier</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {socialMediaPosts.map((post) => (
               <div key={post.id} className="w-full">
@@ -147,7 +143,7 @@ export function SocialMediaGallery() {
       {/* Images */}
       {imagePosts.length > 0 && (
         <div>
-          <h3 className="text-xl font-semibold mb-6">Bilder</h3>
+          <h3 className="text-2xl font-bold mb-6">Bilder</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {imagePosts.map((post) => (
               <ImageEmbed key={post.id} url={post.url} title={post.title} />
@@ -159,7 +155,7 @@ export function SocialMediaGallery() {
       {/* Videos */}
       {videoPosts.length > 0 && (
         <div>
-          <h3 className="text-xl font-semibold mb-6">Videoer</h3>
+          <h3 className="text-2xl font-bold mb-6">Videoer</h3>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {videoPosts.map((post) => (
               <div key={post.id} className="w-full">

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { ContactForm } from './ContactForm';
 import { MapPin, Mail } from 'lucide-react';
+import { ContactFormSkeleton } from './SkeletonLoader';
 
 interface PageContent {
   id: string;
@@ -63,10 +64,25 @@ export function ContactPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-500 border-r-transparent"></div>
-          <p className="mt-2 text-gray-500">Laster innhold...</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 className="text-3xl font-bold mb-8">Kontakt Oss</h1>
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Ta Kontakt</h2>
+              <div className="space-y-4">
+                <p className="flex items-center text-gray-700">
+                  <MapPin className="mr-2" size={18} />
+                  Hovden, 4755 Hovden, Norge
+                </p>
+                <p className="flex items-center text-gray-700">
+                  <Mail className="mr-2" size={18} />
+                  info@hovdenmusikklubb.no
+                </p>
+              </div>
+            </div>
+            <ContactFormSkeleton />
+          </div>
         </div>
       </div>
     );
@@ -89,7 +105,7 @@ export function ContactPage() {
             <div className="space-y-4 mt-4">
               <p className="flex items-center text-gray-700">
                 <MapPin className="mr-2" size={18} />
-                Hovden Sentrum, 4755 Hovden, Norge
+                Hovden, 4755 Hovden, Norge
               </p>
               <p className="flex items-center text-gray-700">
                 <Mail className="mr-2" size={18} />

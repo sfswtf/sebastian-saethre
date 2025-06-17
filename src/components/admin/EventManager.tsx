@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { Database } from '../../types/supabase';
 import { toast } from 'react-hot-toast';
+import { format, parse } from 'date-fns';
 
 type Event = Database['public']['Tables']['events']['Row'];
 
@@ -17,7 +18,8 @@ export function EventManager() {
     status: 'draft',
     image_url: '',
     ticket_price: null,
-    tickets_url: ''
+    tickets_url: '',
+    festival: '',
   });
 
   useEffect(() => {
@@ -72,7 +74,8 @@ export function EventManager() {
         status: 'draft',
         image_url: '',
         ticket_price: null,
-        tickets_url: ''
+        tickets_url: '',
+        festival: '',
       });
       fetchEvents();
     } catch (error) {
@@ -128,7 +131,8 @@ export function EventManager() {
       status: event.status,
       image_url: event.image_url || '',
       ticket_price: event.ticket_price,
-      tickets_url: event.tickets_url || ''
+      tickets_url: event.tickets_url || '',
+      festival: event.festival || '',
     });
   }
 
@@ -168,8 +172,35 @@ export function EventManager() {
             <input
               type="datetime-local"
               required
-              value={formData.event_date || ''}
-              onChange={e => setFormData({ ...formData, event_date: e.target.value })}
+              value={formData.event_date ? (() => {
+                try {
+                  const d = new Date(formData.event_date);
+                  // Get Oslo time parts
+                  const oslo = d.toLocaleString('sv-SE', { timeZone: 'Europe/Oslo' }).replace(' ', 'T').slice(0, 16);
+                  return oslo;
+                } catch {
+                  return '';
+                }
+              })() : ''}
+              onChange={e => {
+                const local = e.target.value;
+                if (local) {
+                  const [date, time] = local.split('T');
+                  const [year, month, day] = date.split('-').map(Number);
+                  const [hour, minute] = time.split(':').map(Number);
+                  // Create a Date object as if in Oslo
+                  const osloDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+                  // Get the offset (in minutes) for Oslo at that date
+                  const temp = new Date(osloDate.toLocaleString('en-US', { timeZone: 'Europe/Oslo' }));
+                  const offset = (osloDate.getTime() - temp.getTime()) / 60000;
+                  // Adjust to true UTC
+                  const utcMillis = osloDate.getTime() + offset * 60000;
+                  const utc = new Date(utcMillis).toISOString();
+                  setFormData({ ...formData, event_date: utc });
+                } else {
+                  setFormData({ ...formData, event_date: '' });
+                }
+              }}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
             />
           </div>
@@ -217,6 +248,18 @@ export function EventManager() {
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Festival</label>
+            <select
+              value={formData.festival || ''}
+              onChange={e => setFormData({ ...formData, festival: e.target.value })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1d4f4d] focus:ring-[#1d4f4d]"
+            >
+              <option value="">Stand alone</option>
+              <option value="musikkfest">Hovden Musikkfest</option>
+            </select>
+          </div>
+
           <div className="flex gap-4">
             <button
               type="submit"
@@ -237,7 +280,8 @@ export function EventManager() {
                     status: 'draft',
                     image_url: '',
                     ticket_price: null,
-                    tickets_url: ''
+                    tickets_url: '',
+                    festival: '',
                   });
                 }}
                 className="bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300"
@@ -257,7 +301,8 @@ export function EventManager() {
               <div className="flex-grow">
                 <h3 className="text-lg font-medium">{event.title}</h3>
                 <p className="text-sm text-gray-500">
-                  {new Date(event.event_date).toLocaleDateString('no-NO', {
+                  {new Date(event.event_date).toLocaleString('no-NO', {
+                    timeZone: 'Europe/Oslo',
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
