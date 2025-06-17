@@ -150,18 +150,18 @@ function HomePage() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-4xl mx-auto">
               <Link to="/events" className="w-full">
-                <AnimatedButton variant="primary" className="w-full h-[72px] text-lg sm:text-xl px-4 py-4">
-                  Kommende<br className="hidden sm:block" /> Arrangementer
+                <AnimatedButton variant="primary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug">
+                  <span className="block w-full max-w-xs mx-auto">Kommende<br className="hidden sm:block" /> Arrangementer</span>
                 </AnimatedButton>
               </Link>
               <Link to="/musikkfest" className="w-full">
-                <AnimatedButton variant="secondary" className="w-full h-[72px] text-lg sm:text-xl px-4 py-4">
-                  Hovden<br className="hidden sm:block" /> Musikkfest 2025
+                <AnimatedButton variant="secondary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug">
+                  <span className="block w-full max-w-xs mx-auto">Hovden<br className="hidden sm:block" /> Musikkfest 2025</span>
                 </AnimatedButton>
               </Link>
               <Link to="/membership" className="w-full">
-                <AnimatedButton variant="secondary" className="w-full h-[72px] text-lg sm:text-xl px-4 py-4">
-                  Bli Medlem
+                <AnimatedButton variant="secondary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug">
+                  <span className="block w-full max-w-xs mx-auto">Bli Medlem</span>
                 </AnimatedButton>
               </Link>
             </div>

@@ -9,6 +9,30 @@ import { supabase } from '../lib/supabase';
 // Event type
 type Event = Database['public']['Tables']['events']['Row'];
 
+// Smart EventImage component
+function EventImage({ src, alt }: { src: string; alt: string }) {
+  const [aspect, setAspect] = useState<'aspect-[16/9]' | 'aspect-[4/3]' | 'aspect-[3/4]'>('aspect-[4/3]');
+
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    const ratio = img.naturalWidth / img.naturalHeight;
+    if (ratio > 1.7) setAspect('aspect-[16/9]');
+    else if (ratio < 0.8) setAspect('aspect-[3/4]');
+    else setAspect('aspect-[4/3]');
+  };
+
+  return (
+    <div className={`w-full ${aspect} bg-stone-100 rounded-t-xl overflow-hidden relative`}>
+      <img
+        src={src}
+        alt={alt}
+        onLoad={handleImageLoad}
+        className="absolute top-0 left-0 w-full h-full object-contain object-center transition-transform duration-300"
+      />
+    </div>
+  );
+}
+
 export function MusikkfestPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +63,6 @@ export function MusikkfestPage() {
             Velkommen til årets store musikkbegivenhet på Hovden! Hovden Musikkfest samler noen av Norges mest spennende artister og byr på et variert program for både store og små. Opplev konserter, lokale matopplevelser og ekte festivalstemning i hjertet av fjellheimen.
           </p>
         </div>
-        <h2 className="text-2xl font-bold mb-8 text-center">Festivalprogram</h2>
         {loading ? (
           <div className="text-center py-12 text-gray-500">Laster program...</div>
         ) : events.length === 0 ? (
@@ -50,13 +73,7 @@ export function MusikkfestPage() {
               <AnimatedCard key={event.id} onClick={() => setSelectedEvent(event)} className="cursor-pointer">
                 <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col h-full p-0">
                   {event.image_url && (
-                    <div className="w-full h-48 bg-stone-100 flex items-center justify-center rounded-t-xl overflow-hidden">
-                      <img
-                        className="w-full h-48 object-cover"
-                        src={event.image_url}
-                        alt={event.title}
-                      />
-                    </div>
+                    <EventImage src={event.image_url} alt={event.title} />
                   )}
                   <div className="p-6 flex flex-col flex-grow">
                     <h3 className="text-xl font-bold mb-2 text-gray-900">{event.title}</h3>
