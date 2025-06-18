@@ -35,7 +35,7 @@ function App() {
         </AnimatedNavbar>
         
         {/* Main Content */}
-        <main className="pt-16">
+        <main className="pt-16 md:pt-20">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/events" element={<EventsPage />} />
