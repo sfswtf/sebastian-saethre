@@ -142,25 +142,29 @@ function HomePage() {
           <AnimatedLogo
             src="/images/logo.jpg"
             alt="Hovden Musikklubb Logo"
-            className="w-[20rem] sm:w-[28rem] md:w-[32rem] h-auto mb-4 rounded-full shadow-lg"
+            className="w-[20rem] sm:w-[28rem] md:w-[32rem] h-auto mb-8 rounded-full shadow-lg border-4 border-[#f2e1c5]"
           />
           <div className="text-center mx-auto max-w-3xl">
-            <p className="text-xl text-gray-300 mb-8">
-              Der fjellånden møter musikksjelen. Bli med oss på intime konserter i vårt unike lokale.
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Hovden Musikklubb
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed">
+              Der fjellånden møter musikksjelen.<br />
+              Bli med oss på intime konserter i vårt unike lokale.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-4xl mx-auto">
-              <Link to="/events" className="w-full">
-                <AnimatedButton variant="primary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-4xl mx-auto">
+              <Link to="/events" className="w-full transform transition-transform hover:scale-105">
+                <AnimatedButton variant="primary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug bg-[#1d4f4d] hover:bg-[#2a6f6d]">
                   <span className="block w-full max-w-xs mx-auto">Kommende<br className="hidden sm:block" /> Arrangementer</span>
                 </AnimatedButton>
               </Link>
-              <Link to="/musikkfest" className="w-full">
-                <AnimatedButton variant="secondary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug">
+              <Link to="/musikkfest" className="w-full transform transition-transform hover:scale-105">
+                <AnimatedButton variant="secondary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug bg-[#e6b800] hover:bg-[#ffcc00]">
                   <span className="block w-full max-w-xs mx-auto">Hovden<br className="hidden sm:block" /> Musikkfest 2025</span>
                 </AnimatedButton>
               </Link>
-              <Link to="/membership" className="w-full">
-                <AnimatedButton variant="secondary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug">
+              <Link to="/membership" className="w-full transform transition-transform hover:scale-105">
+                <AnimatedButton variant="secondary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug bg-[#f2e1c5] hover:bg-[#fff0d9] text-stone-900">
                   <span className="block w-full max-w-xs mx-auto">Bli Medlem</span>
                 </AnimatedButton>
               </Link>
