@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface ParallaxHeroProps {
@@ -11,7 +11,7 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl }
   const y = useTransform(scrollY, [0, 500], [0, 250]);
 
   return (
-    <div className="relative h-screen overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden">
       <motion.div 
         className="absolute inset-0"
         style={{ y }}
@@ -23,7 +23,7 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl }
         />
         <div className="absolute inset-0 bg-black opacity-60"></div>
       </motion.div>
-      <div className="relative h-full">
+      <div className="relative min-h-screen flex flex-col">
         {children}
       </div>
     </div>
