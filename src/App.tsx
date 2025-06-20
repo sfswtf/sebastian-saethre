@@ -251,6 +251,29 @@ function EventsPage() {
     fetchEvents();
   }, []);
 
+  // Group events by month
+  const eventsByMonth = events.reduce((acc, event) => {
+    const date = new Date(event.event_date);
+    const monthKey = date.toLocaleString('no-NO', {
+      timeZone: 'Europe/Oslo',
+      year: 'numeric',
+      month: 'long'
+    });
+    
+    if (!acc[monthKey]) {
+      acc[monthKey] = [];
+    }
+    acc[monthKey].push(event);
+    return acc;
+  }, {} as Record<string, Database['public']['Tables']['events']['Row'][]>);
+
+  // Sort months chronologically
+  const sortedMonths = Object.keys(eventsByMonth).sort((a, b) => {
+    const dateA = new Date(eventsByMonth[a][0].event_date);
+    const dateB = new Date(eventsByMonth[b][0].event_date);
+    return dateA.getTime() - dateB.getTime();
+  });
+
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -271,41 +294,50 @@ function EventsPage() {
           Ingen kommende arrangementer for øyeblikket.
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {events.map(event => (
-            <div
-              key={event.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow flex flex-col"
-              onClick={() => setSelectedEvent(event)}
-            >
-              {event.image_url && (
-                <div className="w-full h-48 bg-stone-100 flex items-center justify-center flex-shrink-0">
-                  <img
-                    className="w-full h-48 object-contain"
-                    src={event.image_url}
-                    alt={event.title}
-                  />
-                </div>
-              )}
-              <div className="p-6 flex-grow flex flex-col">
-                <h2 className="text-xl font-bold mb-2">{event.title}</h2>
-                <p className="text-gray-600 mb-4">
-                  {new Date(event.event_date).toLocaleString('no-NO', {
-                    timeZone: 'Europe/Oslo',
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </p>
-                <p className="text-gray-700 line-clamp-3 mb-4">{event.description}</p>
-                {event.location && (
-                  <p className="text-gray-600 mt-auto">
-                    <span className="font-semibold">Sted:</span> {event.location}
-                  </p>
-                )}
+        <div className="space-y-12">
+          {sortedMonths.map(month => (
+            <div key={month} className="space-y-6">
+              <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-[#1d4f4d] pb-2">
+                {month}
+              </h2>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {eventsByMonth[month].map(event => (
+                  <div
+                    key={event.id}
+                    className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow flex flex-col"
+                    onClick={() => setSelectedEvent(event)}
+                  >
+                    {event.image_url && (
+                      <div className="w-full h-48 bg-stone-100 flex items-center justify-center flex-shrink-0">
+                        <img
+                          className="w-full h-48 object-contain"
+                          src={event.image_url}
+                          alt={event.title}
+                        />
+                      </div>
+                    )}
+                    <div className="p-6 flex-grow flex flex-col">
+                      <h3 className="text-xl font-bold mb-2">{event.title}</h3>
+                      <p className="text-gray-600 mb-4">
+                        {new Date(event.event_date).toLocaleString('no-NO', {
+                          timeZone: 'Europe/Oslo',
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                      <p className="text-gray-700 line-clamp-3 mb-4">{event.description}</p>
+                      {event.location && (
+                        <p className="text-gray-600 mt-auto">
+                          <span className="font-semibold">Sted:</span> {event.location}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
