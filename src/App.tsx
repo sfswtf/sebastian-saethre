@@ -137,7 +137,7 @@ function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <ParallaxHero imageUrl="https://images.unsplash.com/photo-1464207687429-7505649dae38?auto=format&fit=crop&q=80">
+      <ParallaxHero imageUrl="/images/hero-background.jpg">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-start items-center pt-20 pb-8">
           <AnimatedLogo
             src="/images/logo.jpg"
