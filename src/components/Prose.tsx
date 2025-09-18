@@ -7,7 +7,7 @@ interface ProseProps {
 
 export default function Prose({ children, className = '' }: ProseProps) {
   return (
-    <div className={`prose prose-lg prose-gray max-w-none ${className}`}>
+    <div className={`prose prose-slate dark:prose-invert max-w-none ${className}`}>
       {children}
     </div>
   )

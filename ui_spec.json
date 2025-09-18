@@ -1,0 +1,20 @@
+{
+  "tokens": {
+    "font": { "sans": "Inter", "mono": "JetBrains Mono" },
+    "colors": { "bg": "#0b0c0f", "surface": "#111317", "text": "#e6e8eb", "muted": "#9aa3af", "accent": "#7c9cff" },
+    "radii": { "sm": "0.5rem", "md": "1rem", "xl": "1.5rem" },
+    "shadow": { "soft": "0 4px 24px rgba(0,0,0,0.08)", "elevated": "0 12px 40px rgba(0,0,0,0.16)" },
+    "container": { "maxW": "80rem", "padX": "1rem" }
+  },
+  "components": ["Nav","Footer","Button","Container","ProjectCard","Section","Prose"],
+  "pages": ["/","/projects","/about","/contact","/404"],
+  "mdx": { "typographyPlugin": true },
+  "acceptance": [
+    "Responsive on mobile",
+    "Readable MDX with proper headings/lists/code",
+    "Consistent spacing (section vertical rhythm)",
+    "Hero looks premium (eyebrow, h1, subhead, two CTAs)",
+    "Project cards with image, stack pills, hover state",
+    "Lighthouse ≥90 Performance/Accessibility on mobile"
+  ]
+}

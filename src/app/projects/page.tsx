@@ -9,8 +9,8 @@ export default async function ProjectsPage() {
   return (
     <Section>
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">My Projects</h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <h1 className="text-4xl font-semibold tracking-tight mb-4">My Projects</h1>
+        <p className="text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
           A collection of projects I&apos;ve worked on, showcasing my skills in full stack development, 
           modern web technologies, and problem-solving.
         </p>
@@ -35,7 +35,7 @@ export default async function ProjectsPage() {
 
       {projects.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-600">No projects found. Check back soon for updates!</p>
+          <p className="text-neutral-600 dark:text-neutral-300">No projects found. Check back soon for updates!</p>
         </div>
       )}
     </Section>

@@ -2,18 +2,18 @@ import React from 'react'
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 border-t">
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center space-y-4">
-          <p className="text-gray-600 text-sm">
-            © {new Date().getFullYear()} Sebastian Sæthre. All rights reserved.
+    <footer className="mt-24 border-t border-neutral-200/60 dark:border-white/10">
+      <div className="mx-auto max-w-7xl px-4 py-8 text-sm text-neutral-500 dark:text-neutral-400">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p>
+            © {new Date().getFullYear()} Sebastian Sæthre
           </p>
-          <div className="flex space-x-6">
+          <div className="flex items-center gap-6">
             <a
               href="https://github.com/sfswtf"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="hover:opacity-80 transition-opacity"
             >
               GitHub
             </a>
@@ -21,7 +21,7 @@ export default function Footer() {
               href="https://linkedin.com/in/sebastian-saethre"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="hover:opacity-80 transition-opacity"
             >
               LinkedIn
             </a>

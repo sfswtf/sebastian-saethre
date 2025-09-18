@@ -1,72 +1,70 @@
 import React from 'react'
 import Link from 'next/link'
-import Section from '@/components/Section'
-import CTA from '@/components/CTA'
 
 export default function Home() {
   return (
     <>
       {/* Hero Section */}
-      <Section className="bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Hi, I&apos;m <span className="text-blue-600">Sebastian Sæthre</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            A passionate full stack developer who loves building modern web applications 
-            with cutting-edge technologies and clean, maintainable code.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/projects"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-            >
-              View My Work
-            </Link>
-            <Link
-              href="/contact"
-              className="border border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors"
-            >
-              Get In Touch
-            </Link>
-          </div>
+      <section className="py-16 sm:py-24">
+        <p className="text-sm uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
+          Full Stack Developer
+        </p>
+        <h1 className="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight">
+          Systems that scale and experiences that delight.
+        </h1>
+        <p className="mt-4 max-w-2xl text-neutral-600 dark:text-neutral-300">
+          I design and build modern web applications with clean architecture, exceptional user experience, and maintainable code that grows with your business.
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link 
+            href="/contact" 
+            className="inline-flex items-center rounded-xl px-5 py-3 bg-neutral-900 text-white dark:bg-blue-500 dark:text-black shadow-lg hover:opacity-90 transition-opacity"
+          >
+            Start a project
+          </Link>
+          <Link 
+            href="/projects" 
+            className="inline-flex items-center rounded-xl px-5 py-3 border border-neutral-300 dark:border-white/10 hover:bg-neutral-50 dark:hover:bg-white/5 transition-colors"
+          >
+            See my work
+          </Link>
         </div>
-      </Section>
+      </section>
 
       {/* About Preview */}
-      <Section>
+      <section className="py-16 sm:py-24">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">About Me</h2>
-            <p className="text-gray-600 mb-4">
+            <h2 className="text-3xl font-semibold tracking-tight mb-6">About Me</h2>
+            <p className="text-neutral-600 dark:text-neutral-300 mb-4">
               I&apos;m a full stack developer with a passion for creating exceptional digital experiences. 
               I specialize in modern web technologies including React, Next.js, TypeScript, and Node.js.
             </p>
-            <p className="text-gray-600 mb-6">
+            <p className="text-neutral-600 dark:text-neutral-300 mb-6">
               When I&apos;m not coding, you can find me exploring new technologies, contributing to open source projects, 
               or sharing knowledge with the developer community.
             </p>
-            <a
+            <Link
               href="/about"
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              className="text-blue-500 hover:opacity-80 font-medium transition-opacity"
             >
               Learn more about me →
-            </a>
+            </Link>
           </div>
-          <div className="bg-gray-100 rounded-lg p-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Skills & Technologies</h3>
+          <div className="bg-neutral-50 dark:bg-slate-800 rounded-2xl p-8">
+            <h3 className="text-xl font-semibold tracking-tight mb-4">Skills & Technologies</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">Frontend</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
+                <h4 className="font-medium mb-2">Frontend</h4>
+                <ul className="text-sm text-neutral-600 dark:text-neutral-300 space-y-1">
                   <li>React &amp; Next.js</li>
                   <li>TypeScript</li>
                   <li>Tailwind CSS</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">Backend</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
+                <h4 className="font-medium mb-2">Backend</h4>
+                <ul className="text-sm text-neutral-600 dark:text-neutral-300 space-y-1">
                   <li>Node.js</li>
                   <li>PostgreSQL</li>
                   <li>Supabase</li>
@@ -75,18 +73,25 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
       {/* CTA Section */}
-      <Section className="bg-gray-50">
-        <CTA
-          title="Let's Work Together"
-          description="I'm always interested in new opportunities and exciting projects. Let's discuss how we can bring your ideas to life."
-          buttonText="Start a Conversation"
-          buttonHref="/contact"
-          variant="primary"
-        />
-      </Section>
+      <section className="py-16 sm:py-24 bg-neutral-50 dark:bg-slate-800 rounded-2xl">
+        <div className="text-center">
+          <h2 className="text-3xl font-semibold tracking-tight mb-4">
+            Let&apos;s Work Together
+          </h2>
+          <p className="text-neutral-600 dark:text-neutral-300 mb-8 max-w-2xl mx-auto">
+            I&apos;m always interested in new opportunities and exciting projects. Let&apos;s discuss how we can bring your ideas to life.
+          </p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center rounded-xl px-5 py-3 bg-neutral-900 text-white dark:bg-blue-500 dark:text-black shadow-lg hover:opacity-90 transition-opacity"
+          >
+            Start a conversation
+          </Link>
+        </div>
+      </section>
     </>
   )
 }

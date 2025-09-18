@@ -1,36 +1,28 @@
 import React from 'react'
 import Link from 'next/link'
 
-const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'Projects', href: '/projects' },
-  { name: 'About', href: '/about' },
-  { name: 'Contact', href: '/contact' },
-]
-
 export default function Nav() {
   return (
-    <nav className="bg-white shadow-sm border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900">
-              Sebastian Sæthre
-            </Link>
-          </div>
-          <div className="flex items-center space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
+    <div className="sticky top-0 z-50 backdrop-blur border-b border-neutral-200/60 dark:border-white/10 bg-white/70 dark:bg-slate-900/60">
+      <nav className="mx-auto max-w-7xl px-4 flex h-14 items-center justify-between">
+        <Link href="/" className="font-semibold tracking-tight">
+          sebastiansaethre.no
+        </Link>
+        <div className="flex items-center gap-6 text-sm">
+          <Link href="/projects" className="hover:opacity-80 transition-opacity">
+            Projects
+          </Link>
+          <Link href="/about" className="hover:opacity-80 transition-opacity">
+            About
+          </Link>
+          <Link 
+            href="/contact" 
+            className="inline-flex items-center rounded-full px-3 py-1.5 bg-neutral-900 text-white dark:bg-blue-500 dark:text-black transition-colors"
+          >
+            Contact
+          </Link>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   )
 }

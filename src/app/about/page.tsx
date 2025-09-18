@@ -6,7 +6,7 @@ export default function AboutPage() {
   return (
     <Section>
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">About Me</h1>
+        <h1 className="text-4xl font-semibold tracking-tight mb-8 text-center">About Me</h1>
         
         <Prose>
           <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -62,7 +62,7 @@ export default function AboutPage() {
                 <li>RESTful APIs</li>
               </ul>
 
-              <h4>Tools & Others</h4>
+              <h4>Tools &amp; Others</h4>
               <ul>
                 <li>Git &amp; GitHub</li>
                 <li>VS Code</li>
@@ -73,7 +73,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="bg-gray-50 rounded-lg p-8">
+          <div className="bg-neutral-50 dark:bg-slate-800 rounded-2xl p-8">
             <h3>Beyond Coding</h3>
             <p>
               When I&apos;m not coding, I enjoy exploring new technologies, contributing to open source projects, 

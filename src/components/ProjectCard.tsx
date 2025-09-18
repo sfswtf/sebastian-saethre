@@ -18,7 +18,6 @@ export default function ProjectCard({
   title,
   summary,
   date,
-  tags,
   externalUrl,
   repoUrl,
   stack,
@@ -26,9 +25,12 @@ export default function ProjectCard({
   slug
 }: ProjectCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+    <Link
+      href={`/projects/${slug}`}
+      className="group block rounded-2xl border border-neutral-200 dark:border-white/10 overflow-hidden hover:shadow-2xl transition-shadow"
+    >
       {cover && (
-        <div className="relative h-48 w-full">
+        <div className="relative h-44 w-full">
           <Image
             src={cover}
             alt={title}
@@ -37,66 +39,43 @@ export default function ProjectCard({
           />
         </div>
       )}
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-2">
-          <time className="text-sm text-gray-500">{date}</time>
-          <div className="flex flex-wrap gap-1">
-            {tags.slice(0, 2).map((tag) => (
-              <span
-                key={tag}
-                className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"
+      <div className="p-5">
+        <h3 className="text-lg font-semibold tracking-tight group-hover:opacity-90 transition-opacity">
+          {title}
+        </h3>
+        <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-300">
+          {summary}
+        </p>
+        {stack.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {stack.map((tech) => (
+              <span 
+                key={tech} 
+                className="text-xs rounded-full px-2 py-1 border border-neutral-200 dark:border-white/10 text-neutral-600 dark:text-neutral-400"
               >
-                {tag}
+                {tech}
               </span>
             ))}
           </div>
-        </div>
-        
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
-        <p className="text-gray-600 mb-4 line-clamp-3">{summary}</p>
-        
-        <div className="flex flex-wrap gap-2 mb-4">
-          {stack.map((tech) => (
-            <span
-              key={tech}
-              className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <Link
-            href={`/projects/${slug}`}
-            className="text-blue-600 hover:text-blue-800 font-medium text-sm"
-          >
-            Read more →
-          </Link>
-          <div className="flex space-x-3">
+        )}
+        <div className="mt-4 flex items-center justify-between text-sm">
+          <span className="text-neutral-500 dark:text-neutral-400">
+            {date}
+          </span>
+          <div className="flex items-center gap-3">
             {repoUrl && (
-              <a
-                href={repoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-700 text-sm"
-              >
+              <span className="text-neutral-500 dark:text-neutral-400 hover:opacity-80">
                 Code
-              </a>
+              </span>
             )}
             {externalUrl && (
-              <a
-                href={externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-700 text-sm"
-              >
-                Live Demo
-              </a>
+              <span className="text-neutral-500 dark:text-neutral-400 hover:opacity-80">
+                Demo
+              </span>
             )}
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
