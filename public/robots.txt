@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://sebastiansaethre.no/sitemap.xml
+
+# Disallow admin or private areas (none for this site)
+# Disallow: /admin/
+
+# Allow all search engines to crawl the site
+# This is a public portfolio website

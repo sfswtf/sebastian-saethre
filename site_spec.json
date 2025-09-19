@@ -1,0 +1,300 @@
+{
+  "project": {
+    "name": "sebastiansaethre.no",
+    "description": "Personal portfolio website for Sebastian Sæthre, a full stack developer",
+    "version": "1.0.0",
+    "author": "Sebastian Sæthre",
+    "email": "sebastian.saethre@gmail.com",
+    "github": "https://github.com/sfswtf/sebastian-saethre",
+    "hosting": "Netlify",
+    "domain": "sebastiansaethre.no"
+  },
+  "tech": {
+    "framework": "Next.js",
+    "version": "15.5.3",
+    "language": "TypeScript",
+    "styles": "Tailwind CSS",
+    "content": "MDX",
+    "packageManager": "npm"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "name": "Home",
+      "description": "Homepage with hero section, about preview, and call-to-action",
+      "type": "static"
+    },
+    {
+      "path": "/projects",
+      "name": "Projects",
+      "description": "List of all projects with cards and filtering",
+      "type": "static"
+    },
+    {
+      "path": "/projects/[slug]",
+      "name": "Project Detail",
+      "description": "Individual project pages with MDX content",
+      "type": "dynamic"
+    },
+    {
+      "path": "/about",
+      "name": "About",
+      "description": "About page with personal information and skills",
+      "type": "static"
+    },
+    {
+      "path": "/contact",
+      "name": "Contact",
+      "description": "Contact page with form and contact information",
+      "type": "client"
+    },
+    {
+      "path": "/404",
+      "name": "Not Found",
+      "description": "Custom 404 error page",
+      "type": "static"
+    }
+  ],
+  "components": [
+    {
+      "name": "Nav",
+      "description": "Main navigation component with responsive design",
+      "location": "src/components/Nav.tsx"
+    },
+    {
+      "name": "Footer",
+      "description": "Site footer with links and copyright",
+      "location": "src/components/Footer.tsx"
+    },
+    {
+      "name": "ProjectCard",
+      "description": "Project preview card component",
+      "location": "src/components/ProjectCard.tsx"
+    },
+    {
+      "name": "Prose",
+      "description": "Typography wrapper for content",
+      "location": "src/components/Prose.tsx"
+    },
+    {
+      "name": "Section",
+      "description": "Layout section wrapper component",
+      "location": "src/components/Section.tsx"
+    },
+    {
+      "name": "CTA",
+      "description": "Call-to-action component",
+      "location": "src/components/CTA.tsx"
+    },
+    {
+      "name": "ContactForm",
+      "description": "Contact form with Supabase integration",
+      "location": "src/components/ContactForm.tsx"
+    }
+  ],
+  "contentModel": {
+    "projectMDXFrontmatter": {
+      "title": {
+        "type": "string",
+        "required": true,
+        "description": "Project title"
+      },
+      "summary": {
+        "type": "string",
+        "required": true,
+        "description": "Brief project description"
+      },
+      "date": {
+        "type": "string",
+        "required": true,
+        "description": "Project date in YYYY-MM-DD format"
+      },
+      "tags": {
+        "type": "array",
+        "required": true,
+        "description": "Array of technology tags"
+      },
+      "externalUrl": {
+        "type": "string",
+        "required": false,
+        "description": "Live demo URL"
+      },
+      "repoUrl": {
+        "type": "string",
+        "required": false,
+        "description": "GitHub repository URL"
+      },
+      "stack": {
+        "type": "array",
+        "required": true,
+        "description": "Technology stack used"
+      },
+      "cover": {
+        "type": "string",
+        "required": false,
+        "description": "Cover image path"
+      }
+    }
+  },
+  "supabase": {
+    "tables": [
+      {
+        "name": "contact_messages",
+        "description": "Stores contact form submissions",
+        "columns": [
+          {
+            "name": "id",
+            "type": "serial",
+            "primary": true
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "email",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "message",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp",
+            "default": "now()"
+          }
+        ]
+      }
+    ],
+    "env": [
+      {
+        "name": "NEXT_PUBLIC_SUPABASE_URL",
+        "description": "Supabase project URL",
+        "required": true,
+        "public": true
+      },
+      {
+        "name": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "description": "Supabase anonymous key",
+        "required": true,
+        "public": true
+      },
+      {
+        "name": "SUPABASE_SERVICE_ROLE_KEY",
+        "description": "Supabase service role key (local only)",
+        "required": false,
+        "public": false
+      }
+    ]
+  },
+  "netlify": {
+    "files": [
+      {
+        "name": "netlify.toml",
+        "description": "Netlify configuration file",
+        "location": "netlify.toml"
+      }
+    ],
+    "functions": [
+      {
+        "name": "submitContact",
+        "description": "Serverless function for contact form submission",
+        "location": "netlify/functions/submitContact.js"
+      }
+    ],
+    "buildSettings": {
+      "command": "npm run build",
+      "publish": "out",
+      "node_version": "18"
+    }
+  },
+  "env": [
+    {
+      "name": "EMAIL_FROM",
+      "description": "Email address for sending notifications",
+      "required": false
+    },
+    {
+      "name": "EMAIL_TO",
+      "description": "Email address for receiving contact form submissions",
+      "required": false
+    }
+  ],
+  "deliverables": [
+    {
+      "name": "repo",
+      "description": "GitHub repository with complete source code",
+      "status": "completed"
+    },
+    {
+      "name": "Netlify deploy URL",
+      "description": "Live website URL on Netlify",
+      "status": "pending"
+    },
+    {
+      "name": "README",
+      "description": "Comprehensive documentation",
+      "status": "completed"
+    },
+    {
+      "name": "site_spec.json",
+      "description": "Technical specification document",
+      "status": "completed"
+    }
+  ],
+  "acceptance": [
+    {
+      "criteria": "No analytics/cookies",
+      "status": "completed",
+      "description": "Website does not include any analytics or cookie tracking"
+    },
+    {
+      "criteria": "Responsive & accessible",
+      "status": "completed",
+      "description": "Mobile-first responsive design with accessibility features"
+    },
+    {
+      "criteria": "Sitemap/robots OK",
+      "status": "completed",
+      "description": "SEO files generated and configured"
+    },
+    {
+      "criteria": "Contact stores to Supabase",
+      "status": "completed",
+      "description": "Contact form integrates with Supabase database"
+    }
+  ],
+  "features": {
+    "responsive": true,
+    "accessible": true,
+    "seo": true,
+    "performance": true,
+    "typescript": true,
+    "mdx": true,
+    "contactForm": true,
+    "staticGeneration": true
+  },
+  "browser_support": {
+    "modern": true,
+    "ie11": false,
+    "mobile": true,
+    "tablet": true
+  },
+  "performance": {
+    "staticGeneration": true,
+    "imageOptimization": true,
+    "codesplitting": true,
+    "treeshaking": true
+  },
+  "seo": {
+    "metaTags": true,
+    "openGraph": true,
+    "structuredData": false,
+    "sitemap": true,
+    "robots": true
+  }
+}
