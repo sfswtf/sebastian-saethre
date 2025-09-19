@@ -88,12 +88,19 @@ EMAIL_TO=recipient@example.com
 Create a `contact_messages` table in your Supabase project:
 ```sql
 CREATE TABLE contact_messages (
-  id SERIAL PRIMARY KEY,
+  id BIGSERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   email TEXT NOT NULL,
   message TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Enable Row Level Security
+ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+
+-- Create policy to allow inserting contact messages
+CREATE POLICY "Allow inserting contact messages" ON contact_messages
+FOR INSERT WITH CHECK (true);
 ```
 
 5. Run the development server:
