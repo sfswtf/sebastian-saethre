@@ -6,11 +6,6 @@ const nextConfig: NextConfig = {
   experimental: {
     mdxRs: true,
   },
-  output: 'export',
-  trailingSlash: true,
-  images: {
-    unoptimized: true,
-  },
 };
 
 const withMDX = createMDX({
