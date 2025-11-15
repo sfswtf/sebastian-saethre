@@ -1,97 +1,94 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Menu, X, Facebook, Instagram, Mail, MapPin, Music2 } from 'lucide-react';
-import { MembershipForm } from './components/MembershipForm';
-import { AdminDashboard } from './components/AdminDashboard';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import SupabaseTest from './components/SupabaseTest';
-import { VideoGallery } from './components/VideoGallery';
-import { ContactForm } from './components/ContactForm';
+import { Menu, X, Facebook, Instagram, Mail, MapPin, Sparkles, Linkedin, Twitter } from 'lucide-react';
 import { Navigation } from './components/Navigation';
-import { supabase } from './lib/supabase';
-import type { Database } from './types/supabase';
-import { SocialMediaGallery } from './components/SocialMediaGallery';
-import { AdminLogin } from './components/AdminLogin';
-import { HeroSkeleton, EventCardSkeleton } from './components/SkeletonLoader';
+import { ScrollToTop } from './components/ScrollToTop';
+import { useLanguageStore } from './stores/languageStore';
+import { HeroSkeleton } from './components/SkeletonLoader';
 import { AnimatedNavbar } from './components/animations/AnimatedNavbar';
 import { AnimatedFooter } from './components/animations/AnimatedFooter';
 import { ParallaxHero } from './components/animations/ParallaxHero';
-import { AnimatedLogo } from './components/animations/AnimatedLogo';
 import { AnimatedButton } from './components/animations/AnimatedButton';
-import { AnimatedSection } from './components/animations/AnimatedSection';
-import { AnimatedCard } from './components/animations/AnimatedCard';
-import { AnimatedText } from './components/animations/AnimatedText';
-import { EventModal } from './components/EventModal';
-import { ScrollToTop } from './components/ScrollToTop';
-import { MusikkfestPage } from './components/MusikkfestPage';
+import { ProtectedRoute } from './components/ProtectedRoute'; // Not lazy - needs immediate access to auth state
+import { LocalStorageService } from './lib/localStorage';
+
+// Lazy load heavy components
+const AdminDashboard = lazy(() => import('./components/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
+const AdminLogin = lazy(() => import('./components/AdminLogin').then(m => ({ default: m.AdminLogin })));
+const PortfolioPage = lazy(() => import('./components/PortfolioPage').then(m => ({ default: m.PortfolioPage })));
+const BlogPage = lazy(() => import('./components/BlogPage').then(m => ({ default: m.BlogPage })));
+const CoursesPage = lazy(() => import('./components/CoursesPage').then(m => ({ default: m.CoursesPage })));
+const ResourcesPage = lazy(() => import('./components/ResourcesPage').then(m => ({ default: m.ResourcesPage })));
+const CommunityPage = lazy(() => import('./components/CommunityPage').then(m => ({ default: m.CommunityPage })));
+const ContactForm = lazy(() => import('./components/ContactForm').then(m => ({ default: m.ContactForm })));
+const OnboardingForm = lazy(() => import('./components/OnboardingForm').then(m => ({ default: m.OnboardingForm })));
+const OnboardingThanksPage = lazy(() => import('./components/OnboardingThanksPage').then(m => ({ default: m.OnboardingThanksPage })));
+const ServicesPage = lazy(() => import('./components/ServicesPage').then(m => ({ default: m.ServicesPage })));
+const BlogPostDetailPage = lazy(() => import('./components/BlogPostDetailPage').then(m => ({ default: m.BlogPostDetailPage })));
+const CourseDetailPage = lazy(() => import('./components/CourseDetailPage').then(m => ({ default: m.CourseDetailPage })));
+const PortfolioDetailPage = lazy(() => import('./components/PortfolioDetailPage').then(m => ({ default: m.PortfolioDetailPage })));
 
 function App() {
+  const { t } = useLanguageStore();
+  
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen bg-stone-100">
+      <div className="min-h-screen bg-neutral-50">
         <AnimatedNavbar>
           <Navigation />
         </AnimatedNavbar>
         
         {/* Main Content */}
-        <main className="pt-16 md:pt-20">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/musikkfest" element={<MusikkfestPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/membership" element={<MembershipPage />} />
-            <Route path="/gallery" element={<GalleryPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-            <Route path="/login" element={<AdminLogin />} />
-            <Route path="/test" element={<SupabaseTest />} />
-          </Routes>
+        <main className="pt-20 relative z-10">
+          <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-600"></div></div>}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/portfolio" element={<PortfolioPage />} />
+              <Route path="/portfolio/:id" element={<PortfolioDetailPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPostDetailPage />} />
+              <Route path="/courses" element={<CoursesPage />} />
+              <Route path="/courses/:id" element={<CourseDetailPage />} />
+              <Route path="/resources" element={<ResourcesPage />} />
+              <Route path="/community" element={<CommunityPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/onboarding" element={<OnboardingPage />} />
+              <Route path="/onboarding/thanks" element={<OnboardingThanksPage />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute>
+                    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-600"></div></div>}>
+                      <AdminDashboard />
+                    </Suspense>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="/login" element={<AdminLogin />} />
+            </Routes>
+          </Suspense>
         </main>
 
         <AnimatedFooter>
-          <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div>
-                <div className="flex items-center gap-2 text-[#f2e1c5]">
-                  <Music2 size={24} />
-                  <span className="font-bold text-xl">HOVDEN MUSIKKLUBB</span>
-                </div>
-                <p className="mt-4 text-gray-300">
-                  Der fjellene møter musikken.
-                </p>
+          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center">
+              <div className="flex flex-col items-center gap-3 mb-4">
+                <a href="mailto:sebastian.saethre@gmail.com" className="flex items-center gap-2 text-neutral-300 hover:text-brand-400 transition-colors">
+                  <Mail size={18} />
+                  <span>sebastian.saethre@gmail.com</span>
+                </a>
               </div>
-              <div>
-                <h3 className="text-white font-semibold mb-4">Adresse</h3>
-                <div className="flex items-start gap-2 text-gray-300">
-                  <MapPin className="mt-1 flex-shrink-0" size={18} />
-                  <p>Hovden<br />4755 Hovden<br />Norge</p>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-white font-semibold mb-4">Følg Oss</h3>
-                <div className="flex space-x-6">
-                  <a href="https://www.instagram.com/hovdenmusikklubb/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-300">
-                    <Instagram size={24} />
-                  </a>
-                  <Link to="/contact" className="text-gray-400 hover:text-gray-300">
-                    <Mail size={24} />
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="mt-8 border-t border-gray-700 pt-8 text-center">
-              <p className="text-gray-400">
-                &copy; 2025 Hovden Musikklubb. Alle rettigheter reservert.
-                <Link to="/login" className="ml-4 text-gray-500 hover:text-gray-400 text-sm">
-                  Admin
+              <p className="text-neutral-400 text-sm">
+                &copy; 2025 Sebastian Saethre. {t('footer.rights')}
+                <Link to="/login" className="ml-4 text-neutral-500 hover:text-neutral-400 text-sm">
+                  {t('footer.admin')}
                 </Link>
               </p>
-              <p className="text-gray-400 text-sm mt-4">
-                Created by Sebastian Saethre - Need a site like this?{' '}
-                <a href="mailto:sebastian.saethre@gmail.com" className="text-[#1d4f4d] underline hover:text-[#1d4f4d] focus:outline-none focus:ring-2 focus:ring-[#1d4f4d] rounded">
-                  Contact me
+              <p className="text-neutral-400 text-sm mt-2">
+                <a href="https://www.sebastiansaethre.no" className="hover:text-brand-400 transition-colors">
+                  www.sebastiansaethre.no
                 </a>
               </p>
             </div>
@@ -103,69 +100,66 @@ function App() {
 }
 
 function HomePage() {
-  const [nextEvent, setNextEvent] = useState<Database['public']['Tables']['events']['Row'] | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchNextEvent() {
-      try {
-        const { data, error } = await supabase
-          .from('events')
-          .select('*')
-          .eq('status', 'published')
-          .gte('event_date', new Date().toISOString())
-          .order('event_date', { ascending: true })
-          .limit(1)
-          .single();
-
-        if (error && error.code !== 'PGRST116') throw error;
-        setNextEvent(data);
-      } catch (error) {
-        console.error('Error fetching next event:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchNextEvent();
-  }, []);
-
-  if (loading) {
-    return <HeroSkeleton />;
-  }
+  const { t } = useLanguageStore();
 
   return (
     <>
       {/* Hero Section */}
-      <ParallaxHero imageUrl="/images/hero-background.jpg">
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-start items-center pt-20 pb-8">
-          <AnimatedLogo
-            src="/images/logo.jpg"
-            alt="Hovden Musikklubb Logo"
-            className="w-[20rem] sm:w-[28rem] md:w-[32rem] h-auto mb-8 rounded-full shadow-lg border-4 border-[#f2e1c5]"
-          />
-          <div className="text-center mx-auto max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Hovden Musikklubb
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed">
-              Der fjellånden møter musikksjelen.<br />
-              Bli med oss på intime konserter i vårt unike lokale.
+      <ParallaxHero 
+        imageUrl="/images/hero-background.jpg"
+        videoUrl="/images/hero-intro.mp4"
+      >
+        <div className="relative w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-screen flex flex-col justify-center items-center">
+          <div className="text-center w-full flex flex-col items-center gap-4 md:gap-6">
+            {/* Logo symbol only - reduced to fit screen */}
+            <img
+              src="/images/logo.jpg"
+              alt="Sebastian Saethre logo symbol"
+              className="h-28 sm:h-32 md:h-40 lg:h-44"
+              style={{
+                filter: 'drop-shadow(0 0 16px rgba(0, 0, 0, 0.5))',
+                maxWidth: '90vw',
+                marginBottom: '-1.16rem'
+              }}
+              loading="eager"
+            />
+            
+            {/* Name from logo.png image - text part only, positioned right below logo - 30% bigger */}
+            <img
+              src="/images/logo.png"
+              alt="Sebastian Saethre"
+              className="mb-2 md:mb-4 h-[3.25rem] sm:h-[3.9rem] md:h-[4.55rem] lg:h-[5.2rem] w-auto"
+              style={{
+                mixBlendMode: 'normal',
+                filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.3))',
+                marginTop: '-0.96rem'
+              }}
+              loading="eager"
+              onError={(e) => {
+                // If logo.png doesn't exist, hide it
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            
+            <p className="text-xs sm:text-sm md:text-base text-slate-200 max-w-2xl leading-relaxed px-4">
+              {t('home.description')}
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-4xl mx-auto">
-              <Link to="/events" className="w-full transform transition-transform hover:scale-105">
-                <AnimatedButton variant="primary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug bg-[#1d4f4d] hover:bg-[#2a6f6d]">
-                  <span className="block w-full max-w-xs mx-auto">Kommende<br className="hidden sm:block" /> Arrangementer</span>
+            
+            <div className="mt-4 md:mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 w-full max-w-md px-4">
+              <Link to="/onboarding" className="w-full sm:w-auto">
+                <AnimatedButton 
+                  variant="primary" 
+                  className="w-full sm:w-auto rounded-lg px-6 md:px-8 py-2.5 md:py-3 text-sm md:text-base font-semibold bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-100"
+                >
+                  {t('home.cta.onboarding')}
                 </AnimatedButton>
               </Link>
-              <Link to="/musikkfest" className="w-full transform transition-transform hover:scale-105">
-                <AnimatedButton variant="secondary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug bg-[#e6b800] hover:bg-[#ffcc00]">
-                  <span className="block w-full max-w-xs mx-auto">Hovden<br className="hidden sm:block" /> Musikkfest 2025</span>
-                </AnimatedButton>
-              </Link>
-              <Link to="/membership" className="w-full transform transition-transform hover:scale-105">
-                <AnimatedButton variant="secondary" className="w-full min-h-[80px] flex items-center justify-center text-center px-6 py-4 text-lg sm:text-xl leading-snug bg-[#f2e1c5] hover:bg-[#fff0d9] text-stone-900">
-                  <span className="block w-full max-w-xs mx-auto">Bli Medlem</span>
+              <Link to="/blog" className="w-full sm:w-auto">
+                <AnimatedButton 
+                  variant="secondary" 
+                  className="w-full sm:w-auto rounded-lg px-6 md:px-8 py-2.5 md:py-3 text-sm md:text-base font-semibold bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 active:bg-white/30 transition-all duration-200"
+                >
+                  {t('home.cta.blog')}
                 </AnimatedButton>
               </Link>
             </div>
@@ -173,49 +167,35 @@ function HomePage() {
         </div>
       </ParallaxHero>
 
-      {/* Featured Section */}
-      <div className="bg-white py-24 sm:py-32">
+      {/* Featured Section - positioned below fixed hero */}
+      <div className="bg-white py-24 sm:py-32 relative z-10" style={{ marginTop: '100vh' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto space-y-6">
             <Link 
-              to="/events" 
-              className="bg-[#1d4f4d] rounded-lg p-8 transition-transform hover:scale-105 flex flex-col justify-center items-center text-center min-h-[180px] shadow-md"
+              to="/blog" 
+              className="bg-brand-700 rounded-lg p-6 md:p-8 transition-all hover:scale-[1.02] flex flex-col justify-center items-center text-center min-h-[160px] md:min-h-[180px] shadow-lg hover:shadow-xl"
             >
-              <h2 className="mt-6 text-3xl font-bold tracking-tight text-white">
-                {loading ? 'Laster...' : (nextEvent ? 'Neste Arrangement' : 'Ingen planlagte arrangementer')}
+              <h2 className="mt-4 md:mt-6 text-2xl md:text-3xl font-bold tracking-tight text-white">
+                {t('home.featured.blog')}
               </h2>
-              <p className="mt-4 text-lg text-white">
-                {nextEvent ? (
-                  <>
-                    {nextEvent.title} - {new Date(nextEvent.event_date).toLocaleString('no-NO', {
-                      timeZone: 'Europe/Oslo',
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </>
-                ) : (
-                  'Følg med for kommende arrangementer'
-                )}
+              <p className="mt-3 md:mt-4 text-base md:text-lg text-white">
+                {t('home.featured.blog.desc')}
               </p>
             </Link>
             <Link 
-              to="/musikkfest" 
-              className="bg-[#e6b800] rounded-lg p-8 transition-transform hover:scale-105 flex flex-col justify-center items-center text-center min-h-[180px] shadow-md"
+              to="/courses" 
+              className="bg-brand-800 rounded-lg p-6 md:p-8 transition-all hover:scale-[1.02] flex flex-col justify-center items-center text-center min-h-[160px] md:min-h-[180px] shadow-lg hover:shadow-xl"
             >
-              <h2 className="mt-6 text-3xl font-bold tracking-tight text-white">Hovden Musikkfest 2025</h2>
-              <p className="mt-4 text-lg text-white">Opplev årets store musikkbegivenhet på Hovden! Se program og kjøp billetter.</p>
+              <h2 className="mt-4 md:mt-6 text-2xl md:text-3xl font-bold tracking-tight text-white">{t('home.featured.courses')}</h2>
+              <p className="mt-3 md:mt-4 text-base md:text-lg text-white">{t('home.featured.courses.desc')}</p>
             </Link>
             <Link 
-              to="/membership" 
-              className="bg-stone-100 rounded-lg p-8 transition-transform hover:scale-105 flex flex-col justify-center items-center text-center min-h-[180px] shadow-md"
+              to="/resources" 
+              className="bg-neutral-100 rounded-lg p-8 transition-transform hover:scale-105 flex flex-col justify-center items-center text-center min-h-[180px] shadow-md"
             >
-              <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">Medlemskap</h2>
-              <p className="mt-4 text-lg text-gray-500">
-                Bli medlem for eksklusiv tilgang til intime konserter og spesielle arrangementer.
+              <h2 className="mt-6 text-3xl font-bold tracking-tight text-neutral-900">{t('home.featured.resources')}</h2>
+              <p className="mt-4 text-lg text-neutral-600">
+                {t('home.featured.resources.desc')}
               </p>
             </Link>
           </div>
@@ -225,22 +205,31 @@ function HomePage() {
   );
 }
 
+interface Event {
+  id?: string;
+  title: string;
+  description: string;
+  event_date: string;
+  location: string | null;
+  image_url: string | null;
+  status: 'draft' | 'published';
+  festival: string | null;
+  created_at?: string;
+}
+
 function EventsPage() {
-  const [events, setEvents] = useState<Database['public']['Tables']['events']['Row'][]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState<Database['public']['Tables']['events']['Row'] | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   useEffect(() => {
-    async function fetchEvents() {
+    function fetchEvents() {
       try {
-        const { data, error } = await supabase
-          .from('events')
-          .select('*')
-          .eq('status', 'published')
-          .order('event_date', { ascending: true });
-
-        if (error) throw error;
-        setEvents(data || []);
+        const allEvents = LocalStorageService.get<Event>('events');
+        const published = allEvents.filter(event => event.status === 'published');
+        setEvents(published.sort((a, b) => 
+          new Date(a.event_date).getTime() - new Date(b.event_date).getTime()
+        ));
       } catch (error) {
         console.error('Error fetching events:', error);
       } finally {
@@ -265,7 +254,7 @@ function EventsPage() {
     }
     acc[monthKey].push(event);
     return acc;
-  }, {} as Record<string, Database['public']['Tables']['events']['Row'][]>);
+  }, {} as Record<string, Event[]>);
 
   // Sort months chronologically
   const sortedMonths = Object.keys(eventsByMonth).sort((a, b) => {
@@ -288,16 +277,16 @@ function EventsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold mb-8">Kommende Arrangementer</h1>
+      <h1 className="text-3xl font-bold mb-8">Events</h1>
       {events.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          Ingen kommende arrangementer for øyeblikket.
+        <div className="text-center py-12 text-neutral-500">
+          No upcoming events at the moment.
         </div>
       ) : (
         <div className="space-y-12">
           {sortedMonths.map(month => (
             <div key={month} className="space-y-6">
-              <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-[#1d4f4d] pb-2">
+              <h2 className="text-2xl font-bold text-neutral-900 border-b-2 border-primary-600 pb-2">
                 {month}
               </h2>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -318,9 +307,8 @@ function EventsPage() {
                     )}
                     <div className="p-6 flex-grow flex flex-col">
                       <h3 className="text-xl font-bold mb-2">{event.title}</h3>
-                      <p className="text-gray-600 mb-4">
-                        {new Date(event.event_date).toLocaleString('no-NO', {
-                          timeZone: 'Europe/Oslo',
+                      <p className="text-neutral-600 mb-4">
+                        {new Date(event.event_date).toLocaleString('en-US', {
                           weekday: 'long',
                           year: 'numeric',
                           month: 'long',
@@ -329,10 +317,10 @@ function EventsPage() {
                           minute: '2-digit'
                         })}
                       </p>
-                      <p className="text-gray-700 line-clamp-3 mb-4">{event.description}</p>
+                      <p className="text-neutral-700 line-clamp-3 mb-4">{event.description}</p>
                       {event.location && (
-                        <p className="text-gray-600 mt-auto">
-                          <span className="font-semibold">Sted:</span> {event.location}
+                        <p className="text-neutral-600 mt-auto">
+                          <span className="font-semibold">Location:</span> {event.location}
                         </p>
                       )}
                     </div>
@@ -360,22 +348,22 @@ function AboutPage() {
       <div className="bg-white rounded-lg shadow-lg p-8 text-center">
         <img
           src="/images/logo.jpg"
-          alt="Hovden Musikklubb Logo"
+          alt="Sebastian Saethre"
           className="w-64 h-64 mx-auto mb-8 rounded-full"
           style={{
             filter: 'contrast(1.1)'
           }}
         />
-        <h1 className="text-3xl font-bold mb-8">Om Oss</h1>
+        <h1 className="text-3xl font-bold mb-8">About</h1>
         <div className="prose max-w-none text-left">
           <p className="mb-6">
-            Hovden Musikklubb ble stiftet i år av en gjeng med et felles ønske. Å skape unike musikalske opplevelser. Først og fremst ønsker vi å skape et tilbud for alle som elsker musikk, som tør å bli utfordret og har et hjerte for Hovden. Vi ønsker å dyrke det særegne fellesskapet som alltid har eksistert på Hovden, og som er en av grunnene til at vi velger å bo her oppe i fjellheimen. Vi booker alle sjangere, og er forankret i Setesdalens rike musikalske tradisjon.
+            I'm Sebastian Saethre, an AI educator and practitioner dedicated to making artificial intelligence accessible and practical for everyone. My mission is to bridge the gap between complex AI concepts and real-world applications across all industries.
           </p>
           <p className="mb-6">
-            Som et godt måltid, trenger en bra konsert gode ingredienser. Et lyttende publikum, unike omgivelser, god lyd og ikke minst musikere som har noe på hjertet. Vi ønsker å skape et rom der det er godt å være for både utøvere og de som lytter. Et rom der tankene kan vandre, beina danse og musikalsk kvalitet og fellesskap står fjellstøtt i en ellers urolig verden. Et rom fritt for mobiltelefoner og likes, der det er trygt å gi seg hen og leve i nuet.
+            Through this platform, I share practical insights, tool reviews, courses, and resources that help individuals and organizations leverage AI effectively. Whether you're interested in image generation, video creation, coding with AI, or exploring cutting-edge tools, you'll find valuable content here.
           </p>
           <p className="mb-6">
-            Hovden Musikkklubb drives av medlemmene, for medlemmene. Vi arrangerer noen få kommersielle konserter i løpet av året, som finansierer aktiviteten resten av året. Som medlem får du være med på alt som skjer, både som publikum og frivillig hvis du ønsker det. Alle midlene i klubben går til å skape unike opplevelser for medlemmene, sosialt og musikalsk. Intimkonserter, korkveld på pub eller hodelykt-konsert på en fjelltopp i oktober? Det er i grunn kun fantasien som setter grenser.
+            My approach to AI education focuses on "vibe coding" - a practical, hands-on methodology that emphasizes experimentation and real-world application over theory. Join our community to connect, learn, and explore the transformative potential of AI together.
           </p>
         </div>
       </div>
@@ -390,33 +378,33 @@ function MembershipPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col items-center justify-center">
         <img
           src="/images/logo.jpg"
-          alt="Hovden Musikklubb Logo"
+          alt="Sebastian Saethre"
           className="w-[20rem] h-[20rem] mx-auto mb-8 rounded-full"
           style={{ filter: 'contrast(1.1)' }}
         />
         {/* Benefits Section */}
         <AnimatedCard className="w-full max-w-2xl mx-auto mt-2 flex flex-col items-center justify-center text-center">
-          <AnimatedText text="Medlemsfordeler" className="text-2xl font-bold mb-4" />
-          <ul className="mb-8 text-gray-700 space-y-3 text-lg flex flex-col items-center justify-center">
+          <AnimatedText text="Join the Community" className="text-2xl font-bold mb-4" />
+          <ul className="mb-8 text-neutral-700 space-y-3 text-lg flex flex-col items-center justify-center">
             <li className="flex items-center gap-3">
-              <Music2 size={22} className="text-[#1d4f4d]" />
-              <span>Prioritert tilgang til billetter</span>
+              <Sparkles size={22} className="text-primary-600" />
+              <span>Access to exclusive content and resources</span>
             </li>
             <li className="flex items-center gap-3">
-              <Music2 size={22} className="text-[#1d4f4d]" />
-              <span>Eksklusive medlemsarrangementer</span>
+              <Sparkles size={22} className="text-primary-600" />
+              <span>Early access to new courses and tools</span>
             </li>
             <li className="flex items-center gap-3">
-              <Music2 size={22} className="text-[#1d4f4d]" />
-              <span>Støtt lokal musikkultur</span>
+              <Sparkles size={22} className="text-primary-600" />
+              <span>Connect with fellow AI practitioners</span>
             </li>
           </ul>
           {!showForm && (
             <button 
               onClick={() => setShowForm(true)}
-              className="bg-[#1d4f4d] text-white py-4 px-8 text-lg rounded-lg hover:bg-[#1d4f4d] transform hover:scale-105 transition-transform w-full max-w-xs mx-auto mb-2"
+              className="bg-primary-600 text-white py-4 px-8 text-lg rounded-lg hover:bg-primary-700 transform hover:scale-105 transition-transform w-full max-w-xs mx-auto mb-2"
             >
-              Bli Medlem Nå
+              Join Now
             </button>
           )}
           {/* Membership Form */}
@@ -437,8 +425,8 @@ function GalleryPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <AnimatedCard className="mb-12 p-10">
           <div className="flex flex-col items-center justify-center text-center">
-            <AnimatedText text="Galleri" className="text-4xl font-bold mb-4 text-gray-900 mx-auto" delay={0.33} />
-            <AnimatedText text="Utforsk høydepunkter fra våre arrangementer og konserter. Her finner du videoer og bilder som fanger den unike stemningen i Hovden Musikklubb." className="text-lg text-gray-600 max-w-3xl mx-auto mb-8" delay={0.33} />
+            <AnimatedText text="Gallery" className="text-4xl font-bold mb-4 text-neutral-900 mx-auto" delay={0.33} />
+            <AnimatedText text="Explore highlights from projects, tutorials, and content. Here you'll find videos and images showcasing my work and AI applications." className="text-lg text-neutral-600 max-w-3xl mx-auto mb-8" delay={0.33} />
           </div>
         </AnimatedCard>
         <div className="space-y-12">
@@ -449,29 +437,42 @@ function GalleryPage() {
   );
 }
 
-function ContactPage() {
+function OnboardingPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold mb-8">Kontakt Oss</h1>
+      <Suspense fallback={<div className="animate-pulse bg-neutral-100 h-64 rounded"></div>}>
+        <OnboardingForm />
+      </Suspense>
+    </div>
+  );
+}
+
+function ContactPage() {
+  const { t } = useLanguageStore();
+  
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 className="text-4xl font-bold mb-8">{t('contact.title')}</h1>
       <div className="bg-white rounded-lg shadow-md p-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h2 className="text-2xl font-bold mb-4">Ta Kontakt</h2>
-            <p className="text-lg text-gray-700 mb-4">
-              Har du spørsmål? Vi vil gjerne høre fra deg. Send oss en melding, så svarer vi så snart som mulig.
+            <h2 className="text-2xl font-bold mb-4">{t('contact.getInTouch')}</h2>
+            <p className="text-lg text-neutral-700 mb-4">
+              {t('contact.description')}
             </p>
             <div className="space-y-4">
-              <p className="flex items-center text-lg text-gray-700">
-                <MapPin className="mr-2" size={20} />
-                Hovden, 4755 Hovden, Norge
-              </p>
-              <p className="flex items-center text-lg text-gray-700">
+              <a 
+                href="mailto:sebastian.saethre@gmail.com" 
+                className="flex items-center text-lg text-neutral-700 hover:text-brand-600 transition-colors"
+              >
                 <Mail className="mr-2" size={20} />
-                info@hovdenmusikklubb.no
-              </p>
+                <span>sebastian.saethre@gmail.com</span>
+              </a>
             </div>
           </div>
-          <ContactForm />
+          <Suspense fallback={<div className="animate-pulse bg-neutral-100 h-64 rounded"></div>}>
+            <ContactForm />
+          </Suspense>
         </div>
       </div>
     </div>

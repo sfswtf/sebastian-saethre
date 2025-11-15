@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
 import { Mail, Save, Trash2 } from 'lucide-react';
+import { LocalStorageService } from '../../lib/localStorage';
 
 type MessageStatus = 'new' | 'in_progress' | 'completed';
 
@@ -26,20 +26,18 @@ export function ContactMessages() {
 
   const fetchMessages = async () => {
     try {
-      const { data, error } = await supabase
-        .from('contact_messages')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
+      const data = LocalStorageService.get<ContactMessage>('contact_messages');
+      const sorted = data.sort((a, b) => 
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
       
       // Initialize editing notes with current values
       const notesState: { [key: string]: string } = {};
-      data?.forEach(message => {
+      sorted.forEach(message => {
         notesState[message.id] = message.admin_notes || '';
       });
       setEditingNotes(notesState);
-      setMessages(data || []);
+      setMessages(sorted);
     } catch (error) {
       console.error('Error fetching messages:', error);
       toast.error('Could not fetch messages');
@@ -50,12 +48,7 @@ export function ContactMessages() {
 
   const updateStatus = async (id: string, status: MessageStatus) => {
     try {
-      const { error } = await supabase
-        .from('contact_messages')
-        .update({ status })
-        .eq('id', id);
-
-      if (error) throw error;
+      LocalStorageService.update('contact_messages', id, { status });
       toast.success('Status updated');
       fetchMessages();
     } catch (error) {
@@ -66,12 +59,7 @@ export function ContactMessages() {
 
   const updateAdminNotes = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from('contact_messages')
-        .update({ admin_notes: editingNotes[id] })
-        .eq('id', id);
-
-      if (error) throw error;
+      LocalStorageService.update('contact_messages', id, { admin_notes: editingNotes[id] || null });
       toast.success('Notes updated');
       fetchMessages();
     } catch (error) {
@@ -92,12 +80,7 @@ export function ContactMessages() {
     }
 
     try {
-      const { error } = await supabase
-        .from('contact_messages')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      LocalStorageService.delete('contact_messages', id);
       toast.success('Melding slettet');
       fetchMessages();
     } catch (error) {

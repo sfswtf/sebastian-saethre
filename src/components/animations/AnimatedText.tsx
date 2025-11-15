@@ -12,55 +12,18 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
   className = '',
   delay = 0
 }) => {
-  const words = text.split(' ');
-
-  const container = {
-    hidden: { opacity: 0 },
-    visible: (i = 1) => ({
-      opacity: 1,
-      transition: { staggerChildren: 0.08, delayChildren: delay * i },
-    }),
-  };
-
-  const child = {
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        damping: 10,
-        stiffness: 120,
-        duration: 0.25
-      },
-    },
-    hidden: {
-      opacity: 0,
-      y: 20,
-      transition: {
-        type: "spring",
-        damping: 10,
-        stiffness: 120,
-        duration: 0.25
-      },
-    },
-  };
-
   return (
     <motion.div
-      className={`flex flex-wrap ${className}`}
-      variants={container}
-      initial="hidden"
-      animate="visible"
+      className={className}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ 
+        duration: 0.4,
+        delay: delay,
+        ease: [0.25, 0.1, 0.25, 1]
+      }}
     >
-      {words.map((word, index) => (
-        <motion.span
-          key={index}
-          className="mr-2"
-          variants={child}
-        >
-          {word}
-        </motion.span>
-      ))}
+      {text}
     </motion.div>
   );
 }; 

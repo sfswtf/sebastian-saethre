@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 import { toast, Toaster } from 'react-hot-toast';
 import { ManualMemberAdd } from './ManualMemberAdd';
 import { EventManager } from './admin/EventManager';
@@ -7,6 +6,11 @@ import { AboutEditor } from './admin/AboutEditor';
 import { SocialMediaManager } from './admin/SocialMediaManager';
 import { ContactMessages } from './admin/ContactMessages';
 import PageContentManager from './admin/PageContentManager';
+import { BlogManager } from './admin/BlogManager';
+import { CourseManager } from './admin/CourseManager';
+import { ResourceManager } from './admin/ResourceManager';
+import { PortfolioManager } from './admin/PortfolioManager';
+import { useLanguageStore } from '../stores/languageStore';
 
 interface Application {
   id: string;
@@ -37,7 +41,8 @@ export function AdminDashboard() {
   const [emailSubject, setEmailSubject] = useState('');
   const [emailContent, setEmailContent] = useState('');
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<'events' | 'about' | 'messages' | 'members' | 'social'>('events');
+  const [activeTab, setActiveTab] = useState<'events' | 'blog' | 'courses' | 'resources' | 'portfolio' | 'messages' | 'members' | 'social'>('blog');
+  const { t } = useLanguageStore();
 
   useEffect(() => {
     fetchApplications();
@@ -46,13 +51,11 @@ export function AdminDashboard() {
   async function fetchApplications() {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('membership_applications')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setApplications(data || []);
+      // Use localStorage instead of Supabase for local testing
+      const data = JSON.parse(localStorage.getItem('admin_membership_applications') || '[]');
+      setApplications(data.sort((a: Application, b: Application) => 
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      ));
     } catch (error) {
       console.error('Error fetching applications:', error);
       toast.error('Kunne ikke hente søknader');
@@ -65,21 +68,17 @@ export function AdminDashboard() {
     try {
       console.log('Updating status:', { id, newStatus });
       
-      const { data, error } = await supabase
-        .from('membership_applications')
-        .update({ status: newStatus })
-        .eq('id', id)
-        .select();
-
-      if (error) {
-        console.error('Error updating status:', error);
-        toast.error(`Kunne ikke oppdatere status: ${error.message}`);
-        throw error;
+      const applications = JSON.parse(localStorage.getItem('admin_membership_applications') || '[]');
+      const index = applications.findIndex((app: Application) => app.id === id);
+      if (index !== -1) {
+        applications[index].status = newStatus;
+        applications[index].updated_at = new Date().toISOString();
+        localStorage.setItem('admin_membership_applications', JSON.stringify(applications));
+        toast.success('Status oppdatert');
+        await fetchApplications();
+      } else {
+        toast.error('Søknad ikke funnet');
       }
-
-      console.log('Update response:', data);
-      toast.success('Status oppdatert');
-      await fetchApplications();
     } catch (error) {
       console.error('Error in updateApplicationStatus:', error);
       toast.error('Kunne ikke oppdatere status');
@@ -90,21 +89,17 @@ export function AdminDashboard() {
     try {
       console.log('Updating member type:', { id, newType });
       
-      const { data, error } = await supabase
-        .from('membership_applications')
-        .update({ member_type: newType })
-        .eq('id', id)
-        .select();
-
-      if (error) {
-        console.error('Error updating member type:', error);
-        toast.error(`Kunne ikke oppdatere medlemstype: ${error.message}`);
-        throw error;
+      const applications = JSON.parse(localStorage.getItem('admin_membership_applications') || '[]');
+      const index = applications.findIndex((app: Application) => app.id === id);
+      if (index !== -1) {
+        applications[index].member_type = newType;
+        applications[index].updated_at = new Date().toISOString();
+        localStorage.setItem('admin_membership_applications', JSON.stringify(applications));
+        toast.success('Medlemstype oppdatert');
+        await fetchApplications();
+      } else {
+        toast.error('Søknad ikke funnet');
       }
-
-      console.log('Update response:', data);
-      toast.success('Medlemstype oppdatert');
-      await fetchApplications();
     } catch (error) {
       console.error('Error in updateMemberType:', error);
       toast.error('Kunne ikke oppdatere medlemstype');
@@ -165,49 +160,93 @@ export function AdminDashboard() {
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex flex-wrap">
             <button
-              onClick={() => setActiveTab('events')}
+              onClick={() => setActiveTab('blog')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'events'
-                  ? 'border-[#1d4f4d] text-[#1d4f4d]'
+                activeTab === 'blog'
+                  ? 'border-primary-600 text-primary-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              Arrangementer
+              {t('admin.blog')}
+            </button>
+            <button
+              onClick={() => setActiveTab('courses')}
+              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+                activeTab === 'courses'
+                  ? 'border-primary-600 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {t('admin.courses')}
+            </button>
+            <button
+              onClick={() => setActiveTab('resources')}
+              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+                activeTab === 'resources'
+                  ? 'border-primary-600 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {t('admin.resources')}
+            </button>
+            <button
+              onClick={() => setActiveTab('portfolio')}
+              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+                activeTab === 'portfolio'
+                  ? 'border-primary-600 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {t('admin.portfolio')}
+            </button>
+            <button
+              onClick={() => setActiveTab('events')}
+              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+                activeTab === 'events'
+                  ? 'border-primary-600 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {t('admin.events')}
             </button>
             <button
               onClick={() => setActiveTab('messages')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'messages'
-                  ? 'border-[#1d4f4d] text-[#1d4f4d]'
+                  ? 'border-primary-600 text-primary-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              Meldinger
+              {t('admin.messages')}
             </button>
             <button
               onClick={() => setActiveTab('members')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'members'
-                  ? 'border-[#1d4f4d] text-[#1d4f4d]'
+                  ? 'border-primary-600 text-primary-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              Medlemmer
+              {t('admin.members')}
             </button>
             <button
               onClick={() => setActiveTab('social')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'social'
-                  ? 'border-[#1d4f4d] text-[#1d4f4d]'
+                  ? 'border-primary-600 text-primary-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              Sosiale Medier
+              {t('admin.social')}
             </button>
           </nav>
         </div>
 
         <div className="p-6">
+          {activeTab === 'blog' && <BlogManager />}
+          {activeTab === 'courses' && <CourseManager />}
+          {activeTab === 'resources' && <ResourceManager />}
+          {activeTab === 'portfolio' && <PortfolioManager />}
           {activeTab === 'events' && <EventManager />}
           {activeTab === 'messages' && <ContactMessages />}
           {activeTab === 'members' && (

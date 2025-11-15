@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
+import { LocalStorageService } from '../../lib/localStorage';
+import { supabase } from '../../lib/supabase';
 
 type SocialMediaPost = {
   id: string;
@@ -34,10 +35,22 @@ export function SocialMediaManager() {
         .order('display_order', { ascending: true });
 
       if (error) throw error;
-      setPosts(data || []);
+
+      if (data && data.length > 0) {
+        setPosts(data as SocialMediaPost[]);
+      } else {
+        const localData = LocalStorageService.get<SocialMediaPost>('social_media_posts');
+        setPosts(localData.sort((a, b) => a.display_order - b.display_order));
+      }
     } catch (error) {
-      console.error('Error fetching posts:', error);
-      toast.error('Kunne ikke hente innlegg');
+      console.warn('Supabase fetch failed, using localStorage:', error);
+      try {
+        const data = LocalStorageService.get<SocialMediaPost>('social_media_posts');
+        setPosts(data.sort((a, b) => a.display_order - b.display_order));
+      } catch (localError) {
+        console.error('Error fetching posts:', localError);
+        toast.error('Kunne ikke hente innlegg');
+      }
     } finally {
       setLoading(false);
     }
@@ -46,9 +59,14 @@ export function SocialMediaManager() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const newPost = {
-        ...formData,
+      const newPost: SocialMediaPost = {
+        id: LocalStorageService.generateId(),
+        created_at: new Date().toISOString(),
+        platform: formData.platform || 'instagram',
+        url: formData.url || '',
+        title: formData.title || '',
         display_order: posts.length,
+        active: formData.active ?? true,
       };
 
       const { error } = await supabase
@@ -56,7 +74,6 @@ export function SocialMediaManager() {
         .insert([newPost]);
 
       if (error) throw error;
-
       toast.success('Innlegg lagt til');
       setFormData({
         platform: 'instagram',
@@ -65,9 +82,31 @@ export function SocialMediaManager() {
         active: true,
       });
       fetchPosts();
-    } catch (error) {
-      console.error('Error saving post:', error);
-      toast.error('Kunne ikke lagre innlegg');
+    } catch (error: any) {
+      console.warn('Supabase save failed, using localStorage:', error);
+      try {
+        const newPost: SocialMediaPost = {
+          id: LocalStorageService.generateId(),
+          created_at: new Date().toISOString(),
+          platform: formData.platform || 'instagram',
+          url: formData.url || '',
+          title: formData.title || '',
+          display_order: posts.length,
+          active: formData.active ?? true,
+        };
+        LocalStorageService.add('social_media_posts', newPost);
+        toast.success('Innlegg lagt til (lokal lagring)');
+        setFormData({
+          platform: 'instagram',
+          url: '',
+          title: '',
+          active: true,
+        });
+        fetchPosts();
+      } catch (localError) {
+        console.error('Error saving post:', localError);
+        toast.error('Kunne ikke lagre innlegg');
+      }
     }
   }
 
@@ -79,24 +118,25 @@ export function SocialMediaManager() {
         .from('social_media_posts')
         .delete()
         .eq('id', id);
-
       if (error) throw error;
       toast.success('Innlegg slettet');
       fetchPosts();
-    } catch (error) {
-      console.error('Error deleting post:', error);
-      toast.error('Kunne ikke slette innlegg');
+    } catch (error: any) {
+      console.warn('Supabase delete failed, using localStorage:', error);
+      try {
+        LocalStorageService.delete('social_media_posts', id);
+        toast.success('Innlegg slettet (lokal lagring)');
+        fetchPosts();
+      } catch (localError) {
+        console.error('Error deleting post:', localError);
+        toast.error('Kunne ikke slette innlegg');
+      }
     }
   }
 
   async function handleToggleActive(id: string, currentActive: boolean) {
     try {
-      const { error } = await supabase
-        .from('social_media_posts')
-        .update({ active: !currentActive })
-        .eq('id', id);
-
-      if (error) throw error;
+      LocalStorageService.update('social_media_posts', id, { active: !currentActive });
       toast.success('Status oppdatert');
       fetchPosts();
     } catch (error) {
@@ -119,16 +159,9 @@ export function SocialMediaManager() {
     updatedPosts[newIndex] = temp;
 
     try {
-      const updates = updatedPosts.map((post, index) => ({
-        id: post.id,
-        display_order: index,
-      }));
-
-      const { error } = await supabase
-        .from('social_media_posts')
-        .upsert(updates);
-
-      if (error) throw error;
+      updatedPosts.forEach((post, index) => {
+        LocalStorageService.update('social_media_posts', post.id, { display_order: index });
+      });
       setPosts(updatedPosts);
     } catch (error) {
       console.error('Error reordering posts:', error);

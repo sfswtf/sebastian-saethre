@@ -67,7 +67,7 @@ export function MembershipPage() {
         <div className="text-center">
           <img
             src="/images/logo.jpg"
-            alt="Hovden Musikklubb Logo"
+            alt="Sebastian Saethre"
             className="w-64 h-64 mx-auto mb-8 rounded-full"
             style={{
               filter: 'contrast(1.1)'

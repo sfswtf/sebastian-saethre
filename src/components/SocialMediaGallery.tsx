@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { LocalStorageService } from '../lib/localStorage';
 import { InstagramEmbed } from 'react-social-media-embed';
 import { X } from 'lucide-react';
 import { GallerySkeleton } from './SkeletonLoader';
@@ -22,16 +22,13 @@ export function SocialMediaGallery() {
     fetchPosts();
   }, []);
 
-  const fetchPosts = async () => {
+  const fetchPosts = () => {
     try {
-      const { data, error } = await supabase
-        .from('social_media_posts')
-        .select('*')
-        .eq('active', true)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setPosts(data || []);
+      const allPosts = LocalStorageService.get<SocialMediaPost>('social_media_posts');
+      const active = allPosts.filter(post => post.active);
+      setPosts(active.sort((a, b) => 
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      ));
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {

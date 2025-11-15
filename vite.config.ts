@@ -7,14 +7,17 @@ export default defineConfig({
   plugins: [
     react(),
     sitemap({
-      hostname: 'https://hovdenmusikklubb.no',
+      hostname: 'https://sebastiansaethre.no',
       dynamicRoutes: [
         '/',
-        '/musikkfest',
-        '/events',
-        '/membership',
-        '/gallery',
+        '/portfolio',
+        '/blog',
+        '/courses',
+        '/resources',
+        '/community',
+        '/services',
         '/contact',
+        '/onboarding',
         // Add more routes as needed
       ],
     }),

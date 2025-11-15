@@ -1,10 +1,23 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
-import type { Database } from '../../types/supabase';
 import { toast } from 'react-hot-toast';
 import { format, parse } from 'date-fns';
+import { LocalStorageService } from '../../lib/localStorage';
+import { supabase } from '../../lib/supabase';
 
-type Event = Database['public']['Tables']['events']['Row'];
+type Event = {
+  id?: string;
+  title: string;
+  description: string;
+  event_date: string;
+  location: string | null;
+  status: 'draft' | 'published';
+  image_url: string | null;
+  ticket_price: number | null;
+  tickets_url: string | null;
+  festival: string | null;
+  created_at?: string;
+  updated_at?: string;
+};
 
 export function EventManager() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -34,10 +47,22 @@ export function EventManager() {
         .order('event_date', { ascending: true });
 
       if (error) throw error;
-      setEvents(data || []);
+
+      if (data && data.length > 0) {
+        setEvents(data as Event[]);
+      } else {
+        const localData = LocalStorageService.get<Event>('events');
+        setEvents(localData.sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime()));
+      }
     } catch (error) {
-      console.error('Error fetching events:', error);
-      toast.error('Kunne ikke hente arrangementer');
+      console.warn('Supabase fetch failed, using localStorage:', error);
+      try {
+        const data = LocalStorageService.get<Event>('events');
+        setEvents(data.sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime()));
+      } catch (localError) {
+        console.error('Error fetching events:', localError);
+        toast.error('Kunne ikke hente arrangementer');
+      }
     } finally {
       setLoading(false);
     }
@@ -46,21 +71,17 @@ export function EventManager() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      if (editingEvent) {
-        // Update existing event
+      if (editingEvent?.id) {
         const { error } = await supabase
           .from('events')
           .update(formData)
           .eq('id', editingEvent.id);
-
         if (error) throw error;
         toast.success('Arrangement oppdatert');
       } else {
-        // Create new event
         const { error } = await supabase
           .from('events')
-          .insert([formData]);
-
+          .insert([formData as Event]);
         if (error) throw error;
         toast.success('Arrangement opprettet');
       }
@@ -78,9 +99,33 @@ export function EventManager() {
         festival: '',
       });
       fetchEvents();
-    } catch (error) {
-      console.error('Error saving event:', error);
-      toast.error('Kunne ikke lagre arrangement');
+    } catch (error: any) {
+      console.warn('Supabase save failed, using localStorage:', error);
+      try {
+        if (editingEvent?.id) {
+          LocalStorageService.update('events', editingEvent.id, formData);
+          toast.success('Arrangement oppdatert (lokal lagring)');
+        } else {
+          LocalStorageService.add('events', formData as Event);
+          toast.success('Arrangement opprettet (lokal lagring)');
+        }
+        setEditingEvent(null);
+        setFormData({
+          title: '',
+          description: '',
+          event_date: '',
+          location: '',
+          status: 'draft',
+          image_url: '',
+          ticket_price: null,
+          tickets_url: '',
+          festival: '',
+        });
+        fetchEvents();
+      } catch (localError) {
+        console.error('Error saving event:', localError);
+        toast.error('Kunne ikke lagre arrangement');
+      }
     }
   }
 
@@ -92,25 +137,25 @@ export function EventManager() {
         .from('events')
         .delete()
         .eq('id', id);
-
       if (error) throw error;
       toast.success('Arrangement slettet');
       fetchEvents();
-    } catch (error) {
-      console.error('Error deleting event:', error);
-      toast.error('Kunne ikke slette arrangement');
+    } catch (error: any) {
+      console.warn('Supabase delete failed, using localStorage:', error);
+      try {
+        LocalStorageService.delete('events', id);
+        toast.success('Arrangement slettet (lokal lagring)');
+        fetchEvents();
+      } catch (localError) {
+        console.error('Error deleting event:', localError);
+        toast.error('Kunne ikke slette arrangement');
+      }
     }
   }
 
   async function handleStatusChange(id: string, newStatus: Event['status']) {
     try {
-      const { error } = await supabase
-        .from('events')
-        .update({ status: newStatus })
-        .eq('id', id);
-
-      if (error) throw error;
-      
+      LocalStorageService.update('events', id, { status: newStatus });
       setEvents(events.map(event => 
         event.id === id ? { ...event, status: newStatus } : event
       ));

@@ -14,16 +14,18 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
 }) => {
   return (
     <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
       whileHover={{ 
-        scale: 1.02,
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)'
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)'
       }}
-      whileTap={{ scale: 0.98 }}
       onClick={onClick}
       className={`bg-white rounded-xl overflow-hidden ${className}`}
       style={{
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-        transition: 'all 0.3s ease'
+        transition: 'box-shadow 0.3s ease'
       }}
     >
       {children}

@@ -14,13 +14,13 @@ export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 }) => {
   return (
     <motion.section
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
       transition={{
-        duration: 0.8,
+        duration: 0.5,
         delay: delay,
-        ease: [0.17, 0.55, 0.55, 1]
+        ease: [0.25, 0.1, 0.25, 1]
       }}
       className={className}
     >
