@@ -21,7 +21,32 @@ interface OnboardingState {
 export const useOnboardingStore = create<OnboardingState>(() => ({
   submitOnboardingForm: async (data: OnboardingFormData) => {
     try {
-      // Try Supabase first
+      // Try using RPC function first (if it exists, bypasses RLS)
+      // Fallback to direct insert if function doesn't exist
+      try {
+        const { data: functionResult, error: functionError } = await supabase
+          .rpc('insert_onboarding_response', {
+            p_type: data.type,
+            p_goals: data.goals,
+            p_current_usage: data.current_usage,
+            p_pain_points: data.pain_points,
+            p_name: data.name,
+            p_email: data.email,
+            p_phone: data.phone || null,
+            p_consent: data.consent,
+          });
+
+        if (!functionError && functionResult) {
+          console.log('Onboarding form submitted via RPC function:', functionResult);
+          toast.success('Takk for din interesse! Vi tar kontakt snart.');
+          return;
+        }
+      } catch (rpcError) {
+        // RPC function doesn't exist, fall through to direct insert
+        console.log('RPC function not available, using direct insert');
+      }
+
+      // Try Supabase direct insert
       const { data: result, error } = await supabase
         .from('onboarding_responses')
         .insert([
