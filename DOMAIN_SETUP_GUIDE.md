@@ -14,43 +14,76 @@
 3. Go to **Site settings** (top right, gear icon)
 4. Click **Domain management** in the left sidebar
 5. Click **Add custom domain**
-6. Enter: `www.sebastiansaethre.no`
+6. Enter: `www.sebastiansaethre.no` (or just `sebastiansaethre.no`)
 7. Click **Verify**
-8. Netlify will show you DNS records you need to add
-
-**Important:** Write down or copy these DNS records - you'll need them in Step 2!
-
-You'll see something like:
-- **Type:** `A` or `CNAME`
-- **Name:** `www` or `@`
-- **Value:** An IP address or domain name
 
 ---
 
-## Step 2: Add DNS Records in domene.shop
+## Step 2: Choose Your Method
 
-1. Log in to [domene.shop](https://www.domene.shop)
-2. Go to **My Domains** or **Domain Management**
-3. Find `sebastiansaethre.no` and click **Manage** or **DNS Settings**
-4. Look for **DNS Records** or **DNS Management**
+You'll see two options in Netlify. **Use Option A (Name Servers) - it's easier!**
 
-### Option A: If Netlify gave you an A record (IP address)
-- **Type:** `A`
-- **Name/Host:** `www`
-- **Value/Target:** (the IP address Netlify gave you, usually starts with `75.2.x.x` or similar)
-- **TTL:** `3600` (or leave default)
+### ✅ Option A: Use Netlify DNS (RECOMMENDED - EASIEST)
 
-### Option B: If Netlify gave you a CNAME record
-- **Type:** `CNAME`
-- **Name/Host:** `www`
-- **Value/Target:** `sebastiansaethre.netlify.app` (or what Netlify told you)
-- **TTL:** `3600` (or leave default)
+**This is the easiest method!** You just point your domain's name servers to Netlify.
 
-5. Click **Save** or **Add Record**
+1. In Netlify, go to **Domain management** → **DNS settings**
+2. Scroll down to **"Name servers"** section
+3. You'll see 4 name servers like:
+   - `dns1.p03.nsone.net`
+   - `dns2.p03.nsone.net`
+   - `dns3.p03.nsone.net`
+   - `dns4.p03.nsone.net`
+4. **Copy all 4 name servers** (click the copy icon next to each)
+
+5. **Go to domene.shop:**
+   - Log in to [domene.shop](https://www.domene.shop)
+   - Go to **My Domains** → Find `sebastiansaethre.no`
+   - Click **Manage** or **Settings**
+   - Look for **"Name Servers"** or **"DNS Servers"** or **"Nameserver Settings"**
+   - Change from default to **"Custom"** or **"Use custom name servers"**
+   - Paste the 4 name servers from Netlify
+   - Click **Save**
+
+**That's it!** Netlify will handle all DNS automatically.
+
+---
+
+### Option B: Use External DNS (More Complex)
+
+Only use this if Option A doesn't work or you need custom DNS records.
+
+1. In Netlify, go to **Domain management** → Your domain
+2. Look for **"DNS records"** or **"DNS configuration"**
+3. You need to find the DNS records to add. If you don't see them:
+   - Go to **Site settings** → **Domain management** → Click on your domain
+   - Look for **"DNS configuration"** or **"DNS records"**
+   - You should see something like:
+     - **Type:** `CNAME` or `A`
+     - **Name:** `www` or `@`
+     - **Value:** An IP address or `sebastiansaethre.netlify.app`
+
+4. **Go to domene.shop:**
+   - Log in to [domene.shop](https://www.domene.shop)
+   - Go to **My Domains** → Find `sebastiansaethre.no`
+   - Click **DNS Settings** or **DNS Management**
+   - Add the DNS record:
+     - **Type:** `CNAME` (or `A` if Netlify gave you an IP)
+     - **Name/Host:** `www` (or `@` for root domain)
+     - **Value/Target:** What Netlify told you (usually `sebastiansaethre.netlify.app` or an IP)
+     - **TTL:** `3600` (or leave default)
+   - Click **Save**
 
 ---
 
 ## Step 3: Wait for DNS Propagation
+
+**If you used Option A (Name Servers):**
+- Changes can take **1-24 hours** (usually 1-2 hours)
+- Netlify will automatically set up all DNS records
+
+**If you used Option B (DNS Records):**
+- Changes can take **15 minutes to 48 hours** (usually 15-30 minutes)
 
 - DNS changes can take **5 minutes to 48 hours** to propagate
 - Usually takes **15-30 minutes**
