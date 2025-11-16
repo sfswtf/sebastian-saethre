@@ -17,7 +17,9 @@ ALTER TABLE onboarding_responses ENABLE ROW LEVEL SECURITY;
 
 -- Create policies
 CREATE POLICY "Anyone can submit an onboarding response"
-  ON onboarding_responses FOR INSERT
+  ON onboarding_responses 
+  FOR INSERT
+  TO authenticated, anon
   WITH CHECK (true);
 
 CREATE POLICY "Only admins can view onboarding responses"
