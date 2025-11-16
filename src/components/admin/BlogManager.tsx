@@ -169,7 +169,14 @@ export function BlogManager() {
       resetForm();
       fetchPosts();
     } catch (error: any) {
-      console.warn('Supabase save failed, using localStorage:', error);
+      console.error('Supabase save failed:', error);
+      console.error('Error details:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+      });
+      toast.error(`Supabase feilet: ${error.message || 'Ukjent feil'}. Bruker lokal lagring.`);
       // Fallback to localStorage
       try {
         const submitData: BlogPost = {
