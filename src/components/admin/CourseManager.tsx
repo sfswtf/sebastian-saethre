@@ -186,7 +186,7 @@ export function CourseManager() {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">{t('admin.courses')}</h2>
         <button
-          onClick={resetForm}
+          onClick={handleNewCourse}
           className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
         >
           {t('common.create')} {t('admin.courses')}

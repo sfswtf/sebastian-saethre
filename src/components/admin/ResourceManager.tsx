@@ -68,8 +68,18 @@ export function ResourceManager() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    
+    // Debug: Log current state
+    console.log('Submitting resource:', {
+      editingResource: editingResource?.id,
+      formData,
+      isEditing: !!editingResource?.id,
+    });
+    
     try {
       if (editingResource?.id) {
+        // Update existing resource
+        console.log('Updating resource:', editingResource.id);
         const { error } = await supabase
           .from('tools_resources')
           .update(formData)
@@ -77,12 +87,16 @@ export function ResourceManager() {
         if (error) throw error;
         toast.success('Ressurs oppdatert');
       } else {
+        // Insert new resource
+        console.log('Creating new resource');
         const { error } = await supabase
           .from('tools_resources')
           .insert([formData]);
         if (error) throw error;
         toast.success('Ressurs opprettet');
       }
+      
+      // Clear form and refresh
       resetForm();
       fetchResources();
     } catch (error: any) {
@@ -105,7 +119,10 @@ export function ResourceManager() {
   }
 
   function resetForm() {
+    // Clear editing state FIRST
+    console.log('Resetting resource form, clearing editingResource');
     setEditingResource(null);
+    // Then reset form data
     setFormData({
       name: '',
       description: '',
@@ -117,8 +134,25 @@ export function ResourceManager() {
   }
 
   function handleEdit(resource: Resource) {
+    // Set editing resource and form data
+    console.log('Editing resource:', resource.id);
     setEditingResource(resource);
-    setFormData(resource);
+    setFormData({
+      ...resource,
+      // Ensure all fields are set
+      name: resource.name || '',
+      description: resource.description || '',
+      category: resource.category || '',
+      affiliate_url: resource.affiliate_url || null,
+      rating: resource.rating || 5,
+      worth_it: resource.worth_it !== undefined ? resource.worth_it : true,
+    });
+  }
+  
+  function handleNewResource() {
+    // Explicitly clear editing state for new resource
+    console.log('Creating new resource');
+    resetForm();
   }
 
   async function handleDelete(id: string) {
@@ -154,7 +188,7 @@ export function ResourceManager() {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">{t('admin.resources')}</h2>
         <button
-          onClick={resetForm}
+          onClick={handleNewResource}
           className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
         >
           {t('common.create')} {t('admin.resources')}

@@ -29,7 +29,14 @@ export function PortfolioDetailPage() {
 
   useEffect(() => {
     const fetchProject = async () => {
+      if (!id) {
+        setLoading(false);
+        return;
+      }
+
       try {
+        console.log('Fetching portfolio project with ID:', id);
+        
         // Try Supabase first
         const { data, error } = await supabase
           .from('portfolio_projects')
@@ -37,34 +44,57 @@ export function PortfolioDetailPage() {
           .eq('id', id)
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Supabase error:', error);
+          throw error;
+        }
 
         if (data) {
+          console.log('Found project in Supabase:', data);
           setProject(data as PortfolioProject);
         } else {
+          console.log('No data from Supabase, trying localStorage');
           // Fallback to localStorage
           const allProjects = LocalStorageService.get<PortfolioProject>('portfolio_projects');
           const foundProject = allProjects.find(p => p.id === id);
-          setProject(foundProject || null);
+          if (foundProject) {
+            console.log('Found project in localStorage:', foundProject);
+            setProject(foundProject);
+          } else {
+            console.log('Project not found in localStorage either');
+            setProject(null);
+          }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.warn('Supabase fetch failed, using localStorage:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
+        });
+        
         // Fallback to localStorage
         try {
           const allProjects = LocalStorageService.get<PortfolioProject>('portfolio_projects');
           const foundProject = allProjects.find(p => p.id === id);
-          setProject(foundProject || null);
+          if (foundProject) {
+            console.log('Found project in localStorage fallback:', foundProject);
+            setProject(foundProject);
+          } else {
+            console.log('Project not found anywhere');
+            setProject(null);
+          }
         } catch (localError) {
           console.error('Error fetching portfolio project:', localError);
+          setProject(null);
         }
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) {
-      fetchProject();
-    }
+    fetchProject();
   }, [id]);
 
   if (loading) {

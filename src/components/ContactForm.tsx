@@ -23,13 +23,15 @@ export function ContactForm() {
     try {
       console.log('Submitting contact form:', formData);
       
+      // Don't send status - let database default handle it
+      // The DB might use 'unread' or enum type, so we let it default
       const { error } = await supabase
         .from('contact_messages')
         .insert([{
           name: formData.name,
           email: formData.email,
-          message: formData.message,
-          status: 'new'
+          message: formData.message
+          // status will use database default
         }]);
 
       if (error) {

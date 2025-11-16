@@ -97,8 +97,18 @@ export function PortfolioManager() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    
+    // Debug: Log current state
+    console.log('Submitting portfolio project:', {
+      editingProject: editingProject?.id,
+      formData,
+      isEditing: !!editingProject?.id,
+    });
+    
     try {
       if (editingProject?.id) {
+        // Update existing project
+        console.log('Updating portfolio project:', editingProject.id);
         const { error } = await supabase
           .from('portfolio_projects')
           .update(formData)
@@ -106,12 +116,16 @@ export function PortfolioManager() {
         if (error) throw error;
         toast.success('Prosjekt oppdatert');
       } else {
+        // Insert new project
+        console.log('Creating new portfolio project');
         const { error } = await supabase
           .from('portfolio_projects')
           .insert([formData]);
         if (error) throw error;
         toast.success('Prosjekt opprettet');
       }
+      
+      // Clear form and refresh
       resetForm();
       fetchProjects();
     } catch (error: any) {
@@ -134,7 +148,10 @@ export function PortfolioManager() {
   }
 
   function resetForm() {
+    // Clear editing state FIRST
+    console.log('Resetting portfolio form, clearing editingProject');
     setEditingProject(null);
+    // Then reset form data
     setFormData({
       title: '',
       description: '',
@@ -150,8 +167,27 @@ export function PortfolioManager() {
   }
 
   function handleEdit(project: PortfolioProject) {
+    // Set editing project and form data
+    console.log('Editing portfolio project:', project.id);
     setEditingProject(project);
-    setFormData(project);
+    setFormData({
+      ...project,
+      // Ensure all fields are set
+      title: project.title || '',
+      description: project.description || '',
+      category: project.category || '',
+      tech_stack: project.tech_stack || [],
+      image_urls: project.image_urls || [],
+      live_url: project.live_url || null,
+      github_url: project.github_url || null,
+      featured: project.featured || false,
+    });
+  }
+  
+  function handleNewProject() {
+    // Explicitly clear editing state for new project
+    console.log('Creating new portfolio project');
+    resetForm();
   }
 
   async function handleDelete(id: string) {
@@ -187,7 +223,7 @@ export function PortfolioManager() {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">{t('admin.portfolio')}</h2>
         <button
-          onClick={resetForm}
+          onClick={handleNewProject}
           className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
         >
           {t('common.create')} Prosjekt
