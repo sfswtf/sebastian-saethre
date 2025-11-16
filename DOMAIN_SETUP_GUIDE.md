@@ -85,9 +85,7 @@ Only use this if Option A doesn't work or you need custom DNS records.
 **If you used Option B (DNS Records):**
 - Changes can take **15 minutes to 48 hours** (usually 15-30 minutes)
 
-- DNS changes can take **5 minutes to 48 hours** to propagate
-- Usually takes **15-30 minutes**
-- You can check status in Netlify (it will show "Pending" then "Active")
+You can check status in Netlify (it will show "Pending" then "Active")
 
 ---
 
