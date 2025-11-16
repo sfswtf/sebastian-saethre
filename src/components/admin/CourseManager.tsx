@@ -69,8 +69,18 @@ export function CourseManager() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    
+    // Debug: Log current state
+    console.log('Submitting course:', {
+      editingCourse: editingCourse?.id,
+      formData,
+      isEditing: !!editingCourse?.id,
+    });
+    
     try {
       if (editingCourse?.id) {
+        // Update existing course
+        console.log('Updating course:', editingCourse.id);
         const { error } = await supabase
           .from('courses')
           .update(formData)
@@ -78,12 +88,16 @@ export function CourseManager() {
         if (error) throw error;
         toast.success('Kurs oppdatert');
       } else {
+        // Insert new course
+        console.log('Creating new course');
         const { error } = await supabase
           .from('courses')
           .insert([formData]);
         if (error) throw error;
         toast.success('Kurs opprettet');
       }
+      
+      // Clear form and refresh
       resetForm();
       fetchCourses();
     } catch (error: any) {
@@ -106,7 +120,9 @@ export function CourseManager() {
   }
 
   function resetForm() {
+    // Clear editing state FIRST
     setEditingCourse(null);
+    // Then reset form data
     setFormData({
       title: '',
       description: '',
@@ -118,8 +134,23 @@ export function CourseManager() {
   }
 
   function handleEdit(course: Course) {
+    // Set editing course and form data
     setEditingCourse(course);
-    setFormData(course);
+    setFormData({
+      ...course,
+      // Ensure all fields are set
+      title: course.title || '',
+      description: course.description || '',
+      price: course.price || 0,
+      currency: course.currency || 'NOK',
+      course_image: course.course_image || null,
+      status: course.status || 'draft',
+    });
+  }
+  
+  function handleNewCourse() {
+    // Explicitly clear editing state for new course
+    resetForm();
   }
 
   async function handleDelete(id: string) {
