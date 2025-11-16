@@ -34,6 +34,12 @@ export function ContactForm() {
 
       if (error) {
         console.error('Error submitting contact form:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
+        });
         throw error;
       }
 
