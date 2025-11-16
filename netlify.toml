@@ -1,6 +1,11 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  
+# Override Netlify's auto-detection (this is a Vite project, not Next.js)
+[build.environment]
+  NODE_VERSION = "18"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
 
 [[redirects]]
   from = "/*"
