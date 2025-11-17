@@ -165,9 +165,10 @@ export function ResourceDetailPage() {
             </div>
 
             <div className="prose prose-lg max-w-none mt-8">
-              <div className="text-neutral-700 leading-relaxed whitespace-pre-line">
-                {resource.description}
-              </div>
+              <div 
+                className="text-neutral-700 leading-relaxed article-content"
+                dangerouslySetInnerHTML={{ __html: resource.description }}
+              />
             </div>
 
             {resource.affiliate_url && (

@@ -110,75 +110,82 @@ export function BlogPage() {
             </p>
           </AnimatedCard>
         ) : (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
             {posts.map((post) => (
-              <AnimatedCard key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                {post.featured_image && (
-                  <img 
-                    src={post.featured_image} 
-                    alt={post.title}
-                    className="w-full h-48 object-cover"
-                  />
-                )}
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xs font-semibold text-brand-600 uppercase">{post.category}</span>
-                    {post.published_at && (
-                      <span className="text-xs text-neutral-500">
-                        {new Date(post.published_at).toLocaleDateString('no-NO')}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-neutral-900">{post.title}</h3>
-                  <p className="text-neutral-600 mb-4 line-clamp-3">
-                    {post.content.replace(/<[^>]*>/g, '').substring(0, 150)}...
-                  </p>
-                  {post.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {post.tags.slice(0, 3).map((tag, idx) => (
-                        <span key={idx} className="text-xs bg-neutral-100 text-neutral-600 px-2 py-1 rounded">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+              <Link
+                key={post.id}
+                to={`/blog/${post.slug}`}
+                className="block"
+              >
+                <AnimatedCard className="overflow-hidden hover:shadow-xl transition-all hover:scale-[1.01] flex flex-col h-full cursor-pointer group">
+                  {post.featured_image && (
+                    <img 
+                      src={post.featured_image} 
+                      alt={post.title}
+                      className="w-full h-56 object-cover"
+                    />
                   )}
-                  {post.affiliate_links && post.affiliate_links.length > 0 && (
-                    <div className="mb-4 pt-4 border-t border-neutral-200">
-                      <p className="text-xs font-semibold text-neutral-700 mb-2">{t('blog.relatedLinks')}:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {post.affiliate_links.map((link, idx) => (
-                          <a
-                            key={idx}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs bg-brand-50 text-brand-700 px-3 py-1.5 rounded-md hover:bg-brand-100 transition-colors"
-                          >
-                            {link.text}
-                            {link.isAffiliate && (
-                              <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-[10px]">{t('blog.affiliate')}</span>
-                            )}
-                            <ExternalLink size={12} />
-                          </a>
+                  <div className="p-8 flex flex-col flex-grow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-sm font-semibold text-brand-600 uppercase">{post.category}</span>
+                      {post.published_at && (
+                        <span className="text-sm text-neutral-500">
+                          {new Date(post.published_at).toLocaleDateString('no-NO')}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4 text-neutral-900 group-hover:text-brand-600 transition-colors">{post.title}</h3>
+                    <div 
+                      className="text-neutral-600 mb-6 line-clamp-4 flex-grow prose prose-sm max-w-none"
+                      dangerouslySetInnerHTML={{ __html: post.content.replace(/<[^>]*>/g, '').substring(0, 200) + '...' }}
+                    />
+                    {post.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {post.tags.slice(0, 4).map((tag, idx) => (
+                          <span key={idx} className="text-xs bg-neutral-100 text-neutral-600 px-3 py-1 rounded-full">
+                            {tag}
+                          </span>
                         ))}
                       </div>
-                    </div>
-                  )}
-                  <div className="flex items-center justify-between">
-                    <Link 
-                      to={`/blog/${post.slug}`}
-                      className="text-brand-600 hover:text-brand-700 font-semibold text-sm"
-                    >
-                      {t('blog.readMore')} →
-                    </Link>
-                    <Link to="/onboarding">
-                      <span className="text-xs text-neutral-500 hover:text-brand-600">
+                    )}
+                    {post.affiliate_links && post.affiliate_links.length > 0 && (
+                      <div className="mb-4 pt-4 border-t border-neutral-200">
+                        <p className="text-xs font-semibold text-neutral-700 mb-2">{t('blog.relatedLinks')}:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {post.affiliate_links.slice(0, 2).map((link, idx) => (
+                            <a
+                              key={idx}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center gap-1 text-xs bg-brand-50 text-brand-700 px-3 py-1.5 rounded-md hover:bg-brand-100 transition-colors"
+                            >
+                              {link.text}
+                              {link.isAffiliate && (
+                                <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-[10px]">{t('blog.affiliate')}</span>
+                              )}
+                              <ExternalLink size={12} />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between pt-4 border-t border-neutral-200 mt-auto">
+                      <Link 
+                        to="/onboarding"
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-xs text-neutral-500 hover:text-brand-600"
+                      >
                         {t('blog.needHelp')} →
+                      </Link>
+                      <span className="inline-flex items-center gap-2 text-brand-600 group-hover:text-brand-700 font-semibold text-base">
+                        {t('blog.readMore')} →
                       </span>
-                    </Link>
+                    </div>
                   </div>
-                </div>
-              </AnimatedCard>
+                </AnimatedCard>
+              </Link>
             ))}
           </div>
         )}

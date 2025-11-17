@@ -112,68 +112,73 @@ export function PortfolioPage() {
             </p>
           </AnimatedCard>
         ) : (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
             {projects.map((project) => (
-              <AnimatedCard key={project.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                {project.image_urls && project.image_urls.length > 0 && (
-                  <img 
-                    src={project.image_urls[0]} 
-                    alt={project.title}
-                    className="w-full h-48 object-cover"
-                  />
-                )}
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xs font-semibold text-brand-600 uppercase">{project.category}</span>
-                    {project.featured && (
-                      <span className="text-xs bg-brand-100 text-brand-700 px-2 py-1 rounded">{t('portfolio.featured')}</span>
-                    )}
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-neutral-900">{project.title}</h3>
-                  <p className="text-neutral-600 mb-4 line-clamp-3">
-                    {project.description}
-                  </p>
-                  {project.tech_stack.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tech_stack.slice(0, 4).map((tech, idx) => (
-                        <span key={idx} className="text-xs bg-neutral-100 text-neutral-600 px-2 py-1 rounded">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
+              <Link
+                key={project.id}
+                to={project.id ? `/portfolio/${project.id}` : '#'}
+                className="block"
+              >
+                <AnimatedCard className="overflow-hidden hover:shadow-xl transition-all hover:scale-[1.01] flex flex-col h-full cursor-pointer group">
+                  {project.image_urls && project.image_urls.length > 0 && (
+                    <img 
+                      src={project.image_urls[0]} 
+                      alt={project.title}
+                      className="w-full h-56 object-cover"
+                    />
                   )}
-                  <div className="flex items-center justify-between pt-4 border-t border-neutral-200">
-                    <div className="flex gap-4">
-                      {project.live_url && (
-                        <a 
-                          href={project.live_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-brand-600 hover:text-brand-700 font-semibold text-sm"
-                        >
-                          {t('portfolio.liveDemo')} →
-                        </a>
-                      )}
-                      {project.github_url && (
-                        <a 
-                          href={project.github_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-neutral-600 hover:text-neutral-700 font-semibold text-sm"
-                        >
-                          {t('portfolio.github')} →
-                        </a>
+                  <div className="p-8 flex flex-col flex-grow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-sm font-semibold text-brand-600 uppercase">{project.category}</span>
+                      {project.featured && (
+                        <span className="text-sm bg-brand-100 text-brand-700 px-3 py-1 rounded-full">{t('portfolio.featured')}</span>
                       )}
                     </div>
-                    <Link
-                      to={`/portfolio/${project.id}`}
-                      className="text-brand-600 hover:text-brand-700 font-semibold text-sm"
-                    >
-                      {t('portfolio.viewDetails')} →
-                    </Link>
+                    <h3 className="text-2xl font-bold mb-4 text-neutral-900 group-hover:text-brand-600 transition-colors">{project.title}</h3>
+                    <p className="text-neutral-600 mb-6 line-clamp-4 flex-grow">
+                      {project.description}
+                    </p>
+                    {project.tech_stack.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {project.tech_stack.slice(0, 5).map((tech, idx) => (
+                          <span key={idx} className="text-xs bg-neutral-100 text-neutral-600 px-3 py-1 rounded-full">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between pt-4 border-t border-neutral-200 mt-auto">
+                      <div className="flex gap-4">
+                        {project.live_url && (
+                          <a 
+                            href={project.live_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-brand-600 hover:text-brand-700 font-semibold text-sm"
+                          >
+                            {t('portfolio.liveDemo')} →
+                          </a>
+                        )}
+                        {project.github_url && (
+                          <a 
+                            href={project.github_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-neutral-600 hover:text-neutral-700 font-semibold text-sm"
+                          >
+                            {t('portfolio.github')} →
+                          </a>
+                        )}
+                      </div>
+                      <span className="inline-flex items-center gap-2 text-brand-600 group-hover:text-brand-700 font-semibold text-base">
+                        {t('portfolio.viewDetails')} →
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </AnimatedCard>
+                </AnimatedCard>
+              </Link>
             ))}
           </div>
         )}

@@ -23,7 +23,6 @@ export function ResourcesPage() {
   const { t } = useLanguageStore();
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   useEffect(() => {
     const fetchResources = async () => {
@@ -62,10 +61,8 @@ export function ResourcesPage() {
     fetchResources();
   }, []);
 
-  const categories = Array.from(new Set(resources.map(r => r.category)));
-  const filteredResources = selectedCategory === 'all' 
-    ? resources 
-    : resources.filter(r => r.category === selectedCategory);
+  // Removed category filtering - show all resources
+  const filteredResources = resources;
 
   if (loading) {
     return (
@@ -90,34 +87,6 @@ export function ResourcesPage() {
             delay={0.2}
           />
         </div>
-
-        {categories.length > 0 && (
-          <div className="flex flex-wrap gap-2 justify-center mb-8">
-            <button
-              onClick={() => setSelectedCategory('all')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                selectedCategory === 'all'
-                  ? 'bg-brand-600 text-white'
-                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-              }`}
-            >
-              {t('resources.all')}
-            </button>
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  selectedCategory === category
-                    ? 'bg-brand-600 text-white'
-                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        )}
         
         {filteredResources.length === 0 ? (
           <AnimatedCard className="p-12 text-center">
@@ -126,55 +95,44 @@ export function ResourcesPage() {
             </p>
           </AnimatedCard>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
             {filteredResources.map((resource) => (
-              <AnimatedCard key={resource.id} className="p-6 hover:shadow-lg transition-all hover:scale-[1.02] flex flex-col">
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-xl font-bold text-neutral-900 flex-1">{resource.name}</h3>
-                  {resource.worth_it && (
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-semibold whitespace-nowrap ml-2">
-                      {t('resources.worthIt')}
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center gap-1 mb-3">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={16}
-                      className={i < resource.rating ? 'fill-yellow-400 text-yellow-400' : 'text-neutral-300'}
-                    />
-                  ))}
-                  <span className="ml-2 text-sm text-neutral-600 font-medium">{resource.rating}/5</span>
-                </div>
-                <p className="text-neutral-600 mb-4 line-clamp-3 flex-grow">
-                  {resource.description}
-                </p>
-                <div className="flex items-center justify-between pt-4 border-t border-neutral-200 mt-auto">
-                  <span className="text-xs font-semibold text-brand-600 uppercase">{resource.category}</span>
-                  <div className="flex items-center gap-2">
-                    {resource.id && (
-                      <Link
-                        to={`/resources/${resource.id}`}
-                        className="inline-flex items-center gap-1 text-brand-600 hover:text-brand-700 font-semibold text-sm"
-                      >
-                        {t('resources.readMore')}
-                      </Link>
-                    )}
-                    {resource.affiliate_url && (
-                      <a
-                        href={resource.affiliate_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors font-semibold text-sm"
-                      >
-                        {t('resources.visit')}
-                        <ExternalLink size={14} />
-                      </a>
+              <Link
+                key={resource.id}
+                to={resource.id ? `/resources/${resource.id}` : '#'}
+                className="block"
+              >
+                <AnimatedCard className="p-8 hover:shadow-xl transition-all hover:scale-[1.01] flex flex-col h-full cursor-pointer group">
+                  <div className="flex items-start justify-between mb-4">
+                    <h3 className="text-2xl font-bold text-neutral-900 flex-1 group-hover:text-brand-600 transition-colors">{resource.name}</h3>
+                    {resource.worth_it && (
+                      <span className="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold whitespace-nowrap ml-3">
+                        {t('resources.worthIt')}
+                      </span>
                     )}
                   </div>
-                </div>
-              </AnimatedCard>
+                  <div className="flex items-center gap-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={20}
+                        className={i < resource.rating ? 'fill-yellow-400 text-yellow-400' : 'text-neutral-300'}
+                      />
+                    ))}
+                    <span className="ml-2 text-base text-neutral-600 font-semibold">{resource.rating}/5</span>
+                  </div>
+                  <div 
+                    className="text-neutral-600 mb-6 line-clamp-4 flex-grow prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: resource.description.replace(/\n/g, '<br />') }}
+                  />
+                  <div className="flex items-center justify-between pt-4 border-t border-neutral-200 mt-auto">
+                    <span className="text-sm font-semibold text-brand-600 uppercase tracking-wide">{resource.category}</span>
+                    <span className="inline-flex items-center gap-2 text-brand-600 group-hover:text-brand-700 font-semibold text-base">
+                      {t('resources.readMore')} →
+                    </span>
+                  </div>
+                </AnimatedCard>
+              </Link>
             ))}
           </div>
         )}

@@ -97,48 +97,52 @@ export function CoursesPage() {
             </p>
           </AnimatedCard>
         ) : (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
             {courses.map((course) => (
-              <AnimatedCard key={course.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                {course.course_image && (
-                  <img 
-                    src={course.course_image} 
-                    alt={course.title}
-                    className="w-full h-48 object-cover"
-                  />
-                )}
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2 text-neutral-900">{course.title}</h3>
-                  <p className="text-neutral-600 mb-4 line-clamp-3">
-                    {course.description}
-                  </p>
-                  <div className="flex items-center gap-4 mb-4 text-sm text-neutral-500">
-                    {(course as any).duration && (
-                      <div className="flex items-center gap-1">
-                        <Clock size={14} />
-                        <span>{(course as any).duration}</span>
-                      </div>
-                    )}
-                    {(course as any).lessons && (
-                      <div className="flex items-center gap-1">
-                        <Users size={14} />
-                        <span>{(course as any).lessons} {t('courses.lessons')}</span>
-                      </div>
-                    )}
+              <Link
+                key={course.id}
+                to={`/courses/${course.id}`}
+                className="block"
+              >
+                <AnimatedCard className="overflow-hidden hover:shadow-xl transition-all hover:scale-[1.01] flex flex-col h-full cursor-pointer group">
+                  {course.course_image && (
+                    <img 
+                      src={course.course_image} 
+                      alt={course.title}
+                      className="w-full h-56 object-cover"
+                    />
+                  )}
+                  <div className="p-8 flex flex-col flex-grow">
+                    <h3 className="text-2xl font-bold mb-4 text-neutral-900 group-hover:text-brand-600 transition-colors">{course.title}</h3>
+                    <div 
+                      className="text-neutral-600 mb-6 line-clamp-4 flex-grow prose prose-sm max-w-none"
+                      dangerouslySetInnerHTML={{ __html: course.description }}
+                    />
+                    <div className="flex items-center gap-6 mb-6 text-sm text-neutral-500">
+                      {(course as any).duration && (
+                        <div className="flex items-center gap-2">
+                          <Clock size={16} />
+                          <span>{(course as any).duration}</span>
+                        </div>
+                      )}
+                      {(course as any).lessons && (
+                        <div className="flex items-center gap-2">
+                          <Users size={16} />
+                          <span>{(course as any).lessons} {t('courses.lessons')}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between pt-4 border-t border-neutral-200 mt-auto">
+                      <span className="text-2xl font-bold text-brand-600">
+                        {course.price === 0 ? t('courses.free') : `${course.price} ${course.currency}`}
+                      </span>
+                      <span className="inline-flex items-center gap-2 text-brand-600 group-hover:text-brand-700 font-semibold text-base">
+                        {t('courses.viewCourse')} →
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between pt-4 border-t border-neutral-200">
-                    <span className="text-2xl font-bold text-brand-600">
-                      {course.price === 0 ? t('courses.free') : `${course.price} ${course.currency}`}
-                    </span>
-                    <Link 
-                      to={`/courses/${course.id}`}
-                      className="bg-brand-600 text-white px-6 py-2 rounded-lg hover:bg-brand-700 transition-colors font-semibold"
-                    >
-                      {t('courses.viewCourse')}
-                    </Link>
-                  </div>
-                </div>
-              </AnimatedCard>
+                </AnimatedCard>
+              </Link>
             ))}
           </div>
         )}
