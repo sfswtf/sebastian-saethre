@@ -151,17 +151,27 @@ export function ResourcesPage() {
                 </p>
                 <div className="flex items-center justify-between pt-4 border-t border-neutral-200 mt-auto">
                   <span className="text-xs font-semibold text-brand-600 uppercase">{resource.category}</span>
-                  {resource.affiliate_url && (
-                    <a
-                      href={resource.affiliate_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors font-semibold text-sm"
-                    >
-                      {t('resources.visit')}
-                      <ExternalLink size={14} />
-                    </a>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {resource.id && (
+                      <Link
+                        to={`/resources/${resource.id}`}
+                        className="inline-flex items-center gap-1 text-brand-600 hover:text-brand-700 font-semibold text-sm"
+                      >
+                        {t('resources.readMore')}
+                      </Link>
+                    )}
+                    {resource.affiliate_url && (
+                      <a
+                        href={resource.affiliate_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors font-semibold text-sm"
+                      >
+                        {t('resources.visit')}
+                        <ExternalLink size={14} />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </AnimatedCard>
             ))}

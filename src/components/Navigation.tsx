@@ -125,11 +125,19 @@ export function Navigation() {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div 
-          className="md:hidden fixed inset-x-0 top-20 bg-black/98 backdrop-blur-md border-b border-white/10 shadow-xl z-40"
-          role="menu"
-        >
-          <div className="px-4 pt-6 pb-8 space-y-1">
+        <>
+          {/* Backdrop overlay */}
+          <div 
+            className="md:hidden fixed inset-0 bg-black/60 z-30"
+            onClick={() => setIsOpen(false)}
+            aria-hidden="true"
+          />
+          {/* Menu */}
+          <div 
+            className="md:hidden fixed inset-x-0 top-20 bg-neutral-900 border-b border-neutral-700 shadow-xl z-40"
+            role="menu"
+          >
+            <div className="px-4 pt-6 pb-8 space-y-1">
             {navLinks.map(({ path, key }) => (
               <Link
                 key={path}
@@ -161,6 +169,7 @@ export function Navigation() {
             </Link>
           </div>
         </div>
+        </>
       )}
     </motion.nav>
   );

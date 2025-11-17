@@ -50,7 +50,7 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
         {videoUrl && !videoEnded && (
           <video
             ref={videoRef}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain sm:object-contain md:object-cover"
             playsInline
             muted
             onEnded={handleVideoEnd}

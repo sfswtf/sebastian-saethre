@@ -6,19 +6,84 @@ import { AnimatedButton } from './animations/AnimatedButton';
 import { useLanguageStore } from '../stores/languageStore';
 import { Users, Mail, MessageCircle, BookOpen, Gift } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
+import { toast } from 'react-hot-toast';
+import { LocalStorageService } from '../lib/localStorage';
 
 export function CommunityPage() {
   const { t } = useLanguageStore();
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would send to an API
-    console.log('Newsletter signup:', email);
-    setSubmitted(true);
-    setEmail('');
-    setTimeout(() => setSubmitted(false), 3000);
+    setIsSubmitting(true);
+
+    try {
+      // Try Supabase first
+      const { error } = await supabase
+        .from('newsletter_subscriptions')
+        .insert([
+          {
+            email: email.trim().toLowerCase(),
+            status: 'subscribed',
+          },
+        ]);
+
+      if (error) {
+        // If email already exists, that's okay - they're already subscribed
+        if (error.code === '23505') {
+          toast.success('You are already subscribed!');
+          setSubmitted(true);
+          setEmail('');
+          setTimeout(() => setSubmitted(false), 3000);
+          setIsSubmitting(false);
+          return;
+        }
+        
+        console.error('Supabase insert failed:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
+        });
+        
+        // Fallback to localStorage
+        LocalStorageService.add('newsletter_subscriptions', {
+          email: email.trim().toLowerCase(),
+          status: 'subscribed',
+          created_at: new Date().toISOString(),
+        });
+        toast.success('Subscribed! (Saved locally)');
+      } else {
+        toast.success('Thank you for subscribing!');
+      }
+
+      setSubmitted(true);
+      setEmail('');
+      setTimeout(() => setSubmitted(false), 3000);
+    } catch (error: any) {
+      console.error('Error subscribing to newsletter:', error);
+      // Fallback to localStorage
+      try {
+        LocalStorageService.add('newsletter_subscriptions', {
+          email: email.trim().toLowerCase(),
+          status: 'subscribed',
+          created_at: new Date().toISOString(),
+        });
+        toast.success('Subscribed! (Saved locally)');
+        setSubmitted(true);
+        setEmail('');
+        setTimeout(() => setSubmitted(false), 3000);
+      } catch (localError) {
+        console.error('Error saving to localStorage:', localError);
+        toast.error('Sorry, something went wrong. Please try again later.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const communityFeatures = [
@@ -78,21 +143,23 @@ export function CommunityPage() {
                 Thank you for subscribing! Check your email to confirm.
               </div>
             ) : (
-              <form onSubmit={handleNewsletterSubmit} className="flex gap-3 max-w-md mx-auto">
+              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="flex-1 px-4 py-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                  disabled={isSubmitting}
+                  className="flex-1 px-4 py-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50"
                 />
                 <AnimatedButton
                   type="submit"
                   variant="primary"
-                  className="bg-brand-600 text-white hover:bg-brand-700 px-6"
+                  disabled={isSubmitting}
+                  className="bg-brand-600 text-white hover:bg-brand-700 px-6 disabled:opacity-50"
                 >
-                  Subscribe
+                  {isSubmitting ? 'Subscribing...' : 'Subscribe'}
                 </AnimatedButton>
               </form>
             )}
@@ -131,11 +198,11 @@ export function CommunityPage() {
         </div>
 
         {/* CTA Section */}
-        <AnimatedCard className="p-8 bg-brand-600 text-white text-center">
-          <h2 className="text-3xl font-bold mb-4">
+        <AnimatedCard className="p-8 bg-brand-600 text-center">
+          <h2 className="text-3xl font-bold mb-4 text-white">
             Ready to Join?
           </h2>
-          <p className="text-brand-100 mb-6 text-lg">
+          <p className="text-white/90 mb-6 text-lg">
             Start your AI journey today and connect with a community of like-minded individuals.
           </p>
           <Link to="/onboarding">
