@@ -22,9 +22,13 @@ export function OnboardingForm() {
     phone: '',
     consent: false,
   });
+  const [currentUsageOptions, setCurrentUsageOptions] = useState<string[]>([]);
+  const [painPointsOptions, setPainPointsOptions] = useState<string[]>([]);
 
   const personalGoals = t('onboarding.step2.personal.goals').split(',').map(g => g.trim());
   const professionalGoals = t('onboarding.step2.professional.goals').split(',').map(g => g.trim());
+  const currentUsageOptionsList = t('onboarding.step3.options').split(',').map(o => o.trim());
+  const painPointsOptionsList = t('onboarding.step4.options').split(',').map(o => o.trim());
 
   const handleNext = () => {
     if (currentStep < 5) {
@@ -68,9 +72,9 @@ export function OnboardingForm() {
       case 2:
         return formData.goals.length > 0;
       case 3:
-        return formData.current_usage.trim() !== '';
+        return currentUsageOptions.length > 0 || formData.current_usage.trim() !== '';
       case 4:
-        return formData.pain_points.trim() !== '';
+        return painPointsOptions.length > 0 || formData.pain_points.trim() !== '';
       case 5:
         return formData.name.trim() !== '' && formData.email.trim() !== '' && formData.consent;
       default:
@@ -198,13 +202,43 @@ export function OnboardingForm() {
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
                 {t('onboarding.step3.title')}
               </h3>
-              <textarea
-                value={formData.current_usage}
-                onChange={(e) => setFormData({ ...formData, current_usage: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-brand-500 focus:border-brand-500"
-                rows={6}
-                placeholder={t('onboarding.step3.placeholder')}
-              />
+              <div className="space-y-2 mb-4">
+                {currentUsageOptionsList.map((option) => (
+                  <label
+                    key={option}
+                    className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-brand-400 transition-colors"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={currentUsageOptions.includes(option)}
+                      onChange={() => {
+                        const updated = currentUsageOptions.includes(option)
+                          ? currentUsageOptions.filter(o => o !== option)
+                          : [...currentUsageOptions, option];
+                        setCurrentUsageOptions(updated);
+                        // Only update if textarea is empty, otherwise keep user's text
+                        if (!formData.current_usage.trim()) {
+                          setFormData({ ...formData, current_usage: updated.join(', ') });
+                        }
+                      }}
+                      className="mr-3 w-4 h-4 text-brand-600 focus:ring-brand-500"
+                    />
+                    <span className="text-gray-700">{option}</span>
+                  </label>
+                ))}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('onboarding.step3.elaborate')}
+                </label>
+                <textarea
+                  value={formData.current_usage}
+                  onChange={(e) => setFormData({ ...formData, current_usage: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-brand-500 focus:border-brand-500"
+                  rows={4}
+                  placeholder={t('onboarding.step3.placeholder')}
+                />
+              </div>
             </motion.div>
           )}
 
@@ -222,13 +256,43 @@ export function OnboardingForm() {
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
                 {t('onboarding.step4.title')}
               </h3>
-              <textarea
-                value={formData.pain_points}
-                onChange={(e) => setFormData({ ...formData, pain_points: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-brand-500 focus:border-brand-500"
-                rows={6}
-                placeholder={t('onboarding.step4.placeholder')}
-              />
+              <div className="space-y-2 mb-4">
+                {painPointsOptionsList.map((option) => (
+                  <label
+                    key={option}
+                    className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-brand-400 transition-colors"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={painPointsOptions.includes(option)}
+                      onChange={() => {
+                        const updated = painPointsOptions.includes(option)
+                          ? painPointsOptions.filter(o => o !== option)
+                          : [...painPointsOptions, option];
+                        setPainPointsOptions(updated);
+                        // Only update if textarea is empty, otherwise keep user's text
+                        if (!formData.pain_points.trim()) {
+                          setFormData({ ...formData, pain_points: updated.join(', ') });
+                        }
+                      }}
+                      className="mr-3 w-4 h-4 text-brand-600 focus:ring-brand-500"
+                    />
+                    <span className="text-gray-700">{option}</span>
+                  </label>
+                ))}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('onboarding.step4.elaborate')}
+                </label>
+                <textarea
+                  value={formData.pain_points}
+                  onChange={(e) => setFormData({ ...formData, pain_points: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-brand-500 focus:border-brand-500"
+                  rows={4}
+                  placeholder={t('onboarding.step4.placeholder')}
+                />
+              </div>
             </motion.div>
           )}
 
@@ -341,7 +405,7 @@ export function OnboardingForm() {
               {isSubmitting ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                  <span>Sending...</span>
+                  <span>{t('onboarding.sending')}</span>
                 </>
               ) : (
                 t('common.submit')

@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast';
 import { useLanguageStore } from '../../stores/languageStore';
 import { LocalStorageService } from '../../lib/localStorage';
 import { supabase } from '../../lib/supabase';
+import { RichTextEditor } from './RichTextEditor';
 
 interface AffiliateLink {
   text: string;
@@ -314,13 +315,11 @@ export function BlogManager() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Innhold (Markdown)</label>
-          <textarea
+          <label className="block text-sm font-medium mb-1">Innhold</label>
+          <RichTextEditor
             value={formData.content}
-            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-            rows={10}
-            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary-600 font-mono text-sm"
-            required
+            onChange={(value) => setFormData({ ...formData, content: value })}
+            placeholder="Skriv inn innholdet her..."
           />
         </div>
 

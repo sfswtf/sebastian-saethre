@@ -34,7 +34,7 @@ export function CommunityPage() {
       if (error) {
         // If email already exists, that's okay - they're already subscribed
         if (error.code === '23505') {
-          toast.success('You are already subscribed!');
+          toast.success(t('community.alreadySubscribed'));
           setSubmitted(true);
           setEmail('');
           setTimeout(() => setSubmitted(false), 3000);
@@ -56,9 +56,9 @@ export function CommunityPage() {
           status: 'subscribed',
           created_at: new Date().toISOString(),
         });
-        toast.success('Subscribed! (Saved locally)');
+        toast.success(t('community.subscribedLocal'));
       } else {
-        toast.success('Thank you for subscribing!');
+        toast.success(t('community.thankYouSubscribed'));
       }
 
       setSubmitted(true);
@@ -73,13 +73,13 @@ export function CommunityPage() {
           status: 'subscribed',
           created_at: new Date().toISOString(),
         });
-        toast.success('Subscribed! (Saved locally)');
+        toast.success(t('community.subscribedLocal'));
         setSubmitted(true);
         setEmail('');
         setTimeout(() => setSubmitted(false), 3000);
       } catch (localError) {
         console.error('Error saving to localStorage:', localError);
-        toast.error('Sorry, something went wrong. Please try again later.');
+        toast.error(t('community.sorryError'));
       }
     } finally {
       setIsSubmitting(false);
@@ -98,31 +98,31 @@ export function CommunityPage() {
     {
       icon: null,
       iconImage: '/images/discord.png',
-      title: 'Discord Community',
-      description: 'Join our Discord server for real-time discussions, Q&A sessions, and networking with other AI enthusiasts.',
-      action: 'Join Discord',
+      title: t('community.discordTitle'),
+      description: t('community.discordDesc'),
+      action: t('community.joinDiscord'),
       link: 'https://discord.gg/8zftytYdZF',
       external: true,
     },
     {
       icon: Mail,
-      title: 'Newsletter',
-      description: 'Get weekly updates on AI tools, tutorials, and industry insights delivered to your inbox.',
-      action: 'Subscribe',
+      title: t('community.newsletterTitle'),
+      description: t('community.newsletterDesc'),
+      action: t('community.subscribe'),
       link: '#',
     },
     {
       icon: BookOpen,
-      title: 'Free Courses',
-      description: 'Access our collection of free AI courses and tutorials to level up your skills.',
-      action: 'Browse Courses',
+      title: t('community.freeCoursesTitle'),
+      description: t('community.freeCoursesDesc'),
+      action: t('community.browseCourses'),
       link: '/courses',
     },
     {
       icon: Gift,
-      title: 'Exclusive Resources',
-      description: 'Get early access to new tools, templates, and resources before they\'re publicly available.',
-      action: 'Learn More',
+      title: t('community.exclusiveTitle'),
+      description: t('community.exclusiveDesc'),
+      action: t('community.learnMore'),
       link: '/resources',
     },
   ];
@@ -143,14 +143,14 @@ export function CommunityPage() {
         <AnimatedCard className="p-8 mb-12 bg-gradient-to-r from-brand-50 to-brand-100 border-2 border-brand-200">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl font-bold text-neutral-900 mb-3">
-              Stay Updated
+              {t('community.stayUpdated')}
             </h2>
             <p className="text-neutral-700 mb-6">
-              Subscribe to our newsletter for the latest AI insights, tool reviews, and exclusive content.
+              {t('community.newsletterDesc')}
             </p>
             {submitted ? (
               <div className="bg-green-100 text-green-700 px-6 py-3 rounded-lg">
-                Thank you for subscribing! Check your email to confirm.
+                {t('community.thankYouSubscribed')}
               </div>
             ) : (
               <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
@@ -158,7 +158,7 @@ export function CommunityPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder={t('community.enterEmail')}
                   required
                   disabled={isSubmitting}
                   className="flex-1 px-4 py-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50"
@@ -169,7 +169,7 @@ export function CommunityPage() {
                   disabled={isSubmitting}
                   className="bg-brand-600 text-white hover:bg-brand-700 px-6 disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+                  {isSubmitting ? t('community.subscribing') : t('community.subscribe')}
                 </AnimatedButton>
               </form>
             )}
@@ -226,17 +226,17 @@ export function CommunityPage() {
         {/* CTA Section */}
         <AnimatedCard className="p-8 bg-brand-600 text-center">
           <h2 className="text-3xl font-bold mb-4 text-white">
-            Ready to Join?
+            {t('community.readyToJoin')}
           </h2>
           <p className="text-white/90 mb-6 text-lg">
-            Start your AI journey today and connect with a community of like-minded individuals.
+            {t('community.joinMessage')}
           </p>
           <Link to="/onboarding">
             <AnimatedButton
               variant="secondary"
               className="bg-white text-brand-600 hover:bg-neutral-100 px-8 py-3"
             >
-              Get Started
+              {t('community.getStarted')}
             </AnimatedButton>
           </Link>
         </AnimatedCard>

@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast';
 import { useLanguageStore } from '../../stores/languageStore';
 import { LocalStorageService } from '../../lib/localStorage';
 import { supabase } from '../../lib/supabase';
+import { RichTextEditor } from './RichTextEditor';
 
 interface Course {
   id?: string;
@@ -207,12 +208,10 @@ export function CourseManager() {
 
         <div>
           <label className="block text-sm font-medium mb-1">Beskrivelse</label>
-          <textarea
+          <RichTextEditor
             value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            rows={6}
-            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary-600"
-            required
+            onChange={(value) => setFormData({ ...formData, description: value })}
+            placeholder="Beskriv kurset..."
           />
         </div>
 
