@@ -222,6 +222,7 @@ export function CommunityPage() {
               </AnimatedCard>
             );
           })}
+        </div>
 
         {/* CTA Section */}
         <AnimatedCard className="p-8 bg-brand-600 text-center">
