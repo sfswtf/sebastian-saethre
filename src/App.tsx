@@ -27,7 +27,6 @@ const ServicesPage = lazy(() => import('./components/ServicesPage').then(m => ({
 const BlogPostDetailPage = lazy(() => import('./components/BlogPostDetailPage').then(m => ({ default: m.BlogPostDetailPage })));
 const CourseDetailPage = lazy(() => import('./components/CourseDetailPage').then(m => ({ default: m.CourseDetailPage })));
 const PortfolioDetailPage = lazy(() => import('./components/PortfolioDetailPage').then(m => ({ default: m.PortfolioDetailPage })));
-const ResourceDetailPage = lazy(() => import('./components/ResourceDetailPage').then(m => ({ default: m.ResourceDetailPage })));
 
 function App() {
   const { t } = useLanguageStore();
@@ -52,7 +51,6 @@ function App() {
               <Route path="/courses" element={<CoursesPage />} />
               <Route path="/courses/:id" element={<CourseDetailPage />} />
               <Route path="/resources" element={<ResourcesPage />} />
-              <Route path="/resources/:id" element={<ResourceDetailPage />} />
               <Route path="/community" element={<CommunityPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/onboarding" element={<OnboardingPage />} />

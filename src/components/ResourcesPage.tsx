@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { AnimatedSection } from './animations/AnimatedSection';
 import { AnimatedCard } from './animations/AnimatedCard';
 import { AnimatedText } from './animations/AnimatedText';

@@ -4,7 +4,7 @@ import { AnimatedCard } from './animations/AnimatedCard';
 import { AnimatedText } from './animations/AnimatedText';
 import { AnimatedButton } from './animations/AnimatedButton';
 import { useLanguageStore } from '../stores/languageStore';
-import { Users, Mail, MessageCircle, BookOpen, Gift } from 'lucide-react';
+import { Users, Mail, BookOpen, Gift } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { toast } from 'react-hot-toast';
@@ -86,13 +86,23 @@ export function CommunityPage() {
     }
   };
 
-  const communityFeatures = [
+  const communityFeatures: Array<{
+    icon: React.ComponentType<{ className?: string; size?: number }> | null;
+    iconImage?: string;
+    title: string;
+    description: string;
+    action: string;
+    link: string;
+    external?: boolean;
+  }> = [
     {
-      icon: MessageCircle,
+      icon: null,
+      iconImage: '/images/discord.png',
       title: 'Discord Community',
       description: 'Join our Discord server for real-time discussions, Q&A sessions, and networking with other AI enthusiasts.',
       action: 'Join Discord',
-      link: '#', // Replace with actual Discord link
+      link: 'https://discord.gg/8zftytYdZF',
+      external: true,
     },
     {
       icon: Mail,
@@ -174,7 +184,15 @@ export function CommunityPage() {
               <AnimatedCard key={index} className="p-8 hover:shadow-xl transition-shadow">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center justify-center w-16 h-16 bg-brand-100 rounded-full">
-                    <IconComponent className="text-brand-600" size={28} />
+                    {feature.iconImage ? (
+                      <img 
+                        src={feature.iconImage} 
+                        alt={feature.title}
+                        className="w-10 h-10 object-contain"
+                      />
+                    ) : (
+                      IconComponent && <IconComponent className="text-brand-600" size={28} />
+                    )}
                   </div>
                   <h3 className="text-2xl font-bold text-neutral-900">
                     {feature.title}
@@ -183,7 +201,16 @@ export function CommunityPage() {
                 <p className="text-neutral-600 mb-6 leading-relaxed">
                   {feature.description}
                 </p>
-                {feature.link === '#' ? (
+                {feature.external ? (
+                  <a 
+                    href={feature.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-brand-600 hover:text-brand-700 font-semibold"
+                  >
+                    {feature.action} →
+                  </a>
+                ) : feature.link === '#' ? (
                   <button className="text-brand-600 hover:text-brand-700 font-semibold">
                     {feature.action} →
                   </button>
@@ -195,7 +222,6 @@ export function CommunityPage() {
               </AnimatedCard>
             );
           })}
-        </div>
 
         {/* CTA Section */}
         <AnimatedCard className="p-8 bg-brand-600 text-center">
