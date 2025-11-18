@@ -142,6 +142,8 @@ const translations: Record<Language, Record<string, string>> = {
     'onboarding.step4.options': 'Jeg vet ikke hvor jeg skal starte, Jeg vil spare tid, Jeg vil være mer kreativ, Jeg vil automatisere oppgaver, Jeg vil lære nye ferdigheter, Jeg vil forbedre arbeidet mitt',
     'onboarding.step4.elaborate': 'Fortell oss mer (valgfritt)',
     'onboarding.step5.title': 'Kontaktinformasjon',
+    'onboarding.step5.companyName': 'Firmanavn',
+    'onboarding.step5.industry': 'Bransje',
     'onboarding.consent': 'Jeg samtykker til at mine data kan brukes til oppfølging',
     'onboarding.sending': 'Sender...',
     'onboarding.thanks.title': 'Takk for din interesse!',
@@ -358,6 +360,8 @@ const translations: Record<Language, Record<string, string>> = {
     'onboarding.step4.options': 'I don\'t know where to start, I want to save time, I want to be more creative, I want to automate tasks, I want to learn new skills, I want to improve my work',
     'onboarding.step4.elaborate': 'Tell us more (optional)',
     'onboarding.step5.title': 'Contact Information',
+    'onboarding.step5.companyName': 'Company Name',
+    'onboarding.step5.industry': 'Industry',
     'onboarding.consent': 'I consent to my data being used for follow-up',
     'onboarding.sending': 'Sending...',
     'onboarding.thanks.title': 'Thank you for your interest!',
@@ -457,6 +461,27 @@ const getStoredLanguage = (): Language => {
     }
   }
   return 'no';
+};
+
+// Detect language based on IP/geolocation (async)
+export const detectLanguageFromLocation = async (): Promise<Language> => {
+  try {
+    // Use a free geolocation API to detect country
+    const response = await fetch('https://ipapi.co/json/', { 
+      method: 'GET',
+      headers: { 'Accept': 'application/json' }
+    });
+    const data = await response.json();
+    
+    // If country is Norway, return Norwegian, otherwise English
+    if (data.country_code === 'NO') {
+      return 'no';
+    }
+    return 'en';
+  } catch (error) {
+    console.warn('Could not detect location, defaulting to Norwegian:', error);
+    return 'no'; // Default to Norwegian if detection fails
+  }
 };
 
 export const useLanguageStore = create<LanguageState>((set, get) => ({

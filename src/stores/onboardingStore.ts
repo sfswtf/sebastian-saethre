@@ -7,10 +7,14 @@ export interface OnboardingFormData {
   type: 'personal' | 'professional';
   goals: string[];
   current_usage: string;
+  current_usage_options: string[];
   pain_points: string;
+  pain_points_options: string[];
   name: string;
   email: string;
   phone?: string;
+  company_name?: string;
+  industry?: string;
   consent: boolean;
 }
 
@@ -29,10 +33,14 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
             p_type: data.type,
             p_goals: data.goals,
             p_current_usage: data.current_usage,
+            p_current_usage_options: data.current_usage_options || [],
             p_pain_points: data.pain_points,
+            p_pain_points_options: data.pain_points_options || [],
             p_name: data.name,
             p_email: data.email,
             p_phone: data.phone || null,
+            p_company_name: data.company_name || null,
+            p_industry: data.industry || null,
             p_consent: data.consent,
           });
 
@@ -54,10 +62,14 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
             type: data.type,
             goals: data.goals,
             current_usage: data.current_usage,
+            current_usage_options: data.current_usage_options || [],
             pain_points: data.pain_points,
+            pain_points_options: data.pain_points_options || [],
             name: data.name,
             email: data.email,
             phone: data.phone || null,
+            company_name: data.company_name || null,
+            industry: data.industry || null,
             consent: data.consent,
           },
         ])

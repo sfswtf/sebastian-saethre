@@ -16,14 +16,16 @@ export function OnboardingForm() {
     type: 'personal',
     goals: [],
     current_usage: '',
+    current_usage_options: [],
     pain_points: '',
+    pain_points_options: [],
     name: '',
     email: '',
     phone: '',
+    company_name: '',
+    industry: '',
     consent: false,
   });
-  const [currentUsageOptions, setCurrentUsageOptions] = useState<string[]>([]);
-  const [painPointsOptions, setPainPointsOptions] = useState<string[]>([]);
 
   const personalGoals = t('onboarding.step2.personal.goals').split(',').map(g => g.trim());
   const professionalGoals = t('onboarding.step2.professional.goals').split(',').map(g => g.trim());
@@ -57,7 +59,7 @@ export function OnboardingForm() {
         await submitOnboardingForm(formData);
         // Small delay to show success message before navigation
         setTimeout(() => {
-          navigate('/onboarding/thanks');
+          navigate('/resources');
         }, 500);
       } catch (error) {
         setIsSubmitting(false);
@@ -72,11 +74,16 @@ export function OnboardingForm() {
       case 2:
         return formData.goals.length > 0;
       case 3:
-        return currentUsageOptions.length > 0 || formData.current_usage.trim() !== '';
+        return formData.current_usage_options.length > 0 || formData.current_usage.trim() !== '';
       case 4:
-        return painPointsOptions.length > 0 || formData.pain_points.trim() !== '';
+        return formData.pain_points_options.length > 0 || formData.pain_points.trim() !== '';
       case 5:
-        return formData.name.trim() !== '' && formData.email.trim() !== '' && formData.consent;
+        const basicValid = formData.name.trim() !== '' && formData.email.trim() !== '' && formData.consent;
+        if (formData.type === 'professional') {
+          // Professional requires company name and industry
+          return basicValid && formData.company_name.trim() !== '' && formData.industry.trim() !== '';
+        }
+        return basicValid;
       default:
         return false;
     }
@@ -210,16 +217,12 @@ export function OnboardingForm() {
                   >
                     <input
                       type="checkbox"
-                      checked={currentUsageOptions.includes(option)}
+                      checked={formData.current_usage_options.includes(option)}
                       onChange={() => {
-                        const updated = currentUsageOptions.includes(option)
-                          ? currentUsageOptions.filter(o => o !== option)
-                          : [...currentUsageOptions, option];
-                        setCurrentUsageOptions(updated);
-                        // Only update if textarea is empty, otherwise keep user's text
-                        if (!formData.current_usage.trim()) {
-                          setFormData({ ...formData, current_usage: updated.join(', ') });
-                        }
+                        const updated = formData.current_usage_options.includes(option)
+                          ? formData.current_usage_options.filter(o => o !== option)
+                          : [...formData.current_usage_options, option];
+                        setFormData({ ...formData, current_usage_options: updated });
                       }}
                       className="mr-3 w-4 h-4 text-brand-600 focus:ring-brand-500"
                     />
@@ -264,16 +267,12 @@ export function OnboardingForm() {
                   >
                     <input
                       type="checkbox"
-                      checked={painPointsOptions.includes(option)}
+                      checked={formData.pain_points_options.includes(option)}
                       onChange={() => {
-                        const updated = painPointsOptions.includes(option)
-                          ? painPointsOptions.filter(o => o !== option)
-                          : [...painPointsOptions, option];
-                        setPainPointsOptions(updated);
-                        // Only update if textarea is empty, otherwise keep user's text
-                        if (!formData.pain_points.trim()) {
-                          setFormData({ ...formData, pain_points: updated.join(', ') });
-                        }
+                        const updated = formData.pain_points_options.includes(option)
+                          ? formData.pain_points_options.filter(o => o !== option)
+                          : [...formData.pain_points_options, option];
+                        setFormData({ ...formData, pain_points_options: updated });
                       }}
                       className="mr-3 w-4 h-4 text-brand-600 focus:ring-brand-500"
                     />
@@ -310,6 +309,35 @@ export function OnboardingForm() {
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
                 {t('onboarding.step5.title')}
               </h3>
+              {formData.type === 'professional' && (
+                <>
+                  <div>
+                    <label className="block text-gray-700 mb-2 text-left">
+                      {t('onboarding.step5.companyName')} *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.company_name || ''}
+                      onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-brand-500 focus:border-brand-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2 text-left">
+                      {t('onboarding.step5.industry')} *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.industry || ''}
+                      onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-brand-500 focus:border-brand-500"
+                      placeholder="F.eks. Teknologi, Markedsføring, Helse, Utdanning..."
+                    />
+                  </div>
+                </>
+              )}
               <div>
                 <label className="block text-gray-700 mb-2 text-left">
                   {t('common.name')} *
@@ -340,7 +368,7 @@ export function OnboardingForm() {
                 </label>
                 <input
                   type="tel"
-                  value={formData.phone}
+                  value={formData.phone || ''}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-brand-500 focus:border-brand-500"
                 />

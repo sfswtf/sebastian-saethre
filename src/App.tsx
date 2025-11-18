@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Menu, X, Facebook, Instagram, Mail, MapPin, Sparkles, Linkedin, Twitter } from 'lucide-react';
 import { Navigation } from './components/Navigation';
 import { ScrollToTop } from './components/ScrollToTop';
-import { useLanguageStore } from './stores/languageStore';
+import { useLanguageStore, detectLanguageFromLocation } from './stores/languageStore';
 import { HeroSkeleton } from './components/SkeletonLoader';
 import { AnimatedNavbar } from './components/animations/AnimatedNavbar';
 import { AnimatedFooter } from './components/animations/AnimatedFooter';
@@ -30,7 +30,17 @@ const PortfolioDetailPage = lazy(() => import('./components/PortfolioDetailPage'
 const ResourceDetailPage = lazy(() => import('./components/ResourceDetailPage').then(m => ({ default: m.ResourceDetailPage })));
 
 function App() {
-  const { t } = useLanguageStore();
+  const { t, setLanguage } = useLanguageStore();
+  
+  // Detect language from location on mount (only if no stored preference)
+  useEffect(() => {
+    const stored = localStorage.getItem('language-storage');
+    if (!stored) {
+      detectLanguageFromLocation().then(lang => {
+        setLanguage(lang);
+      });
+    }
+  }, [setLanguage]);
   
   return (
     <Router>
