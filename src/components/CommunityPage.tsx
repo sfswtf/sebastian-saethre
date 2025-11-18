@@ -142,39 +142,6 @@ export function CommunityPage() {
         </div>
 
 
-        {/* Newsletter Signup - Integrated into Newsletter card */}
-        <div className="mb-12">
-          <AnimatedCard className="p-8 bg-gradient-to-r from-brand-50 to-brand-100 border-2 border-brand-200">
-            <div className="max-w-2xl mx-auto text-center">
-              {submitted ? (
-                <div className="bg-green-100 text-green-700 px-6 py-3 rounded-lg">
-                  {t('community.thankYouSubscribed')}
-                </div>
-              ) : (
-                <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={t('community.enterEmail')}
-                    required
-                    disabled={isSubmitting}
-                    className="flex-1 px-4 py-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50"
-                  />
-                  <AnimatedButton
-                    type="submit"
-                    variant="primary"
-                    disabled={isSubmitting}
-                    className="bg-brand-600 text-white hover:bg-brand-700 px-6 disabled:opacity-50"
-                  >
-                    {isSubmitting ? t('community.subscribing') : t('community.subscribe')}
-                  </AnimatedButton>
-                </form>
-              )}
-            </div>
-          </AnimatedCard>
-        </div>
-
         {/* Community Features */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2 mb-12">
           {communityFeatures.map((feature, index) => {
@@ -232,17 +199,36 @@ export function CommunityPage() {
                   >
                     {feature.action} →
                   </a>
+                ) : feature.link === '#' && feature.title === t('community.newsletterTitle') ? (
+                  <div className="mt-4">
+                    {submitted ? (
+                      <div className="bg-green-100 text-green-700 px-4 py-2 rounded-lg text-sm">
+                        {t('community.thankYouSubscribed')}
+                      </div>
+                    ) : (
+                      <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-3">
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder={t('community.enterEmail')}
+                          required
+                          disabled={isSubmitting}
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50 text-sm"
+                        />
+                        <AnimatedButton
+                          type="submit"
+                          variant="primary"
+                          disabled={isSubmitting}
+                          className="bg-brand-600 text-white hover:bg-brand-700 px-4 py-2 disabled:opacity-50 text-sm"
+                        >
+                          {isSubmitting ? t('community.subscribing') : t('community.subscribe')}
+                        </AnimatedButton>
+                      </form>
+                    )}
+                  </div>
                 ) : feature.link === '#' ? (
-                  <button 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const form = document.querySelector('form');
-                      if (form) {
-                        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      }
-                    }}
-                    className="text-brand-600 hover:text-brand-700 font-semibold"
-                  >
+                  <button className="text-brand-600 hover:text-brand-700 font-semibold">
                     {feature.action} →
                   </button>
                 ) : (
