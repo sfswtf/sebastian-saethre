@@ -82,6 +82,20 @@
   .article-content img {
     @apply rounded-lg my-6 max-w-full h-auto;
   }
+  
+  /* Normalize Quill editor output */
+  .article-content p:empty {
+    @apply mb-0;
+  }
+  
+  .article-content br {
+    @apply mb-0;
+  }
+  
+  /* Reduce spacing for consecutive paragraphs */
+  .article-content p:not(:last-child) {
+    @apply mb-3;
+  }
 }
 
 /* Aspect ratio utilities */
