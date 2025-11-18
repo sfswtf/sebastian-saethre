@@ -4,7 +4,7 @@ import { AnimatedCard } from './animations/AnimatedCard';
 import { AnimatedText } from './animations/AnimatedText';
 import { AnimatedButton } from './animations/AnimatedButton';
 import { useLanguageStore } from '../stores/languageStore';
-import { Users, Mail, BookOpen, Gift } from 'lucide-react';
+import { Users, Mail, Gift, Twitter, Youtube, Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { toast } from 'react-hot-toast';
@@ -112,11 +112,13 @@ export function CommunityPage() {
       link: '#',
     },
     {
-      icon: BookOpen,
-      title: t('community.freeCoursesTitle'),
-      description: t('community.freeCoursesDesc'),
-      action: t('community.browseCourses'),
-      link: '/courses',
+      icon: Bell,
+      iconImage: null,
+      title: t('community.keepUpdatedTitle'),
+      description: t('community.keepUpdatedDesc'),
+      action: '',
+      link: '#',
+      customContent: true,
     },
     {
       icon: Gift,
@@ -139,42 +141,39 @@ export function CommunityPage() {
           />
         </div>
 
-        {/* Newsletter Signup */}
-        <AnimatedCard className="p-8 mb-12 bg-gradient-to-r from-brand-50 to-brand-100 border-2 border-brand-200">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-3">
-              {t('community.stayUpdated')}
-            </h2>
-            <p className="text-neutral-700 mb-6">
-              {t('community.newsletterDesc')}
-            </p>
-            {submitted ? (
-              <div className="bg-green-100 text-green-700 px-6 py-3 rounded-lg">
-                {t('community.thankYouSubscribed')}
-              </div>
-            ) : (
-              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t('community.enterEmail')}
-                  required
-                  disabled={isSubmitting}
-                  className="flex-1 px-4 py-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50"
-                />
-                <AnimatedButton
-                  type="submit"
-                  variant="primary"
-                  disabled={isSubmitting}
-                  className="bg-brand-600 text-white hover:bg-brand-700 px-6 disabled:opacity-50"
-                >
-                  {isSubmitting ? t('community.subscribing') : t('community.subscribe')}
-                </AnimatedButton>
-              </form>
-            )}
-          </div>
-        </AnimatedCard>
+
+        {/* Newsletter Signup - Integrated into Newsletter card */}
+        <div className="mb-12">
+          <AnimatedCard className="p-8 bg-gradient-to-r from-brand-50 to-brand-100 border-2 border-brand-200">
+            <div className="max-w-2xl mx-auto text-center">
+              {submitted ? (
+                <div className="bg-green-100 text-green-700 px-6 py-3 rounded-lg">
+                  {t('community.thankYouSubscribed')}
+                </div>
+              ) : (
+                <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder={t('community.enterEmail')}
+                    required
+                    disabled={isSubmitting}
+                    className="flex-1 px-4 py-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50"
+                  />
+                  <AnimatedButton
+                    type="submit"
+                    variant="primary"
+                    disabled={isSubmitting}
+                    className="bg-brand-600 text-white hover:bg-brand-700 px-6 disabled:opacity-50"
+                  >
+                    {isSubmitting ? t('community.subscribing') : t('community.subscribe')}
+                  </AnimatedButton>
+                </form>
+              )}
+            </div>
+          </AnimatedCard>
+        </div>
 
         {/* Community Features */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2 mb-12">
@@ -201,7 +200,30 @@ export function CommunityPage() {
                 <p className="text-neutral-600 mb-6 leading-relaxed">
                   {feature.description}
                 </p>
-                {feature.external ? (
+                {feature.customContent ? (
+                  <div className="flex flex-col gap-3">
+                    <a 
+                      href="https://twitter.com/sebastiansaethre" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-brand-600 hover:text-brand-700 font-semibold"
+                    >
+                      <Twitter size={20} />
+                      <span>Twitter / X</span>
+                      <span className="ml-auto">→</span>
+                    </a>
+                    <a 
+                      href="https://youtube.com/@sebastiansaethre" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-brand-600 hover:text-brand-700 font-semibold"
+                    >
+                      <Youtube size={20} />
+                      <span>YouTube</span>
+                      <span className="ml-auto">→</span>
+                    </a>
+                  </div>
+                ) : feature.external ? (
                   <a 
                     href={feature.link} 
                     target="_blank" 
@@ -211,7 +233,16 @@ export function CommunityPage() {
                     {feature.action} →
                   </a>
                 ) : feature.link === '#' ? (
-                  <button className="text-brand-600 hover:text-brand-700 font-semibold">
+                  <button 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const form = document.querySelector('form');
+                      if (form) {
+                        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }
+                    }}
+                    className="text-brand-600 hover:text-brand-700 font-semibold"
+                  >
                     {feature.action} →
                   </button>
                 ) : (

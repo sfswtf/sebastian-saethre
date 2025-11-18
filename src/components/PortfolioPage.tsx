@@ -135,9 +135,10 @@ export function PortfolioPage() {
                       )}
                     </div>
                     <h3 className="text-2xl font-bold mb-4 text-neutral-900 group-hover:text-brand-600 transition-colors">{project.title}</h3>
-                    <p className="text-neutral-600 mb-6 line-clamp-4 flex-grow">
-                      {project.description}
-                    </p>
+                    <div 
+                      className="text-neutral-600 mb-6 line-clamp-4 flex-grow prose prose-sm max-w-none article-content"
+                      dangerouslySetInnerHTML={{ __html: project.description }}
+                    />
                     {project.tech_stack.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-6">
                         {project.tech_stack.slice(0, 5).map((tech, idx) => (
