@@ -479,8 +479,8 @@ export const detectLanguageFromLocation = async (): Promise<Language> => {
     }
     return 'en';
   } catch (error) {
-    console.warn('Could not detect location, defaulting to Norwegian:', error);
-    return 'no'; // Default to Norwegian if detection fails
+    console.warn('Could not detect location, defaulting to English:', error);
+    return 'en'; // Default to English if detection fails
   }
 };
 

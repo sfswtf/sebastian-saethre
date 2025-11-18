@@ -118,8 +118,15 @@ export function BlogPostDetailPage() {
   }, [slug]);
 
   // Simple markdown to HTML converter (basic support)
+  // Also handles HTML from RichTextEditor (Quill)
   const renderMarkdown = (markdown: string): string => {
     if (!markdown) return '';
+    
+    // If content is already HTML (from RichTextEditor), return as-is
+    // Check if it contains HTML tags
+    if (markdown.includes('<p>') || markdown.includes('<div>') || markdown.includes('<h1>') || markdown.includes('<h2>') || markdown.includes('<h3>')) {
+      return markdown;
+    }
     
     let html = markdown;
     
@@ -182,7 +189,7 @@ export function BlogPostDetailPage() {
       if (trimmed.startsWith('<')) return trimmed;
       // Don't wrap if it's a list
       if (trimmed.startsWith('<ul') || trimmed.startsWith('<li')) return trimmed;
-      return `<p class="mb-6 text-neutral-700 leading-relaxed text-lg">${trimmed}</p>`;
+      return `<p class="mb-3 text-neutral-700 leading-relaxed text-lg">${trimmed}</p>`;
     }).filter(p => p).join('\n');
     
     return html;

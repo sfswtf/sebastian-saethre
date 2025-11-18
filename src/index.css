@@ -43,7 +43,11 @@
   }
   
   .article-content p {
-    @apply mb-6 leading-relaxed;
+    @apply mb-3 leading-relaxed;
+  }
+  
+  .article-content p + p {
+    @apply mt-0;
   }
   
   .article-content a {
@@ -52,7 +56,7 @@
   
   .article-content ul,
   .article-content ol {
-    @apply my-6 ml-6 space-y-2;
+    @apply my-4 ml-6 space-y-2;
   }
   
   .article-content li {
