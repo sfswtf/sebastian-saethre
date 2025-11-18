@@ -170,7 +170,7 @@ export function CommunityPage() {
                 {feature.customContent ? (
                   <div className="flex flex-col gap-3">
                     <a 
-                      href="https://twitter.com/sebastiansaethre" 
+                      href="https://twitter.com/seb_fs_ai" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-brand-600 hover:text-brand-700 font-semibold"
@@ -180,7 +180,7 @@ export function CommunityPage() {
                       <span className="ml-auto">→</span>
                     </a>
                     <a 
-                      href="https://youtube.com/@sebastiansaethre" 
+                      href="https://www.youtube.com/@sebfsai" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-brand-600 hover:text-brand-700 font-semibold"
