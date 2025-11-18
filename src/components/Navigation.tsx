@@ -27,7 +27,7 @@ export function Navigation() {
   const navLinks = [
     { path: '/portfolio', key: 'nav.portfolio' },
     { path: '/blog', key: 'nav.blog' },
-    { path: '/courses', key: 'nav.courses' },
+    // { path: '/courses', key: 'nav.courses' }, // Temporarily hidden
     { path: '/resources', key: 'nav.resources' },
     { path: '/community', key: 'nav.community' },
     { path: '/services', key: 'nav.services' },

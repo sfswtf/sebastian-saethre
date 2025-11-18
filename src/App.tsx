@@ -184,13 +184,14 @@ function HomePage() {
                 {t('home.featured.blog.desc')}
               </p>
             </Link>
-            <Link 
+            {/* Courses temporarily hidden */}
+            {/* <Link 
               to="/courses" 
               className="bg-brand-800 rounded-lg p-6 md:p-8 transition-all hover:scale-[1.02] flex flex-col justify-center items-center text-center min-h-[160px] md:min-h-[180px] shadow-lg hover:shadow-xl"
             >
               <h2 className="mt-4 md:mt-6 text-2xl md:text-3xl font-bold tracking-tight text-white">{t('home.featured.courses')}</h2>
               <p className="mt-3 md:mt-4 text-base md:text-lg text-white">{t('home.featured.courses.desc')}</p>
-            </Link>
+            </Link> */}
             <Link 
               to="/resources" 
               className="bg-neutral-100 rounded-lg p-8 transition-transform hover:scale-105 flex flex-col justify-center items-center text-center min-h-[180px] shadow-md"
