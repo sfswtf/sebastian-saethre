@@ -181,15 +181,19 @@ export function PortfolioDetailPage() {
               {project.title}
             </h1>
 
-            <p className="text-xl text-neutral-700 mb-8 leading-relaxed">
-              {project.description}
-            </p>
+            <div className="prose prose-lg max-w-none mb-8">
+              <div 
+                className="text-neutral-700 leading-relaxed article-content"
+                dangerouslySetInnerHTML={{ __html: project.description }}
+              />
+            </div>
 
             {project.long_description && (
               <div className="prose prose-lg max-w-none mb-8">
-                <div className="text-neutral-700 leading-relaxed whitespace-pre-line">
-                  {project.long_description}
-                </div>
+                <div 
+                  className="text-neutral-700 leading-relaxed article-content"
+                  dangerouslySetInnerHTML={{ __html: project.long_description }}
+                />
               </div>
             )}
 
