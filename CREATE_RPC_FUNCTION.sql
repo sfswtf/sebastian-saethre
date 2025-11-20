@@ -3,9 +3,14 @@
 -- Kjør dette i Supabase SQL Editor
 
 -- ============================================
+-- STEP 0: Slett ALLE eksisterende versjoner av funksjonen
+-- ============================================
+DROP FUNCTION IF EXISTS insert_onboarding_response CASCADE;
+
+-- ============================================
 -- STEP 1: Opprett RPC function som kan insert uten RLS
 -- ============================================
-CREATE OR REPLACE FUNCTION insert_onboarding_response(
+CREATE FUNCTION insert_onboarding_response(
   p_type TEXT,
   p_goals TEXT[],
   p_current_usage TEXT,
