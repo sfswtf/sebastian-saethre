@@ -42,7 +42,7 @@ export function AdminDashboard() {
   const [emailSubject, setEmailSubject] = useState('');
   const [emailContent, setEmailContent] = useState('');
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<'events' | 'blog' | 'courses' | 'resources' | 'portfolio' | 'messages' | 'members' | 'social' | 'onboarding'>('blog');
+  const [activeTab, setActiveTab] = useState<'blog' | 'courses' | 'resources' | 'portfolio' | 'messages' | 'onboarding'>('blog');
   const { t } = useLanguageStore();
 
   useEffect(() => {
@@ -201,16 +201,6 @@ export function AdminDashboard() {
               {t('admin.portfolio')}
             </button>
             <button
-              onClick={() => setActiveTab('events')}
-              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'events'
-                  ? 'border-primary-600 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              {t('admin.events')}
-            </button>
-            <button
               onClick={() => setActiveTab('messages')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'messages'
@@ -219,26 +209,6 @@ export function AdminDashboard() {
               }`}
             >
               {t('admin.messages')}
-            </button>
-            <button
-              onClick={() => setActiveTab('members')}
-              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'members'
-                  ? 'border-primary-600 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              {t('admin.members')}
-            </button>
-            <button
-              onClick={() => setActiveTab('social')}
-              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'social'
-                  ? 'border-primary-600 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              {t('admin.social')}
             </button>
             <button
               onClick={() => setActiveTab('onboarding')}
@@ -258,9 +228,11 @@ export function AdminDashboard() {
           {activeTab === 'courses' && <CourseManager />}
           {activeTab === 'resources' && <ResourceManager />}
           {activeTab === 'portfolio' && <PortfolioManager />}
-          {activeTab === 'events' && <EventManager />}
           {activeTab === 'messages' && <ContactMessages />}
-          {activeTab === 'members' && (
+          {activeTab === 'onboarding' && <OnboardingResponses />}
+          {/* Temporarily hidden - can be re-enabled later */}
+          {false && activeTab === 'events' && <EventManager />}
+          {false && activeTab === 'members' && (
             <div className="space-y-8">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold">Medlemssøknader</h2>
@@ -437,7 +409,8 @@ export function AdminDashboard() {
               )}
             </div>
           )}
-          {activeTab === 'social' && <SocialMediaManager />}
+          {/* Temporarily hidden - can be re-enabled later */}
+          {false && activeTab === 'social' && <SocialMediaManager />}
           {activeTab === 'onboarding' && <OnboardingResponses />}
         </div>
       </div>
