@@ -159,7 +159,7 @@ export function AdminDashboard() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="bg-white shadow rounded-lg">
         <div className="border-b border-gray-200">
-          <nav className="-mb-px flex flex-wrap">
+          <nav className="-mb-px flex flex-wrap overflow-x-auto">
             <button
               onClick={() => setActiveTab('blog')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
