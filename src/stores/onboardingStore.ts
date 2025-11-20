@@ -55,6 +55,14 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
       }
 
       // Try Supabase direct insert
+      console.log('Attempting to insert onboarding response:', {
+        type: data.type,
+        name: data.name,
+        email: data.email,
+        hasGoals: data.goals.length > 0,
+        hasCurrentUsageOptions: (data.current_usage_options || []).length > 0,
+      });
+
       const { data: result, error } = await supabase
         .from('onboarding_responses')
         .insert([
@@ -76,13 +84,14 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
         .select();
 
       if (error) {
-        console.error('Supabase insert failed:', error);
+        console.error('❌ Supabase insert failed:', error);
         console.error('Error details:', {
           message: error.message,
           details: error.details,
           hint: error.hint,
           code: error.code,
         });
+        console.error('Full error object:', JSON.stringify(error, null, 2));
         
         // Show error to user
         toast.error(`Kunne ikke lagre: ${error.message}`);
@@ -101,7 +110,8 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
         }
       }
 
-      console.log('Onboarding form submitted successfully to Supabase:', result);
+      console.log('✅ Onboarding form submitted successfully to Supabase:', result);
+      console.log('Inserted row ID:', result?.[0]?.id);
       // Don't show toast here - let the modal handle the success message
     } catch (error: any) {
       console.error('Error submitting onboarding form:', error);
