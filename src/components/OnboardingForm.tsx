@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useOnboardingStore, OnboardingFormData } from '../stores/onboardingStore';
 import { useLanguageStore } from '../stores/languageStore';
 import { AnimatedButton } from './animations/AnimatedButton';
+import { OnboardingThankYouModal } from './OnboardingThankYouModal';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export function OnboardingForm() {
@@ -12,6 +13,7 @@ export function OnboardingForm() {
   const { submitOnboardingForm } = useOnboardingStore();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [formData, setFormData] = useState<OnboardingFormData>({
     type: 'personal',
     goals: [],
@@ -57,14 +59,20 @@ export function OnboardingForm() {
       setIsSubmitting(true);
       try {
         await submitOnboardingForm(formData);
-        // Small delay to show success message before navigation
-        setTimeout(() => {
-          navigate('/resources');
-        }, 500);
-      } catch (error) {
+        // Show thank you modal
         setIsSubmitting(false);
+        setShowThankYouModal(true);
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        setIsSubmitting(false);
+        // Error toast is already shown by the store
       }
     }
+  };
+
+  const handleViewResources = () => {
+    setShowThankYouModal(false);
+    navigate('/resources');
   };
 
   const isStepValid = () => {
@@ -96,7 +104,13 @@ export function OnboardingForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
+    <>
+      <OnboardingThankYouModal
+        isOpen={showThankYouModal}
+        onClose={() => setShowThankYouModal(false)}
+        onViewResources={handleViewResources}
+      />
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
         {/* Progress Indicator */}
         <div className="mb-6">
@@ -443,6 +457,7 @@ export function OnboardingForm() {
         </div>
       </div>
     </form>
+    </>
   );
 }
 

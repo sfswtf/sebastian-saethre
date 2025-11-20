@@ -150,6 +150,9 @@ const translations: Record<Language, Record<string, string>> = {
     'onboarding.thanks.calendly': 'Vil du planlegge et møte?',
     'onboarding.thanks.schedule': 'Planlegg et møte her',
     'onboarding.thanks.readInsights': 'Les mine innsikter',
+    'onboarding.modal.title': 'Takk for at du sendte inn skjemaet!',
+    'onboarding.modal.message': 'Vi vil komme tilbake til deg så raskt vi kan. I mellomtiden, sjekk ut disse ressursene:',
+    'onboarding.modal.viewResources': 'Se ressurser',
     
     // Services
     'services.title': 'AI Tjenester',
@@ -367,6 +370,9 @@ const translations: Record<Language, Record<string, string>> = {
     'onboarding.thanks.calendly': 'Want to schedule a meeting?',
     'onboarding.thanks.schedule': 'Schedule a meeting here',
     'onboarding.thanks.readInsights': 'Read My Insights',
+    'onboarding.modal.title': 'Thank you for submitting!',
+    'onboarding.modal.message': 'We will get back to you as fast as we can. In the meanwhile, check out these resources:',
+    'onboarding.modal.viewResources': 'View Resources',
     
     // Services
     'services.title': 'AI Services',

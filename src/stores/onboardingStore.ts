@@ -88,16 +88,21 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
         toast.error(`Kunne ikke lagre: ${error.message}`);
         
         // Fallback to localStorage
-        LocalStorageService.add('onboarding_responses', {
-          ...data,
-          created_at: new Date().toISOString(),
-        });
-        toast.success('Lagret lokalt (Supabase feilet)');
-        return;
+        try {
+          LocalStorageService.add('onboarding_responses', {
+            ...data,
+            created_at: new Date().toISOString(),
+          });
+          toast.success('Lagret lokalt (Supabase feilet)');
+          // Still throw error so form knows submission had issues
+          throw new Error(`Supabase failed: ${error.message}. Saved locally.`);
+        } catch (localError) {
+          throw new Error(`Failed to save: ${error.message}`);
+        }
       }
 
       console.log('Onboarding form submitted successfully to Supabase:', result);
-      toast.success('Takk for din interesse! Vi tar kontakt snart.');
+      // Don't show toast here - let the modal handle the success message
     } catch (error: any) {
       console.error('Error submitting onboarding form:', error);
       console.error('Error details:', {
@@ -114,9 +119,12 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
           created_at: new Date().toISOString(),
         });
         toast.success('Takk for din interesse! (Lagret lokalt)');
+        // Don't throw - allow form to show success modal even if Supabase failed
+        // The form will show the modal and user can still proceed
       } catch (localError) {
         console.error('Error saving to localStorage:', localError);
         toast.error('Beklager, noe gikk galt. Vennligst prøv igjen senere.');
+        throw new Error('Failed to save form data');
       }
     }
   },
