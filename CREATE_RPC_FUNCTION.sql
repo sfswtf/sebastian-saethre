@@ -14,10 +14,10 @@ CREATE OR REPLACE FUNCTION insert_onboarding_response(
   p_pain_points_options TEXT[],
   p_name TEXT,
   p_email TEXT,
+  p_consent BOOLEAN,
   p_phone TEXT DEFAULT NULL,
   p_company_name TEXT DEFAULT NULL,
-  p_industry TEXT DEFAULT NULL,
-  p_consent BOOLEAN
+  p_industry TEXT DEFAULT NULL
 )
 RETURNS uuid
 LANGUAGE plpgsql
@@ -76,10 +76,10 @@ SELECT insert_onboarding_response(
   ARRAY['Test']::TEXT[],
   'RPC Test User'::TEXT,
   'rpc-test-' || extract(epoch from now())::text || '@test.com'::TEXT,
+  true::BOOLEAN,
   NULL::TEXT,
   NULL::TEXT,
-  NULL::TEXT,
-  true::BOOLEAN
+  NULL::TEXT
 ) as inserted_id;
 
 -- ============================================

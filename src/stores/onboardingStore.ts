@@ -38,10 +38,10 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
             p_pain_points_options: data.pain_points_options || [],
             p_name: data.name,
             p_email: data.email,
+            p_consent: data.consent,
             p_phone: data.phone || null,
             p_company_name: data.company_name || null,
             p_industry: data.industry || null,
-            p_consent: data.consent,
           });
 
         if (!functionError && functionResult) {
