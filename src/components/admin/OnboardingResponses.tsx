@@ -30,16 +30,34 @@ export function OnboardingResponses() {
 
   const fetchResponses = async () => {
     try {
+      // Try RPC function first (bypasses RLS)
+      const { data: rpcData, error: rpcError } = await supabase
+        .rpc('get_onboarding_responses');
+
+      if (!rpcError && rpcData) {
+        setResponses(rpcData as OnboardingResponse[]);
+        setLoading(false);
+        return;
+      }
+
+      // Fallback to direct select (requires RLS policy)
       const { data, error } = await supabase
         .from('onboarding_responses')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setResponses(data || []);
+      if (error) {
+        console.error('Error fetching responses:', error);
+        console.error('RPC error:', rpcError);
+        toast.error('Kunne ikke hente innsendinger. Sjekk at RPC-funksjonen er opprettet.');
+        setResponses([]);
+      } else {
+        setResponses(data || []);
+      }
     } catch (error) {
       console.error('Error fetching responses:', error);
       toast.error('Kunne ikke hente innsendinger');
+      setResponses([]);
     } finally {
       setLoading(false);
     }
