@@ -411,7 +411,6 @@ export function AdminDashboard() {
           )}
           {/* Temporarily hidden - can be re-enabled later */}
           {false && activeTab === 'social' && <SocialMediaManager />}
-          {activeTab === 'onboarding' && <OnboardingResponses />}
         </div>
       </div>
 
