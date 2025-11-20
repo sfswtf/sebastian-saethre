@@ -10,6 +10,7 @@ import { BlogManager } from './admin/BlogManager';
 import { CourseManager } from './admin/CourseManager';
 import { ResourceManager } from './admin/ResourceManager';
 import { PortfolioManager } from './admin/PortfolioManager';
+import { OnboardingResponses } from './admin/OnboardingResponses';
 import { useLanguageStore } from '../stores/languageStore';
 
 interface Application {
@@ -41,7 +42,7 @@ export function AdminDashboard() {
   const [emailSubject, setEmailSubject] = useState('');
   const [emailContent, setEmailContent] = useState('');
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<'events' | 'blog' | 'courses' | 'resources' | 'portfolio' | 'messages' | 'members' | 'social'>('blog');
+  const [activeTab, setActiveTab] = useState<'events' | 'blog' | 'courses' | 'resources' | 'portfolio' | 'messages' | 'members' | 'social' | 'onboarding'>('blog');
   const { t } = useLanguageStore();
 
   useEffect(() => {
@@ -239,6 +240,16 @@ export function AdminDashboard() {
             >
               {t('admin.social')}
             </button>
+            <button
+              onClick={() => setActiveTab('onboarding')}
+              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+                activeTab === 'onboarding'
+                  ? 'border-primary-600 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Onboarding
+            </button>
           </nav>
         </div>
 
@@ -427,6 +438,7 @@ export function AdminDashboard() {
             </div>
           )}
           {activeTab === 'social' && <SocialMediaManager />}
+          {activeTab === 'onboarding' && <OnboardingResponses />}
         </div>
       </div>
 

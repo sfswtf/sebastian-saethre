@@ -31,7 +31,7 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
       // Set a timeout fallback - if video doesn't load in 5 seconds, show content
       const timeoutId = setTimeout(() => {
         if (!videoEnded && !videoError) {
-          console.warn('Video loading timeout, showing content');
+          // Silently show content if video times out (expected behavior)
           showContent();
         }
       }, 5000);
