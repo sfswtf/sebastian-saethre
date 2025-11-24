@@ -156,7 +156,16 @@ export function ContactMessages() {
     }
 
     try {
-      LocalStorageService.delete('contact_messages', id);
+      const { error: supabaseError } = await supabase
+        .from('contact_messages')
+        .delete()
+        .eq('id', id);
+
+      if (supabaseError) {
+        console.error('Error deleting message:', supabaseError);
+        toast.error('Kunne ikke slette melding');
+        return;
+      }
       toast.success('Melding slettet');
       fetchMessages();
     } catch (error) {
