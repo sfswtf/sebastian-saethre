@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Mail, Save, Trash2 } from 'lucide-react';
 import { LocalStorageService } from '../../lib/localStorage';
+import { supabase } from '../../lib/supabase';
 
 type MessageStatus = 'new' | 'in_progress' | 'completed';
 
@@ -26,6 +27,41 @@ export function ContactMessages() {
 
   const fetchMessages = async () => {
     try {
+      setLoading(true);
+      // Try Supabase first
+      const { data: supabaseData, error: supabaseError } = await supabase
+        .from('contact_messages')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!supabaseError && supabaseData && supabaseData.length > 0) {
+        // Map Supabase data to ContactMessage format
+        const mappedData: ContactMessage[] = supabaseData.map((msg: any) => ({
+          id: msg.id.toString(),
+          name: msg.name || '',
+          email: msg.email || '',
+          message: msg.message || '',
+          created_at: msg.created_at || new Date().toISOString(),
+          admin_notes: msg.admin_notes || null,
+          status: (msg.status as MessageStatus) || 'new',
+        }));
+
+        const sorted = mappedData.sort((a, b) => 
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+
+        // Initialize editing notes with current values
+        const notesState: { [key: string]: string } = {};
+        sorted.forEach(message => {
+          notesState[message.id] = message.admin_notes || '';
+        });
+        setEditingNotes(notesState);
+        setMessages(sorted);
+        setLoading(false);
+        return;
+      }
+
+      // Fallback to localStorage
       const data = LocalStorageService.get<ContactMessage>('contact_messages');
       const sorted = data.sort((a, b) => 
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
@@ -40,7 +76,17 @@ export function ContactMessages() {
       setMessages(sorted);
     } catch (error) {
       console.error('Error fetching messages:', error);
-      toast.error('Could not fetch messages');
+      toast.error('Kunne ikke hente meldinger');
+      // Fallback to localStorage on error
+      try {
+        const data = LocalStorageService.get<ContactMessage>('contact_messages');
+        const sorted = data.sort((a, b) => 
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+        setMessages(sorted);
+      } catch (localError) {
+        console.error('Error with localStorage fallback:', localError);
+      }
     } finally {
       setLoading(false);
     }
@@ -48,23 +94,44 @@ export function ContactMessages() {
 
   const updateStatus = async (id: string, status: MessageStatus) => {
     try {
-      LocalStorageService.update('contact_messages', id, { status });
-      toast.success('Status updated');
+      // Try Supabase first
+      const { error: supabaseError } = await supabase
+        .from('contact_messages')
+        .update({ status })
+        .eq('id', parseInt(id));
+
+      if (supabaseError) {
+        console.warn('Supabase update failed, using localStorage:', supabaseError);
+        // Fallback to localStorage
+        LocalStorageService.update('contact_messages', id, { status });
+      }
+      toast.success('Status oppdatert');
       fetchMessages();
     } catch (error) {
       console.error('Error updating status:', error);
-      toast.error('Could not update status');
+      toast.error('Kunne ikke oppdatere status');
     }
   };
 
   const updateAdminNotes = async (id: string) => {
     try {
-      LocalStorageService.update('contact_messages', id, { admin_notes: editingNotes[id] || null });
-      toast.success('Notes updated');
+      const notes = editingNotes[id] || null;
+      // Try Supabase first
+      const { error: supabaseError } = await supabase
+        .from('contact_messages')
+        .update({ admin_notes: notes })
+        .eq('id', parseInt(id));
+
+      if (supabaseError) {
+        console.warn('Supabase update failed, using localStorage:', supabaseError);
+        // Fallback to localStorage
+        LocalStorageService.update('contact_messages', id, { admin_notes: notes });
+      }
+      toast.success('Notater oppdatert');
       fetchMessages();
     } catch (error) {
       console.error('Error updating notes:', error);
-      toast.error('Could not update notes');
+      toast.error('Kunne ikke oppdatere notater');
     }
   };
 

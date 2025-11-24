@@ -65,14 +65,19 @@ export function OnboardingResponses() {
     const currentUsage = response.current_usage || '';
     const painPoints = response.pain_points || '';
 
-    const isBeginner = 
-      currentUsageOptions.length === 0 && 
-      currentUsage.trim() === '' &&
-      (painPointsOptions.includes('New to AI') || 
-       painPointsOptions.includes('Helt ny i AI') ||
-       painPoints.toLowerCase().includes('ny') ||
-       painPoints.toLowerCase().includes('beginner') ||
-       painPoints.toLowerCase().includes('starter'));
+    // More nuanced logic: check if they explicitly indicate being new OR have no usage
+    const explicitlyNew = 
+      painPointsOptions.includes('New to AI') || 
+      painPointsOptions.includes('Helt ny i AI') ||
+      painPoints.toLowerCase().includes('helt ny') ||
+      painPoints.toLowerCase().includes('nybegynner') ||
+      painPoints.toLowerCase().includes('starter');
+
+    // If they have no usage options AND no free text usage, likely beginner
+    const noUsage = currentUsageOptions.length === 0 && currentUsage.trim() === '';
+
+    // If they explicitly say they're new OR have no usage at all, they're a beginner
+    const isBeginner = explicitlyNew || (noUsage && painPointsOptions.length === 0);
 
     if (response.type === 'personal') {
       return isBeginner ? 'beginnerPersonal' : 'advancedPersonal';
@@ -87,16 +92,16 @@ export function OnboardingResponses() {
       subject: 'Velkommen til AI-verdenen! 🚀',
       body: `Hei {name}!
 
-Takk for at du tok deg tid til å fylle ut skjemaet! Jeg ser at du er ny i AI-verdenen, og det er helt greit - alle starter et sted.
+Takk for at du tok deg tid til å fylle ut skjemaet. Jeg ser at du er ny i AI-verdenen, og det er helt greit – alle starter et sted.
 
 Jeg hjelper deg gjerne med å komme i gang med praktisk AI-bruk. Her er noen ressurser som kan være nyttige for deg:
 
 📚 Starter-ressurser:
-- Enkle guider for å komme i gang med AI-verktøy
-- Steg-for-steg tutorials for nybegynnere
-- Eksempler på praktiske bruksområder
+• Enkle guider for å komme i gang med AI-verktøy
+• Steg-for-steg tutorials for nybegynnere
+• Eksempler på praktiske bruksområder
 
-Jeg sender ut nyhetsbrev med tips og triks spesielt for nybegynnere. Hvis du har spørsmål, bare send meg en e-post!
+Jeg sender ut nyhetsbrev med tips og triks spesielt for nybegynnere. Hvis du har spørsmål, kan du bare sende meg en e-post.
 
 Med vennlig hilsen,
 Sebastian Saethre
@@ -110,16 +115,16 @@ YouTube: @sebfsai`
       subject: 'Takk for din interesse! 🎯',
       body: `Hei {name}!
 
-Takk for at du tok deg tid til å fylle ut skjemaet! Jeg ser at du allerede har erfaring med AI-verktøy, og det er flott.
+Takk for at du tok deg tid til å fylle ut skjemaet. Jeg ser at du allerede har erfaring med AI-verktøy, og det er flott.
 
 Jeg kan hjelpe deg med å ta neste steg og utforske mer avanserte teknikker og verktøy. Her er noen ressurser som kan være relevante for deg:
 
 🚀 Avanserte ressurser:
-- Dypere dykker i AI-teknologi
-- Avanserte teknikker og workflows
-- Nyheter om nye verktøy og muligheter
+• Dypere dykker i AI-teknologi
+• Avanserte teknikker og workflows
+• Nyheter om nye verktøy og muligheter
 
-Jeg sender ut nyhetsbrev med avanserte tips, nye verktøy og case studies. Hvis du har spørsmål eller ønsker å diskutere noe spesifikt, bare send meg en e-post!
+Jeg sender ut nyhetsbrev med avanserte tips, nye verktøy og case studies. Hvis du har spørsmål eller ønsker å diskutere noe spesifikt, kan du bare sende meg en e-post.
 
 Med vennlig hilsen,
 Sebastian Saethre
@@ -130,18 +135,18 @@ Twitter: @seb_fs_ai
 YouTube: @sebfsai`
     },
     beginnerBusiness: {
-      subject: 'Velkommen - La oss ta bedriften din til neste nivå med AI 💼',
+      subject: 'Velkommen – la oss ta bedriften din til neste nivå med AI 💼',
       body: `Hei {name}!
 
-Takk for at du tok deg tid til å fylle ut skjemaet! Jeg ser at {company_info} og er ny i AI-verdenen.
+Takk for at du tok deg tid til å fylle ut skjemaet. Jeg ser at {company_info} og er ny i AI-verdenen.
 
 Jeg hjelper bedrifter med å implementere AI på en praktisk og forretningsfokusert måte. Her er noen ressurser som kan være nyttige for dere:
 
 📊 Forretningsfokuserte ressurser:
-- AI-implementering for bedrifter
-- ROI-analyse og case studies
-- Best practices for AI-adopsjon
-- Verktøy spesielt for forretningsbruk
+• AI-implementering for bedrifter
+• ROI-analyse og case studies
+• Best practices for AI-adopsjon
+• Verktøy spesielt for forretningsbruk
 
 Jeg sender ut nyhetsbrev med forretningsfokuserte AI-nyheter, case studies og tips for implementering. Hvis du ønsker å diskutere hvordan AI kan hjelpe bedriften din spesifikt, kan vi avtale et møte.
 
@@ -154,18 +159,18 @@ Twitter: @seb_fs_ai
 YouTube: @sebfsai`
     },
     advancedBusiness: {
-      subject: 'Takk for din interesse - La oss utvide AI-kompetansen din 💼',
+      subject: 'Takk for din interesse – la oss utvide AI-kompetansen din 💼',
       body: `Hei {name}!
 
-Takk for at du tok deg tid til å fylle ut skjemaet! Jeg ser at {company_info} allerede har erfaring med AI-verktøy, og det er flott.
+Takk for at du tok deg tid til å fylle ut skjemaet. Jeg ser at {company_info} allerede har erfaring med AI-verktøy, og det er flott.
 
 Jeg kan hjelpe dere med å ta neste steg og maksimere verdien av AI i bedriften. Her er noen ressurser som kan være relevante:
 
 🎯 Avanserte forretningsressurser:
-- Avanserte AI-strategier for bedrifter
-- Skalering av AI-implementeringer
-- Integrasjon med eksisterende systemer
-- Nyheter om enterprise AI-verktøy
+• Avanserte AI-strategier for bedrifter
+• Skalering av AI-implementeringer
+• Integrasjon med eksisterende systemer
+• Nyheter om enterprise AI-verktøy
 
 Jeg sender ut nyhetsbrev med avanserte forretningsfokuserte AI-nyheter, case studies og best practices. Hvis du ønsker å diskutere spesifikke utfordringer eller muligheter, kan vi avtale et møte.
 
@@ -485,17 +490,9 @@ ${(response.pain_points_options || []).length > 0 ? `Utfordringsalternativer: ${
                               <span>Vis detaljer</span>
                             </button>
                             <button
-                              onClick={() => copyEmailFormat(response)}
-                              className="flex items-center gap-1 text-gray-600 hover:text-gray-700 px-2 py-1 rounded hover:bg-gray-50"
-                              title="Kopier rådata"
-                            >
-                              <FileText size={16} />
-                              <span>Rådata</span>
-                            </button>
-                            <button
-                              onClick={() => copyPersonaEmail(response)}
+                              onClick={() => openPersonaEmail(response)}
                               className="flex items-center gap-1 text-brand-600 hover:text-brand-700 px-2 py-1 rounded hover:bg-brand-50"
-                              title="Kopier personalisert e-post"
+                              title="Åpne personalisert e-post i e-postklient"
                             >
                               <Mail size={16} />
                               <span>E-post</span>
@@ -803,30 +800,12 @@ ${(response.pain_points_options || []).length > 0 ? `Utfordringsalternativer: ${
                 <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200">
                   <button
                     onClick={() => {
-                      copyPersonaEmail(selectedResponse);
+                      openPersonaEmail(selectedResponse);
                     }}
                     className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors"
                   >
                     <Mail size={18} />
-                    <span>Kopier personalisert e-post</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      openPersonaEmail(selectedResponse);
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    <Mail size={18} />
-                    <span>Åpne i e-postklient</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      copyEmailFormat(selectedResponse);
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                  >
-                    <FileText size={18} />
-                    <span>Kopier rådata</span>
+                    <span>Åpne e-post i e-postklient</span>
                   </button>
                 </div>
               </div>
