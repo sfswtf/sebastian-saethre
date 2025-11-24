@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Mail, Save, Trash2 } from 'lucide-react';
-import { LocalStorageService } from '../../lib/localStorage';
 import { supabase } from '../../lib/supabase';
 
 type MessageStatus = 'unread' | 'read' | 'replied';
@@ -28,7 +27,38 @@ export function ContactMessages() {
   const fetchMessages = async () => {
     try {
       setLoading(true);
-      // Try Supabase first
+      // Try RPC function first (bypasses RLS)
+      const { data: rpcData, error: rpcError } = await supabase
+        .rpc('get_contact_messages');
+
+      if (!rpcError && rpcData) {
+        // Map RPC data to ContactMessage format
+        const mappedData: ContactMessage[] = rpcData.map((msg: any) => ({
+          id: msg.id.toString(),
+          name: msg.name || '',
+          email: msg.email || '',
+          message: msg.message || '',
+          created_at: msg.created_at || new Date().toISOString(),
+          admin_notes: msg.admin_notes || null,
+          status: (msg.status as MessageStatus) || 'unread',
+        }));
+
+        const sorted = mappedData.sort((a, b) => 
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+
+        // Initialize editing notes with current values
+        const notesState: { [key: string]: string } = {};
+        sorted.forEach(message => {
+          notesState[message.id] = message.admin_notes || '';
+        });
+        setEditingNotes(notesState);
+        setMessages(sorted);
+        setLoading(false);
+        return;
+      }
+
+      // Fallback to direct select (requires RLS policy)
       const { data: supabaseData, error: supabaseError } = await supabase
         .from('contact_messages')
         .select('*')
@@ -61,32 +91,13 @@ export function ContactMessages() {
         return;
       }
 
-      // Fallback to localStorage
-      const data = LocalStorageService.get<ContactMessage>('contact_messages');
-      const sorted = data.sort((a, b) => 
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-      
-      // Initialize editing notes with current values
-      const notesState: { [key: string]: string } = {};
-      sorted.forEach(message => {
-        notesState[message.id] = message.admin_notes || '';
-      });
-      setEditingNotes(notesState);
-      setMessages(sorted);
+      // No data found
+      setMessages([]);
+      setEditingNotes({});
     } catch (error) {
       console.error('Error fetching messages:', error);
       toast.error('Kunne ikke hente meldinger');
-      // Fallback to localStorage on error
-      try {
-        const data = LocalStorageService.get<ContactMessage>('contact_messages');
-        const sorted = data.sort((a, b) => 
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-        setMessages(sorted);
-      } catch (localError) {
-        console.error('Error with localStorage fallback:', localError);
-      }
+      setMessages([]);
     } finally {
       setLoading(false);
     }
@@ -94,16 +105,15 @@ export function ContactMessages() {
 
   const updateStatus = async (id: string, status: MessageStatus) => {
     try {
-      // Try Supabase first
       const { error: supabaseError } = await supabase
         .from('contact_messages')
         .update({ status })
         .eq('id', id);
 
       if (supabaseError) {
-        console.warn('Supabase update failed, using localStorage:', supabaseError);
-        // Fallback to localStorage
-        LocalStorageService.update('contact_messages', id, { status });
+        console.error('Error updating status:', supabaseError);
+        toast.error('Kunne ikke oppdatere status');
+        return;
       }
       toast.success('Status oppdatert');
       fetchMessages();
@@ -116,16 +126,15 @@ export function ContactMessages() {
   const updateAdminNotes = async (id: string) => {
     try {
       const notes = editingNotes[id] || null;
-      // Try Supabase first
       const { error: supabaseError } = await supabase
         .from('contact_messages')
         .update({ admin_notes: notes })
         .eq('id', id);
 
       if (supabaseError) {
-        console.warn('Supabase update failed, using localStorage:', supabaseError);
-        // Fallback to localStorage
-        LocalStorageService.update('contact_messages', id, { admin_notes: notes });
+        console.error('Error updating notes:', supabaseError);
+        toast.error('Kunne ikke oppdatere notater');
+        return;
       }
       toast.success('Notater oppdatert');
       fetchMessages();
