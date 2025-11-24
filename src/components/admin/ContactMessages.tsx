@@ -4,7 +4,7 @@ import { Mail, Save, Trash2 } from 'lucide-react';
 import { LocalStorageService } from '../../lib/localStorage';
 import { supabase } from '../../lib/supabase';
 
-type MessageStatus = 'new' | 'in_progress' | 'completed';
+type MessageStatus = 'unread' | 'read' | 'replied';
 
 interface ContactMessage {
   id: string;
@@ -43,7 +43,7 @@ export function ContactMessages() {
           message: msg.message || '',
           created_at: msg.created_at || new Date().toISOString(),
           admin_notes: msg.admin_notes || null,
-          status: (msg.status as MessageStatus) || 'new',
+          status: (msg.status as MessageStatus) || 'unread',
         }));
 
         const sorted = mappedData.sort((a, b) => 
@@ -98,7 +98,7 @@ export function ContactMessages() {
       const { error: supabaseError } = await supabase
         .from('contact_messages')
         .update({ status })
-        .eq('id', parseInt(id));
+        .eq('id', id);
 
       if (supabaseError) {
         console.warn('Supabase update failed, using localStorage:', supabaseError);
@@ -120,7 +120,7 @@ export function ContactMessages() {
       const { error: supabaseError } = await supabase
         .from('contact_messages')
         .update({ admin_notes: notes })
-        .eq('id', parseInt(id));
+        .eq('id', id);
 
       if (supabaseError) {
         console.warn('Supabase update failed, using localStorage:', supabaseError);
@@ -204,16 +204,16 @@ export function ContactMessages() {
                   value={message.status}
                   onChange={(e) => updateStatus(message.id, e.target.value as MessageStatus)}
                   className={`rounded-full px-3 py-1 text-sm font-medium ${
-                    message.status === 'new'
+                    message.status === 'unread'
                       ? 'bg-yellow-100 text-yellow-800'
-                      : message.status === 'in_progress'
+                      : message.status === 'read'
                       ? 'bg-blue-100 text-blue-800'
                       : 'bg-green-100 text-green-800'
                   }`}
                 >
-                  <option value="new">Ny</option>
-                  <option value="in_progress">Under behandling</option>
-                  <option value="completed">Fullført</option>
+                  <option value="unread">Ulest</option>
+                  <option value="read">Lest</option>
+                  <option value="replied">Besvart</option>
                 </select>
               </div>
 
