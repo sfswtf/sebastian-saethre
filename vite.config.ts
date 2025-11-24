@@ -9,7 +9,6 @@ export default defineConfig({
     sitemap({
       hostname: 'https://sebastiansaethre.no',
       dynamicRoutes: [
-        '/',
         '/portfolio',
         '/blog',
         '/courses',
@@ -20,6 +19,7 @@ export default defineConfig({
         '/onboarding',
         // Add more routes as needed
       ],
+      readable: true, // Makes sitemap more readable
     }),
   ],
   optimizeDeps: {

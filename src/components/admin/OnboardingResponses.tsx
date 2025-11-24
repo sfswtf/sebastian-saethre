@@ -21,6 +21,13 @@ interface OnboardingResponse {
   created_at: string;
 }
 
+type PersonaType = 'beginnerPersonal' | 'advancedPersonal' | 'beginnerBusiness' | 'advancedBusiness';
+
+interface EmailTemplate {
+  subject: string;
+  body: string;
+}
+
 export function OnboardingResponses() {
   const [responses, setResponses] = useState<OnboardingResponse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,6 +54,162 @@ export function OnboardingResponses() {
 
   const closeDetailModal = () => {
     setSelectedResponse(null);
+  };
+
+  // Determine customer persona based on response data
+  const determinePersona = (response: OnboardingResponse): PersonaType => {
+    const isBeginner = 
+      response.current_usage_options.length === 0 && 
+      (!response.current_usage || response.current_usage.trim() === '') &&
+      (response.pain_points_options.includes('New to AI') || 
+       response.pain_points_options.includes('Helt ny i AI') ||
+       response.pain_points?.toLowerCase().includes('ny') ||
+       response.pain_points?.toLowerCase().includes('beginner') ||
+       response.pain_points?.toLowerCase().includes('starter'));
+
+    if (response.type === 'personal') {
+      return isBeginner ? 'beginnerPersonal' : 'advancedPersonal';
+    } else {
+      return isBeginner ? 'beginnerBusiness' : 'advancedBusiness';
+    }
+  };
+
+  // Email templates for each persona
+  const emailTemplates: Record<PersonaType, EmailTemplate> = {
+    beginnerPersonal: {
+      subject: 'Velkommen til AI-verdenen! 🚀',
+      body: `Hei {name}!
+
+Takk for at du tok deg tid til å fylle ut skjemaet! Jeg ser at du er ny i AI-verdenen, og det er helt greit - alle starter et sted.
+
+Jeg hjelper deg gjerne med å komme i gang med praktisk AI-bruk. Her er noen ressurser som kan være nyttige for deg:
+
+📚 Starter-ressurser:
+- Enkle guider for å komme i gang med AI-verktøy
+- Steg-for-steg tutorials for nybegynnere
+- Eksempler på praktiske bruksområder
+
+Jeg sender ut nyhetsbrev med tips og triks spesielt for nybegynnere. Hvis du har spørsmål, bare send meg en e-post!
+
+Med vennlig hilsen,
+Sebastian Saethre
+AI Educator & Practitioner
+
+---
+Twitter: @seb_fs_ai
+YouTube: @sebfsai`
+    },
+    advancedPersonal: {
+      subject: 'Takk for din interesse! 🎯',
+      body: `Hei {name}!
+
+Takk for at du tok deg tid til å fylle ut skjemaet! Jeg ser at du allerede har erfaring med AI-verktøy, og det er flott.
+
+Jeg kan hjelpe deg med å ta neste steg og utforske mer avanserte teknikker og verktøy. Her er noen ressurser som kan være relevante for deg:
+
+🚀 Avanserte ressurser:
+- Dypere dykker i AI-teknologi
+- Avanserte teknikker og workflows
+- Nyheter om nye verktøy og muligheter
+
+Jeg sender ut nyhetsbrev med avanserte tips, nye verktøy og case studies. Hvis du har spørsmål eller ønsker å diskutere noe spesifikt, bare send meg en e-post!
+
+Med vennlig hilsen,
+Sebastian Saethre
+AI Educator & Practitioner
+
+---
+Twitter: @seb_fs_ai
+YouTube: @sebfsai`
+    },
+    beginnerBusiness: {
+      subject: 'Velkommen - La oss ta bedriften din til neste nivå med AI 💼',
+      body: `Hei {name}!
+
+Takk for at du tok deg tid til å fylle ut skjemaet! Jeg ser at {company_info} og er ny i AI-verdenen.
+
+Jeg hjelper bedrifter med å implementere AI på en praktisk og forretningsfokusert måte. Her er noen ressurser som kan være nyttige for dere:
+
+📊 Forretningsfokuserte ressurser:
+- AI-implementering for bedrifter
+- ROI-analyse og case studies
+- Best practices for AI-adopsjon
+- Verktøy spesielt for forretningsbruk
+
+Jeg sender ut nyhetsbrev med forretningsfokuserte AI-nyheter, case studies og tips for implementering. Hvis du ønsker å diskutere hvordan AI kan hjelpe bedriften din spesifikt, kan vi avtale et møte.
+
+Med vennlig hilsen,
+Sebastian Saethre
+AI Educator & Practitioner
+
+---
+Twitter: @seb_fs_ai
+YouTube: @sebfsai`
+    },
+    advancedBusiness: {
+      subject: 'Takk for din interesse - La oss utvide AI-kompetansen din 💼',
+      body: `Hei {name}!
+
+Takk for at du tok deg tid til å fylle ut skjemaet! Jeg ser at {company_info} allerede har erfaring med AI-verktøy, og det er flott.
+
+Jeg kan hjelpe dere med å ta neste steg og maksimere verdien av AI i bedriften. Her er noen ressurser som kan være relevante:
+
+🎯 Avanserte forretningsressurser:
+- Avanserte AI-strategier for bedrifter
+- Skalering av AI-implementeringer
+- Integrasjon med eksisterende systemer
+- Nyheter om enterprise AI-verktøy
+
+Jeg sender ut nyhetsbrev med avanserte forretningsfokuserte AI-nyheter, case studies og best practices. Hvis du ønsker å diskutere spesifikke utfordringer eller muligheter, kan vi avtale et møte.
+
+Med vennlig hilsen,
+Sebastian Saethre
+AI Educator & Practitioner
+
+---
+Twitter: @seb_fs_ai
+YouTube: @sebfsai`
+    }
+  };
+
+  // Generate personalized email based on persona
+  const generatePersonaEmail = (response: OnboardingResponse): { subject: string; body: string } => {
+    const persona = determinePersona(response);
+    const template = emailTemplates[persona];
+    
+    // Determine company info for business personas
+    const companyInfo = response.company_name 
+      ? `du representerer ${response.company_name}`
+      : 'du representerer en bedrift';
+    
+    let body = template.body
+      .replace(/{name}/g, response.name)
+      .replace(/{company_info}/g, companyInfo);
+
+    // Add personalized touches based on goals
+    if (response.goals && response.goals.length > 0) {
+      body += `\n\nBasert på målene dine (${response.goals.join(', ')}), kan jeg hjelpe deg med spesifikke ressurser og veiledning.`;
+    }
+
+    return {
+      subject: template.subject,
+      body: body
+    };
+  };
+
+  // Copy persona-based email to clipboard
+  const copyPersonaEmail = (response: OnboardingResponse) => {
+    const email = generatePersonaEmail(response);
+    const fullEmail = `Subject: ${email.subject}\n\n${email.body}`;
+    navigator.clipboard.writeText(fullEmail);
+    toast.success('Personalisert e-post kopiert til utklippstavle!');
+  };
+
+  // Open email client with persona-based email
+  const openPersonaEmail = (response: OnboardingResponse) => {
+    const email = generatePersonaEmail(response);
+    const mailtoLink = `mailto:${response.email}?subject=${encodeURIComponent(email.subject)}&body=${encodeURIComponent(email.body)}`;
+    window.location.href = mailtoLink;
   };
 
   const fetchResponses = async () => {
@@ -265,13 +428,22 @@ ${response.pain_points_options.length > 0 ? `Utfordringsalternativer: ${response
                           </a>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <span className={`px-2 py-1 rounded-full text-xs ${
-                            response.type === 'professional' 
-                              ? 'bg-blue-100 text-blue-800' 
-                              : 'bg-green-100 text-green-800'
-                          }`}>
-                            {response.type === 'professional' ? 'Profesjonell' : 'Personlig'}
-                          </span>
+                          <div className="flex flex-col gap-1">
+                            <span className={`px-2 py-1 rounded-full text-xs ${
+                              response.type === 'professional' 
+                                ? 'bg-blue-100 text-blue-800' 
+                                : 'bg-green-100 text-green-800'
+                            }`}>
+                              {response.type === 'professional' ? 'Profesjonell' : 'Personlig'}
+                            </span>
+                            <span className={`px-2 py-1 rounded-full text-xs text-center ${
+                              determinePersona(response).includes('beginner')
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-purple-100 text-purple-800'
+                            }`}>
+                              {determinePersona(response).includes('beginner') ? 'Nybegynner' : 'Erfaren'}
+                            </span>
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm" onClick={(e) => e.stopPropagation()}>
                           <div className="flex items-center gap-2">
@@ -285,9 +457,18 @@ ${response.pain_points_options.length > 0 ? `Utfordringsalternativer: ${response
                             <button
                               onClick={() => copyEmailFormat(response)}
                               className="flex items-center gap-1 text-gray-600 hover:text-gray-700 px-2 py-1 rounded hover:bg-gray-50"
+                              title="Kopier rådata"
+                            >
+                              <FileText size={16} />
+                              <span>Rådata</span>
+                            </button>
+                            <button
+                              onClick={() => copyPersonaEmail(response)}
+                              className="flex items-center gap-1 text-brand-600 hover:text-brand-700 px-2 py-1 rounded hover:bg-brand-50"
+                              title="Kopier personalisert e-post"
                             >
                               <Mail size={16} />
-                              <span>Kopier</span>
+                              <span>E-post</span>
                             </button>
                             <button
                               onClick={() => toggleRowExpansion(response.id)}
@@ -564,27 +745,59 @@ ${response.pain_points_options.length > 0 ? `Utfordringsalternativer: ${response
                   </p>
                 </div>
 
+                {/* Persona Info */}
+                <div className="bg-brand-50 rounded-lg p-4 border border-brand-200">
+                  <h4 className="font-semibold text-lg text-gray-900 mb-2">Kunde Persona</h4>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`px-3 py-1 rounded-full text-sm ${
+                      determinePersona(selectedResponse).includes('beginner')
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-purple-100 text-purple-800'
+                    }`}>
+                      {determinePersona(selectedResponse).includes('beginner') ? '🆕 Nybegynner' : '⭐ Erfaren'}
+                    </span>
+                    <span className={`px-3 py-1 rounded-full text-sm ${
+                      selectedResponse.type === 'professional' 
+                        ? 'bg-blue-100 text-blue-800' 
+                        : 'bg-green-100 text-green-800'
+                    }`}>
+                      {selectedResponse.type === 'professional' ? '💼 Profesjonell' : '👤 Personlig'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    Persona: <span className="font-medium">{determinePersona(selectedResponse)}</span>
+                  </p>
+                </div>
+
                 {/* Actions */}
-                <div className="flex gap-3 pt-4 border-t border-gray-200">
+                <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200">
                   <button
                     onClick={() => {
-                      copyEmailFormat(selectedResponse);
-                      closeDetailModal();
+                      copyPersonaEmail(selectedResponse);
                     }}
                     className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors"
                   >
                     <Mail size={18} />
-                    <span>Kopier til utklippstavle</span>
+                    <span>Kopier personalisert e-post</span>
                   </button>
-                  <a
-                    href={`mailto:${selectedResponse.email}?subject=Oppfølging%20fra%20Sebastian%20Saethre&body=${encodeURIComponent(
-                      `Hei ${selectedResponse.name},\n\nTakk for din interesse!\n\nMed vennlig hilsen,\nSebastian Saethre`
-                    )}`}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                  <button
+                    onClick={() => {
+                      openPersonaEmail(selectedResponse);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                   >
                     <Mail size={18} />
-                    <span>Send e-post</span>
-                  </a>
+                    <span>Åpne i e-postklient</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      copyEmailFormat(selectedResponse);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                  >
+                    <FileText size={18} />
+                    <span>Kopier rådata</span>
+                  </button>
                 </div>
               </div>
             </motion.div>
