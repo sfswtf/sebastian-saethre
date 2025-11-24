@@ -104,8 +104,8 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
       <motion.div 
         className="relative h-screen flex flex-col"
         initial={{ opacity: 0 }}
-        animate={{ opacity: videoEnded ? 1 : 0 }}
-        transition={{ duration: 0.5, ease: "easeOut", delay: videoEnded ? 0 : 0 }}
+        animate={{ opacity: (videoEnded || !videoUrl || videoError) && imageLoaded ? 1 : 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
         {children}
       </motion.div>

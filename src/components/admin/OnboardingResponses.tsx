@@ -36,6 +36,7 @@ export function OnboardingResponses() {
 
   useEffect(() => {
     fetchResponses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleRowExpansion = (id: string) => {
@@ -58,14 +59,20 @@ export function OnboardingResponses() {
 
   // Determine customer persona based on response data
   const determinePersona = (response: OnboardingResponse): PersonaType => {
+    // Safely check arrays - handle null/undefined
+    const currentUsageOptions = response.current_usage_options || [];
+    const painPointsOptions = response.pain_points_options || [];
+    const currentUsage = response.current_usage || '';
+    const painPoints = response.pain_points || '';
+
     const isBeginner = 
-      response.current_usage_options.length === 0 && 
-      (!response.current_usage || response.current_usage.trim() === '') &&
-      (response.pain_points_options.includes('New to AI') || 
-       response.pain_points_options.includes('Helt ny i AI') ||
-       response.pain_points?.toLowerCase().includes('ny') ||
-       response.pain_points?.toLowerCase().includes('beginner') ||
-       response.pain_points?.toLowerCase().includes('starter'));
+      currentUsageOptions.length === 0 && 
+      currentUsage.trim() === '' &&
+      (painPointsOptions.includes('New to AI') || 
+       painPointsOptions.includes('Helt ny i AI') ||
+       painPoints.toLowerCase().includes('ny') ||
+       painPoints.toLowerCase().includes('beginner') ||
+       painPoints.toLowerCase().includes('starter'));
 
     if (response.type === 'personal') {
       return isBeginner ? 'beginnerPersonal' : 'advancedPersonal';
@@ -214,12 +221,22 @@ YouTube: @sebfsai`
 
   const fetchResponses = async () => {
     try {
+      setLoading(true);
       // Try RPC function first (bypasses RLS)
       const { data: rpcData, error: rpcError } = await supabase
         .rpc('get_onboarding_responses');
 
       if (!rpcError && rpcData) {
-        setResponses(rpcData as OnboardingResponse[]);
+        // Ensure all arrays are properly initialized
+        const normalizedData = (rpcData as OnboardingResponse[]).map(response => ({
+          ...response,
+          goals: response.goals || [],
+          current_usage_options: response.current_usage_options || [],
+          pain_points_options: response.pain_points_options || [],
+          current_usage: response.current_usage || '',
+          pain_points: response.pain_points || '',
+        }));
+        setResponses(normalizedData);
         setLoading(false);
         return;
       }
@@ -236,7 +253,16 @@ YouTube: @sebfsai`
         toast.error('Kunne ikke hente innsendinger. Sjekk at RPC-funksjonen er opprettet.');
         setResponses([]);
       } else {
-        setResponses(data || []);
+        // Ensure all arrays are properly initialized
+        const normalizedData = (data || []).map((response: OnboardingResponse) => ({
+          ...response,
+          goals: response.goals || [],
+          current_usage_options: response.current_usage_options || [],
+          pain_points_options: response.pain_points_options || [],
+          current_usage: response.current_usage || '',
+          pain_points: response.pain_points || '',
+        }));
+        setResponses(normalizedData);
       }
     } catch (error) {
       console.error('Error fetching responses:', error);
@@ -272,11 +298,11 @@ YouTube: @sebfsai`
       response.type === 'personal' ? 'Personlig' : 'Profesjonell',
       response.company_name || '',
       response.industry || '',
-      response.goals.join(', '),
-      response.current_usage,
-      response.current_usage_options.join(', '),
-      response.pain_points,
-      response.pain_points_options.join(', '),
+      (response.goals || []).join(', '),
+      response.current_usage || '',
+      (response.current_usage_options || []).join(', '),
+      response.pain_points || '',
+      (response.pain_points_options || []).join(', '),
       response.consent ? 'Ja' : 'Nei'
     ]);
 
@@ -300,16 +326,20 @@ YouTube: @sebfsai`
 
   const exportToEmailFormat = () => {
     const emailContent = responses.map(response => {
+      const goals = response.goals || [];
+      const currentUsageOptions = response.current_usage_options || [];
+      const painPointsOptions = response.pain_points_options || [];
+      
       return `--- NY INNSENDING ---
 Dato: ${new Date(response.created_at).toLocaleString('no-NO')}
 Navn: ${response.name}
 E-post: ${response.email}
 Telefon: ${response.phone || 'Ikke oppgitt'}
 Type: ${response.type === 'personal' ? 'Personlig' : 'Profesjonell'}
-${response.company_name ? `Firmanavn: ${response.company_name}\n` : ''}${response.industry ? `Bransje: ${response.industry}\n` : ''}Mål: ${response.goals.join(', ')}
+${response.company_name ? `Firmanavn: ${response.company_name}\n` : ''}${response.industry ? `Bransje: ${response.industry}\n` : ''}Mål: ${goals.join(', ')}
 Nåværende bruk: ${response.current_usage || 'Ikke oppgitt'}
-${response.current_usage_options.length > 0 ? `Bruksalternativer: ${response.current_usage_options.join(', ')}\n` : ''}Utfordringer: ${response.pain_points || 'Ikke oppgitt'}
-${response.pain_points_options.length > 0 ? `Utfordringsalternativer: ${response.pain_points_options.join(', ')}\n` : ''}Samtykke: ${response.consent ? 'Ja' : 'Nei'}
+${currentUsageOptions.length > 0 ? `Bruksalternativer: ${currentUsageOptions.join(', ')}\n` : ''}Utfordringer: ${response.pain_points || 'Ikke oppgitt'}
+${painPointsOptions.length > 0 ? `Utfordringsalternativer: ${painPointsOptions.join(', ')}\n` : ''}Samtykke: ${response.consent ? 'Ja' : 'Nei'}
 
 `;
     }).join('\n');
@@ -336,8 +366,8 @@ Telefon: ${response.phone || 'Ikke oppgitt'}
 Type: ${response.type === 'personal' ? 'Personlig' : 'Profesjonell'}
 ${response.company_name ? `Firmanavn: ${response.company_name}\n` : ''}${response.industry ? `Bransje: ${response.industry}\n` : ''}Mål: ${response.goals.join(', ')}
 Nåværende bruk: ${response.current_usage || 'Ikke oppgitt'}
-${response.current_usage_options.length > 0 ? `Bruksalternativer: ${response.current_usage_options.join(', ')}\n` : ''}Utfordringer: ${response.pain_points || 'Ikke oppgitt'}
-${response.pain_points_options.length > 0 ? `Utfordringsalternativer: ${response.pain_points_options.join(', ')}\n` : ''}Samtykke: ${response.consent ? 'Ja' : 'Nei'}`;
+${(response.current_usage_options || []).length > 0 ? `Bruksalternativer: ${(response.current_usage_options || []).join(', ')}\n` : ''}Utfordringer: ${response.pain_points || 'Ikke oppgitt'}
+${(response.pain_points_options || []).length > 0 ? `Utfordringsalternativer: ${(response.pain_points_options || []).join(', ')}\n` : ''}Samtykke: ${response.consent ? 'Ja' : 'Nei'}`;
 
     navigator.clipboard.writeText(emailContent);
     toast.success('Kopiert til utklippstavle!');
