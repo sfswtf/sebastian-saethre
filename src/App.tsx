@@ -166,12 +166,12 @@ function HomePage() {
                   {t('home.cta.onboarding')}
                 </AnimatedButton>
               </Link>
-              <Link to="/blog" className="w-full sm:w-auto">
+              <Link to="/resources" className="w-full sm:w-auto">
                 <AnimatedButton 
                   variant="secondary" 
                   className="w-full sm:w-auto rounded-lg px-6 md:px-8 py-2.5 md:py-3 text-sm md:text-base font-semibold bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 active:bg-white/30 transition-all duration-200"
                 >
-                  {t('home.cta.blog')}
+                  {t('home.cta.resources')}
                 </AnimatedButton>
               </Link>
             </div>

@@ -46,6 +46,7 @@ const translations: Record<Language, Record<string, string>> = {
     'home.subtitle': '',
     'home.description': 'Gjør AI tilgjengelig, praktisk og revolusjonerende på tvers av bransjer.',
     'home.cta.blog': 'Siste nytt',
+    'home.cta.resources': 'Nyttige AI Verktøy',
     'home.cta.courses': 'Gratis kurs',
     'home.cta.community': 'Bli med i fellesskapet',
     'home.cta.onboarding': 'Start AI Onboarding',

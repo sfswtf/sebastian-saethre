@@ -31,7 +31,10 @@ export function ContactMessages() {
       const { data: rpcData, error: rpcError } = await supabase
         .rpc('get_contact_messages');
 
+      console.log('RPC call result:', { rpcData, rpcError });
+
       if (!rpcError && rpcData) {
+        console.log('RPC returned data:', rpcData.length, 'messages');
         // Map RPC data to ContactMessage format
         const mappedData: ContactMessage[] = rpcData.map((msg: any) => ({
           id: msg.id.toString(),
@@ -56,6 +59,8 @@ export function ContactMessages() {
         setMessages(sorted);
         setLoading(false);
         return;
+      } else {
+        console.warn('RPC error or no data:', rpcError);
       }
 
       // Fallback to direct select (requires RLS policy)
