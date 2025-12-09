@@ -131,59 +131,36 @@ function HomePage() {
         imageUrl="/images/hero-background.jpg"
         videoUrl="/images/hero-intro.mp4"
       >
-        <div className="relative w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-screen flex flex-col justify-center items-center">
-          <div className="text-center w-full flex flex-col items-center gap-4 md:gap-6">
-            {/* Logo symbol only - reduced to fit screen */}
-            <img
-              src="/images/logo.jpg"
-              alt="Sebastian Saethre logo symbol"
-              className="h-28 sm:h-32 md:h-40 lg:h-44"
-              style={{
-                filter: 'drop-shadow(0 0 16px rgba(0, 0, 0, 0.5))',
-                maxWidth: '90vw',
-                marginBottom: '-1.16rem'
-              }}
-              loading="eager"
-            />
-            
-            {/* Name from logo.png image - text part only, positioned right below logo - 30% bigger */}
-            <img
-              src="/images/logo.png"
-              alt="Sebastian Saethre"
-              className="mb-2 md:mb-4 h-[3.25rem] sm:h-[3.9rem] md:h-[4.55rem] lg:h-[5.2rem] w-auto"
-              style={{
-                mixBlendMode: 'normal',
-                filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.3))',
-                marginTop: '-0.96rem'
-              }}
-              loading="eager"
-              onError={(e) => {
-                // If logo.png doesn't exist, hide it
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-            
-            <p className="mt-10 sm:mt-12 text-xs sm:text-sm md:text-base text-slate-200 max-w-2xl leading-relaxed px-4">
-              {t('home.description')}
-            </p>
-            
-            <div className="mt-4 md:mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 w-full max-w-md px-4">
-              <Link to="/onboarding" className="w-full sm:w-auto">
-                <AnimatedButton 
-                  variant="primary" 
-                  className="w-full sm:w-auto rounded-lg px-6 md:px-8 py-2.5 md:py-3 text-sm md:text-base font-semibold bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-100"
-                >
-                  {t('home.cta.onboarding')}
-                </AnimatedButton>
-              </Link>
-              <Link to="/resources" className="w-full sm:w-auto">
-                <AnimatedButton 
-                  variant="secondary" 
-                  className="w-full sm:w-auto rounded-lg px-6 md:px-8 py-2.5 md:py-3 text-sm md:text-base font-semibold bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 active:bg-white/30 transition-all duration-200"
-                >
-                  {t('home.cta.resources')}
-                </AnimatedButton>
-              </Link>
+        <div className="relative w-full mx-auto px-4 sm:px-6 lg:px-8 h-screen flex flex-col justify-center items-center">
+          <div className="text-center w-full flex flex-col items-center gap-5 md:gap-6">
+            <div className="max-w-2xl md:max-w-3xl mx-auto">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                {t('home.hero.h1')}
+              </h1>
+              <p className="mt-3 text-sm md:text-base text-white/90">
+                {t('home.hero.nameRole')}
+              </p>
+              <p className="mt-4 md:mt-5 text-sm md:text-base text-slate-200 leading-relaxed">
+                {t('home.hero.body')}
+              </p>
+            </div>
+
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 w-full max-w-md">
+              <a
+                href="/onboarding"
+                className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg px-6 md:px-8 py-2.5 md:py-3 text-sm md:text-base font-semibold bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-400"
+              >
+                {t('home.cta.onboarding')}
+              </a>
+              <p className="text-xs md:text-sm text-white/80 mt-1 sm:mt-0 sm:ml-2">
+                {t('home.hero.helper')}
+              </p>
+              <a
+                href="/resources"
+                className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg px-6 md:px-8 py-2.5 md:py-3 text-sm md:text-base font-semibold border-2 border-white/60 text-white hover:bg-white/10 hover:border-white transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-400"
+              >
+                {t('home.cta.resources')}
+              </a>
             </div>
           </div>
         </div>

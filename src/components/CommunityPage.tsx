@@ -241,25 +241,8 @@ export function CommunityPage() {
           })}
         </div>
 
-        {/* CTA Section */}
-        <AnimatedCard className="p-8 bg-brand-600 text-center">
-          <h2 className="text-3xl font-bold mb-4 text-white">
-            {t('community.readyToJoin')}
-          </h2>
-          <p className="text-white/90 mb-6 text-lg">
-            {t('community.joinMessage')}
-          </p>
-          <Link to="/onboarding">
-            <AnimatedButton
-              variant="secondary"
-              className="bg-white text-brand-600 hover:bg-neutral-100 px-8 py-3"
-            >
-              {t('community.getStarted')}
-            </AnimatedButton>
-          </Link>
-        </AnimatedCard>
+        {/* CTA Section removed per request */}
       </div>
     </AnimatedSection>
   );
 }
-
