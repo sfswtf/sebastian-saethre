@@ -110,8 +110,8 @@ export function OnboardingForm() {
         onClose={() => setShowThankYouModal(false)}
         onViewResources={handleViewResources}
       />
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl w-full mx-auto px-4">
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 overflow-x-hidden">
         {/* Progress Indicator */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
@@ -460,4 +460,3 @@ export function OnboardingForm() {
     </>
   );
 }
-

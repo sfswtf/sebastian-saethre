@@ -10,7 +10,6 @@ interface ParallaxHeroProps {
 
 export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, videoUrl }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [videoPlaying, setVideoPlaying] = useState(false);
@@ -28,7 +27,6 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
       // Reset all states when video URL changes
       setVideoEnded(false);
       setVideoError(false);
-      setVideoReady(false);
       setVideoPlaying(false);
       setGlobalVideoEnded(false);
       
@@ -43,7 +41,6 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
 
       // Wait for video to be ready to play
       const handleCanPlay = () => {
-        setVideoReady(true);
         // Try to play video
         video.play().then(() => {
           setVideoPlaying(true);

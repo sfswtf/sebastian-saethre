@@ -36,7 +36,16 @@ export function ContactMessages() {
       if (!rpcError && rpcData) {
         console.log('RPC returned data:', rpcData.length, 'messages');
         // Map RPC data to ContactMessage format
-        const mappedData: ContactMessage[] = rpcData.map((msg: any) => ({
+        type RpcMessage = {
+          id: string | number;
+          name?: string;
+          email?: string;
+          message?: string;
+          created_at?: string;
+          admin_notes?: string | null;
+          status?: MessageStatus;
+        };
+        const mappedData: ContactMessage[] = rpcData.map((msg: RpcMessage) => ({
           id: msg.id.toString(),
           name: msg.name || '',
           email: msg.email || '',
@@ -71,7 +80,7 @@ export function ContactMessages() {
 
       if (!supabaseError && supabaseData && supabaseData.length > 0) {
         // Map Supabase data to ContactMessage format
-        const mappedData: ContactMessage[] = supabaseData.map((msg: any) => ({
+        const mappedData: ContactMessage[] = supabaseData.map((msg: RpcMessage) => ({
           id: msg.id.toString(),
           name: msg.name || '',
           email: msg.email || '',

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -211,4 +212,11 @@
 
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+/* Rough mode utility class for future use */
+.rough-mode {
+  font-family: 'Special Elite', 'Courier New', monospace;
+  background-color: #0a0a0a;
+  color: #f5f5f5;
 }

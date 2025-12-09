@@ -16,6 +16,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.blog': 'Nyheter',
     'nav.courses': 'Kurs',
     'nav.resources': 'Ressurser',
+    'nav.products': 'Produkter',
     'nav.community': 'Fellesskap',
     'nav.contact': 'Kontakt',
     
@@ -98,7 +99,7 @@ const translations: Record<Language, Record<string, string>> = {
     'community.description': 'Bli med i fellesskapet - Discord, nyhetsbrev, gratis kurs og mer.',
     'community.comingSoon': 'Fellesskap kommer snart.',
     'community.stayUpdated': 'Hold deg oppdatert',
-    'community.newsletterDesc': 'Abonner på vårt nyhetsbrev for de siste AI-innsiktene, verktøyvurderinger og eksklusivt innhold.',
+    'community.newsletterDesc': 'Få ukentlige oppdateringer om AI-verktøy, veiledninger og bransjeinnsikt rett i innboksen din.',
     'community.thankYouSubscribed': 'Takk for at du abonnerte! Sjekk e-posten din for å bekrefte.',
     'community.subscribing': 'Abonnerer...',
     'community.subscribe': 'Abonner',
@@ -110,7 +111,6 @@ const translations: Record<Language, Record<string, string>> = {
     'community.discordDesc': 'Bli med i vår Discord-server for sanntidsdiskusjoner, Q&A-økter og nettverk med andre AI-entusiaster.',
     'community.joinDiscord': 'Bli med i Discord',
     'community.newsletterTitle': 'Nyhetsbrev',
-    'community.newsletterDesc': 'Få ukentlige oppdateringer om AI-verktøy, veiledninger og bransjeinnsikter levert til innboksen din.',
     'community.keepUpdatedTitle': 'Hold deg oppdatert',
     'community.keepUpdatedDesc': 'Følg meg på Twitter og YouTube for de siste oppdateringene, tips og innsikter om AI.',
     'community.exclusiveTitle': 'Eksklusive ressurser',
@@ -207,11 +207,6 @@ const translations: Record<Language, Record<string, string>> = {
     'portfolio.viewOnGitHub': 'Se på GitHub',
     'portfolio.projectGallery': 'Prosjektgalleri',
     
-    // Resources
-    'resources.all': 'Alle',
-    'resources.worthIt': 'Verdt det',
-    'resources.visit': 'Besøk',
-    
     // About
     'about.title': 'Om',
     'about.para1': 'Jeg heter Sebastian Saethre og jobber for å gjøre kunstig intelligens tilgjengelig og praktisk for alle. Målet mitt er å bygge en bro mellom komplekse AI-konsepter og virkelige applikasjoner på tvers av bransjer.',
@@ -237,6 +232,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.blog': 'News',
     'nav.courses': 'Courses',
     'nav.resources': 'Resources',
+    'nav.products': 'Products',
     'nav.community': 'Community',
     'nav.contact': 'Contact',
     
@@ -319,7 +315,6 @@ const translations: Record<Language, Record<string, string>> = {
     'community.description': 'Join our community - Discord, Newsletter, Free Courses, and more.',
     'community.comingSoon': 'Community features coming soon. Discord, newsletter signup, and community tiers will be available here.',
     'community.stayUpdated': 'Stay Updated',
-    'community.newsletterDesc': 'Subscribe to our newsletter for the latest AI insights, tool reviews, and exclusive content.',
     'community.thankYouSubscribed': 'Thank you for subscribing! Check your email to confirm.',
     'community.subscribing': 'Subscribing...',
     'community.subscribe': 'Subscribe',
@@ -429,9 +424,6 @@ const translations: Record<Language, Record<string, string>> = {
     'portfolio.projectGallery': 'Project Gallery',
     
     // Resources
-    'resources.all': 'All',
-    'resources.worthIt': 'Worth it',
-    'resources.visit': 'Visit',
     
     // About
     'about.title': 'About',
@@ -512,4 +504,3 @@ export const useLanguageStore = create<LanguageState>((set, get) => ({
     return translation;
   },
 }));
-

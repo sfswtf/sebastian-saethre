@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import React from 'react';
 import { ContactForm } from './ContactForm';
-import { MapPin, Mail } from 'lucide-react';
-import { ContactFormSkeleton } from './SkeletonLoader';
+import { MapPin, Mail, Phone, Globe } from 'lucide-react';
+import { useLanguageStore } from '../stores/languageStore';
 
 interface PageContent {
   id: string;
@@ -13,109 +12,43 @@ interface PageContent {
 }
 
 export function ContactPage() {
-  const [content, setContent] = useState<PageContent | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { language } = useLanguageStore();
 
-  useEffect(() => {
-    fetchContent();
-
-    // Subscribe to real-time updates
-    const subscription = supabase
-      .channel('page_content_changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'page_content',
-          filter: 'page_id=eq.contact AND section_id=eq.info'
-        },
-        (payload) => {
-          if (payload.new) {
-            setContent(payload.new as PageContent);
-          }
-        }
-      )
-      .subscribe();
-
-    // Cleanup subscription on unmount
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  const fetchContent = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('page_content')
-        .select('*')
-        .eq('page_id', 'contact')
-        .eq('section_id', 'info')
-        .single();
-
-      if (error) throw error;
-      setContent(data);
-    } catch (error) {
-      console.error('Error fetching contact page content:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl font-bold mb-8">Kontakt Oss</h1>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Ta Kontakt</h2>
-              <div className="space-y-4">
-                <p className="flex items-center text-gray-700">
-                  <MapPin className="mr-2" size={18} />
-                  Hovden, 4755 Hovden, Norge
-                </p>
-                <p className="flex items-center text-gray-700">
-                  <Mail className="mr-2" size={18} />
-                  info@hovdenmusikklubb.no
-                </p>
-              </div>
-            </div>
-            <ContactFormSkeleton />
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const title = language === 'no' ? 'Kontakt' : 'Contact';
+  const description = language === 'no'
+    ? 'Jeg vil gjerne høre fra deg - send meg en melding så tar jeg kontakt snarest'
+    : "I'd love to hear from you - send me a message and I'll get back to you as soon as I can.";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold mb-8">{content?.title || 'Kontakt Oss'}</h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-mono">
+      <h1 className="text-3xl font-bold mb-8 text-center">{title}</h1>
       <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Ta Kontakt</h2>
-            <div className="prose prose-emerald max-w-none">
-              {content?.content.split('\n').map((paragraph, index) => (
-                <p key={index} className="mb-4">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-            <div className="space-y-4 mt-4">
-              <p className="flex items-center text-gray-700">
-                <MapPin className="mr-2" size={18} />
-                Hovden, 4755 Hovden, Norge
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-4">{language === 'no' ? 'Ta Kontakt' : 'Get in Touch'}</h2>
+            <p className="text-lg text-neutral-700 mb-6">{description}</p>
+
+            <div className="space-y-4 text-neutral-700">
+              <p className="flex items-center justify-center gap-2">
+                <Mail size={18} />
+                <a href="mailto:sebastiansaethre@gmail.com" className="text-brand-600 hover:text-brand-700">sebastiansaethre@gmail.com</a>
               </p>
-              <p className="flex items-center text-gray-700">
-                <Mail className="mr-2" size={18} />
-                info@hovdenmusikklubb.no
+              <p className="flex items-center justify-center gap-2">
+                <Phone size={18} />
+                <a href="tel:+4794493231" className="text-brand-600 hover:text-brand-700">+47 944 93 231</a>
+              </p>
+              <p className="flex items-center justify-center gap-2">
+                <Globe size={18} />
+                <a href="https://www.sebastiansaethre.com" target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:text-brand-700">www.sebastiansaethre.com</a>
               </p>
             </div>
           </div>
-          <ContactForm />
+
+          <div className="mx-auto w-full max-w-xl">
+            <ContactForm />
+          </div>
         </div>
       </div>
     </div>
   );
-} 
+}

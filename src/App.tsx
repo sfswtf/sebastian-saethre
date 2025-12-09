@@ -11,6 +11,8 @@ import { ParallaxHero } from './components/animations/ParallaxHero';
 import { AnimatedButton } from './components/animations/AnimatedButton';
 import { ProtectedRoute } from './components/ProtectedRoute'; // Not lazy - needs immediate access to auth state
 import { LocalStorageService } from './lib/localStorage';
+import { EventModal } from './components/EventModal';
+import { EventCardSkeleton } from './components/SkeletonLoader';
 
 // Lazy load heavy components
 const AdminDashboard = lazy(() => import('./components/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
@@ -28,6 +30,12 @@ const BlogPostDetailPage = lazy(() => import('./components/BlogPostDetailPage').
 const CourseDetailPage = lazy(() => import('./components/CourseDetailPage').then(m => ({ default: m.CourseDetailPage })));
 const PortfolioDetailPage = lazy(() => import('./components/PortfolioDetailPage').then(m => ({ default: m.PortfolioDetailPage })));
 const ResourceDetailPage = lazy(() => import('./components/ResourceDetailPage').then(m => ({ default: m.ResourceDetailPage })));
+const CheckoutPage = lazy(() => import('./components/CheckoutPage').then(m => ({ default: m.CheckoutPage })));
+const OrderSuccessPage = lazy(() => import('./components/OrderSuccessPage').then(m => ({ default: m.OrderSuccessPage })));
+const DigitalProductsPage = lazy(() => import('./components/DigitalProductsPage').then(m => ({ default: m.DigitalProductsPage })));
+const DigitalProductDetailPage = lazy(() => import('./components/DigitalProductDetailPage').then(m => ({ default: m.DigitalProductDetailPage })));
+const ContactPage = lazy(() => import('./components/ContactPage').then(m => ({ default: m.ContactPage })));
+const MembershipPage = lazy(() => import('./components/MembershipPage').then(m => ({ default: m.MembershipPage })));
 
 function App() {
   const { t, setLanguage } = useLanguageStore();
@@ -45,13 +53,11 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen bg-neutral-50">
-        <AnimatedNavbar>
-          <Navigation />
-        </AnimatedNavbar>
+      <div className="min-h-screen bg-neutral-50 font-mono flex flex-col">
+        <Navigation />
         
         {/* Main Content */}
-        <main className="pt-20 relative z-10">
+        <main className="pt-28 relative z-10">
           <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-600"></div></div>}>
             <Routes>
               <Route path="/" element={<HomePage />} />
@@ -68,6 +74,10 @@ function App() {
               <Route path="/onboarding" element={<OnboardingPage />} />
               <Route path="/onboarding/thanks" element={<OnboardingThanksPage />} />
               <Route path="/services" element={<ServicesPage />} />
+              <Route path="/products" element={<DigitalProductsPage />} />
+              <Route path="/products/:id" element={<DigitalProductDetailPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/order-success" element={<OrderSuccessPage />} />
               <Route 
                 path="/admin" 
                 element={
@@ -153,7 +163,7 @@ function HomePage() {
               }}
             />
             
-            <p className="text-xs sm:text-sm md:text-base text-slate-200 max-w-2xl leading-relaxed px-4">
+            <p className="mt-10 sm:mt-12 text-xs sm:text-sm md:text-base text-slate-200 max-w-2xl leading-relaxed px-4">
               {t('home.description')}
             </p>
             
@@ -219,7 +229,7 @@ function HomePage() {
 }
 
 interface Event {
-  id?: string;
+  id: string;
   title: string;
   description: string;
   event_date: string;
@@ -227,7 +237,10 @@ interface Event {
   image_url: string | null;
   status: 'draft' | 'published';
   festival: string | null;
-  created_at?: string;
+  created_at: string;
+  ticket_price: number | null;
+  capacity: number | null;
+  tickets_url: string | null;
 }
 
 function EventsPage() {
@@ -355,100 +368,8 @@ function EventsPage() {
   );
 }
 
-function AboutPage() {
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-        <img
-          src="/images/logo.jpg"
-          alt="Sebastian Saethre"
-          className="w-64 h-64 mx-auto mb-8 rounded-full"
-          style={{
-            filter: 'contrast(1.1)'
-          }}
-        />
-        <h1 className="text-3xl font-bold mb-8">About</h1>
-        <div className="prose max-w-none text-left">
-          <p className="mb-6">
-            I'm Sebastian Saethre, an AI educator and practitioner dedicated to making artificial intelligence accessible and practical for everyone. My mission is to bridge the gap between complex AI concepts and real-world applications across all industries.
-          </p>
-          <p className="mb-6">
-            Through this platform, I share practical insights, tool reviews, courses, and resources that help individuals and organizations leverage AI effectively. Whether you're interested in image generation, video creation, coding with AI, or exploring cutting-edge tools, you'll find valuable content here.
-          </p>
-          <p className="mb-6">
-            My approach to AI education focuses on "vibe coding" - a practical, hands-on methodology that emphasizes experimentation and real-world application over theory. Join our community to connect, learn, and explore the transformative potential of AI together.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
 
-function MembershipPage() {
-  const [showForm, setShowForm] = useState(false);
-  return (
-    <AnimatedSection>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col items-center justify-center">
-        <img
-          src="/images/logo.jpg"
-          alt="Sebastian Saethre"
-          className="w-[20rem] h-[20rem] mx-auto mb-8 rounded-full"
-          style={{ filter: 'contrast(1.1)' }}
-        />
-        {/* Benefits Section */}
-        <AnimatedCard className="w-full max-w-2xl mx-auto mt-2 flex flex-col items-center justify-center text-center">
-          <AnimatedText text="Join the Community" className="text-2xl font-bold mb-4" />
-          <ul className="mb-8 text-neutral-700 space-y-3 text-lg flex flex-col items-center justify-center">
-            <li className="flex items-center gap-3">
-              <Sparkles size={22} className="text-primary-600" />
-              <span>Access to exclusive content and resources</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <Sparkles size={22} className="text-primary-600" />
-              <span>Early access to new courses and tools</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <Sparkles size={22} className="text-primary-600" />
-              <span>Connect with fellow AI practitioners</span>
-            </li>
-          </ul>
-          {!showForm && (
-            <button 
-              onClick={() => setShowForm(true)}
-              className="bg-primary-600 text-white py-4 px-8 text-lg rounded-lg hover:bg-primary-700 transform hover:scale-105 transition-transform w-full max-w-xs mx-auto mb-2"
-            >
-              Join Now
-            </button>
-          )}
-          {/* Membership Form */}
-          {showForm && (
-            <div className="w-full max-w-2xl mx-auto">
-              <MembershipForm />
-            </div>
-          )}
-        </AnimatedCard>
-      </div>
-    </AnimatedSection>
-  );
-}
 
-function GalleryPage() {
-  return (
-    <AnimatedSection>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <AnimatedCard className="mb-12 p-10">
-          <div className="flex flex-col items-center justify-center text-center">
-            <AnimatedText text="Gallery" className="text-4xl font-bold mb-4 text-neutral-900 mx-auto" delay={0.33} />
-            <AnimatedText text="Explore highlights from projects, tutorials, and content. Here you'll find videos and images showcasing my work and AI applications." className="text-lg text-neutral-600 max-w-3xl mx-auto mb-8" delay={0.33} />
-          </div>
-        </AnimatedCard>
-        <div className="space-y-12">
-          <SocialMediaGallery />
-        </div>
-      </div>
-    </AnimatedSection>
-  );
-}
 
 function OnboardingPage() {
   return (
@@ -460,36 +381,5 @@ function OnboardingPage() {
   );
 }
 
-function ContactPage() {
-  const { t } = useLanguageStore();
-  
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold mb-8">{t('contact.title')}</h1>
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h2 className="text-2xl font-bold mb-4">{t('contact.getInTouch')}</h2>
-            <p className="text-lg text-neutral-700 mb-4">
-              {t('contact.description')}
-            </p>
-            <div className="space-y-4">
-              <a 
-                href="mailto:sebastian.saethre@gmail.com" 
-                className="flex items-center text-lg text-neutral-700 hover:text-brand-600 transition-colors"
-              >
-                <Mail className="mr-2" size={20} />
-                <span>sebastian.saethre@gmail.com</span>
-              </a>
-            </div>
-          </div>
-          <Suspense fallback={<div className="animate-pulse bg-neutral-100 h-64 rounded"></div>}>
-            <ContactForm />
-          </Suspense>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default App;

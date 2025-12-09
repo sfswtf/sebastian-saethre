@@ -49,8 +49,7 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
           toast.success('Takk for din interesse! Vi tar kontakt snart.');
           return;
         }
-      } catch (rpcError) {
-        // RPC function doesn't exist, fall through to direct insert
+      } catch {
         console.log('RPC function not available, using direct insert');
       }
 
@@ -105,7 +104,7 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
           toast.success('Lagret lokalt (Supabase feilet)');
           // Still throw error so form knows submission had issues
           throw new Error(`Supabase failed: ${error.message}. Saved locally.`);
-        } catch (localError) {
+        } catch {
           throw new Error(`Failed to save: ${error.message}`);
         }
       }
@@ -113,14 +112,8 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
       console.log('✅ Onboarding form submitted successfully to Supabase:', result);
       console.log('Inserted row ID:', result?.[0]?.id);
       // Don't show toast here - let the modal handle the success message
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error submitting onboarding form:', error);
-      console.error('Error details:', {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code,
-      });
       
       // Fallback to localStorage
       try {
@@ -139,4 +132,3 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
     }
   },
 }));
-
