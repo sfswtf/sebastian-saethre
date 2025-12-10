@@ -1,13 +1,16 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+module.exports = {
+  content: [
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+  ],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
         sans: ['"DM Sans"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
       },
       colors: {
-        // Primary brand color - dark teal
         brand: {
           50: '#f0fdfa',
           100: '#ccfbf1',
@@ -21,7 +24,6 @@ export default {
           900: '#134e4a',
           950: '#042f2e',
         },
-        // Accent color - warm copper for highlights
         copper: {
           50: '#fdf6f0',
           100: '#faede0',
@@ -74,8 +76,11 @@ export default {
           900: '#171717',
           950: '#0a0a0a',
         },
+        background: '#0a0a0a',
+        'primary-foreground': '#ffffff',
       },
     },
   },
   plugins: [],
 };
+
