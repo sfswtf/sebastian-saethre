@@ -8,12 +8,18 @@ interface OnboardingThankYouModalProps {
   isOpen: boolean;
   onClose: () => void;
   onViewResources: () => void;
+  titleOverride?: string;
+  messageOverride?: string;
+  primaryLabelOverride?: string;
 }
 
 export function OnboardingThankYouModal({
   isOpen,
   onClose,
   onViewResources,
+  titleOverride,
+  messageOverride,
+  primaryLabelOverride,
 }: OnboardingThankYouModalProps) {
   const { t } = useLanguageStore();
 
@@ -56,11 +62,11 @@ export function OnboardingThankYouModal({
                 </div>
                 
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                  {t('onboarding.modal.title')}
+                  {titleOverride || t('onboarding.modal.title')}
                 </h2>
                 
                 <p className="text-lg text-gray-700 mb-6">
-                  {t('onboarding.modal.message')}
+                  {messageOverride || t('onboarding.modal.message')}
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -69,7 +75,7 @@ export function OnboardingThankYouModal({
                     onClick={onViewResources}
                     className="px-6 py-3 rounded-lg font-semibold bg-brand-600 text-white hover:bg-brand-700 transition-colors"
                   >
-                    {t('onboarding.modal.viewResources')}
+                    {primaryLabelOverride || t('onboarding.modal.viewResources')}
                   </AnimatedButton>
                   
                   <button
@@ -87,4 +93,3 @@ export function OnboardingThankYouModal({
     </AnimatePresence>
   );
 }
-
