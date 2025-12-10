@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { format, parse } from 'date-fns';
 import { LocalStorageService } from '../../lib/localStorage';
 import { supabase } from '../../lib/supabase';
 
@@ -99,7 +98,7 @@ export function EventManager() {
         festival: '',
       });
       fetchEvents();
-    } catch (error: any) {
+    } catch (error) {
       console.warn('Supabase save failed, using localStorage:', error);
       try {
         if (editingEvent?.id) {
@@ -140,7 +139,7 @@ export function EventManager() {
       if (error) throw error;
       toast.success('Arrangement slettet');
       fetchEvents();
-    } catch (error: any) {
+    } catch (error) {
       console.warn('Supabase delete failed, using localStorage:', error);
       try {
         LocalStorageService.delete('events', id);

@@ -2,15 +2,15 @@ import { useState, useEffect } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
 import { ManualMemberAdd } from './ManualMemberAdd';
 import { EventManager } from './admin/EventManager';
-import { AboutEditor } from './admin/AboutEditor';
 import { SocialMediaManager } from './admin/SocialMediaManager';
 import { ContactMessages } from './admin/ContactMessages';
-import PageContentManager from './admin/PageContentManager';
 import { BlogManager } from './admin/BlogManager';
 import { CourseManager } from './admin/CourseManager';
 import { ResourceManager } from './admin/ResourceManager';
 import { PortfolioManager } from './admin/PortfolioManager';
 import { OnboardingResponses } from './admin/OnboardingResponses';
+import { OrdersManager } from './admin/OrdersManager';
+import { DigitalProductsManager } from './admin/DigitalProductsManager';
 import { useLanguageStore } from '../stores/languageStore';
 
 interface Application {
@@ -42,7 +42,7 @@ export function AdminDashboard() {
   const [emailSubject, setEmailSubject] = useState('');
   const [emailContent, setEmailContent] = useState('');
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<'blog' | 'courses' | 'resources' | 'portfolio' | 'messages' | 'onboarding'>('blog');
+  const [activeTab, setActiveTab] = useState<'blog' | 'courses' | 'resources' | 'portfolio' | 'messages' | 'onboarding' | 'orders' | 'products'>('blog');
   const { t } = useLanguageStore();
 
   useEffect(() => {
@@ -156,7 +156,7 @@ export function AdminDashboard() {
   const groupedMembers = groupMembers(applications);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 overflow-x-auto">
       <div className="bg-white shadow rounded-lg">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex flex-wrap overflow-x-auto">
@@ -220,6 +220,26 @@ export function AdminDashboard() {
             >
               Onboarding
             </button>
+            <button
+              onClick={() => setActiveTab('orders')}
+              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+                activeTab === 'orders'
+                  ? 'border-primary-600 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Bestillinger
+            </button>
+            <button
+              onClick={() => setActiveTab('products')}
+              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+                activeTab === 'products'
+                  ? 'border-primary-600 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Produkter
+            </button>
           </nav>
         </div>
 
@@ -230,6 +250,8 @@ export function AdminDashboard() {
           {activeTab === 'portfolio' && <PortfolioManager />}
           {activeTab === 'messages' && <ContactMessages />}
           {activeTab === 'onboarding' && <OnboardingResponses />}
+          {activeTab === 'orders' && <OrdersManager />}
+          {activeTab === 'products' && <DigitalProductsManager />}
           {/* Temporarily hidden - can be re-enabled later */}
           {false && activeTab === 'events' && <EventManager />}
           {false && activeTab === 'members' && (

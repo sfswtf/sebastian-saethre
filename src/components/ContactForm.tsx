@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { toast, Toaster } from 'react-hot-toast';
+import { OnboardingThankYouModal } from './OnboardingThankYouModal';
+import { useLanguageStore } from '../stores/languageStore';
 
 interface ContactFormData {
   name: string;
@@ -9,12 +12,15 @@ interface ContactFormData {
 }
 
 export function ContactForm() {
+  const navigate = useNavigate();
+  const { t } = useLanguageStore();
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,8 +51,8 @@ export function ContactForm() {
         throw error;
       }
 
-      toast.success('Meldingen din er sendt! Vi tar kontakt snart.');
       setFormData({ name: '', email: '', message: '' });
+      setShowThankYou(true);
     } catch (error) {
       console.error('Error submitting contact form:', error);
       toast.error('Beklager, noe gikk galt. Vennligst prøv igjen senere.');
@@ -56,6 +62,15 @@ export function ContactForm() {
   };
 
   return (
+    <>
+    <OnboardingThankYouModal
+      isOpen={showThankYou}
+      onClose={() => setShowThankYou(false)}
+      onViewResources={() => { setShowThankYou(false); navigate('/resources'); }}
+      titleOverride={t('contact.modal.title')}
+      messageOverride={t('contact.modal.message')}
+      primaryLabelOverride={t('contact.modal.viewResources')}
+    />
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-8">
       <div className="space-y-6">
         <div>
@@ -110,5 +125,6 @@ export function ContactForm() {
       </div>
       <Toaster position="top-center" />
     </form>
+    </>
   );
 }

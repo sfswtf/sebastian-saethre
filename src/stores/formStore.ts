@@ -22,7 +22,7 @@ export interface MembershipFormData {
   motivation?: string;
 }
 
-export const useFormStore = create<FormState>((set) => ({
+export const useFormStore = create<FormState>(() => ({
   submitContactForm: async (data: ContactFormData) => {
     try {
       const { error } = await supabase
@@ -76,14 +76,13 @@ export const useFormStore = create<FormState>((set) => ({
 
       console.log('Submission successful:', result);
       toast.success('Takk for din interesse! Vi behandler søknaden din snart.');
-    } catch (error: any) {
-      console.error('Detailed error:', {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code
-      });
-      toast.error(`Beklager, noe gikk galt: ${error.message}`);
+    } catch (error) {
+      let message = 'Beklager, noe gikk galt.';
+      if (typeof error === 'object' && error && 'message' in error) {
+        message = String((error as { message: unknown }).message);
+      }
+      console.error('Detailed error:', error);
+      toast.error(`Beklager, noe gikk galt: ${message}`);
     }
   },
 }));

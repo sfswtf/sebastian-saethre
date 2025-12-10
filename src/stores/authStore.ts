@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import type { User } from '@supabase/supabase-js';
 
 interface Profile {
   id: string;
@@ -11,7 +12,7 @@ interface Profile {
 }
 
 interface AuthState {
-  user: any | null;
+  user: User | null;
   profile: Profile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;

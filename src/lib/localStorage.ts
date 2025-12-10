@@ -51,9 +51,9 @@ export class LocalStorageService {
     return items[index];
   }
 
-  static delete(key: string, id: string): boolean {
-    const items = this.get<any>(key);
-    const filtered = items.filter((item: any) => item.id !== id);
+  static delete<T extends { id: string }>(key: string, id: string): boolean {
+    const items = this.get<T>(key);
+    const filtered = items.filter(item => item.id !== id);
     this.set(key, filtered);
     return filtered.length < items.length;
   }
@@ -62,4 +62,3 @@ export class LocalStorageService {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 }
-

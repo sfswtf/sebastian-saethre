@@ -16,6 +16,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.blog': 'Nyheter',
     'nav.courses': 'Kurs',
     'nav.resources': 'Ressurser',
+    'nav.products': 'Produkter',
     'nav.community': 'Fellesskap',
     'nav.contact': 'Kontakt',
     
@@ -45,11 +46,15 @@ const translations: Record<Language, Record<string, string>> = {
     'home.title': 'Sebastian Saethre',
     'home.subtitle': '',
     'home.description': 'Gjør AI tilgjengelig, praktisk og revolusjonerende på tvers av bransjer.',
+    'home.hero.h1': 'Praktisk AI for hverdagen og jobb.',
+    'home.hero.nameRole': 'Sebastian Saethre · AI-ekspert og praktiker',
+    'home.hero.body': 'Jeg hjelper privatpersoner, skapere og team å bruke AI-verktøy, koding med AI og automasjon for å lære raskere, spare tid og skape bedre resultater.',
+    'home.hero.helper': 'Fyll ut et kort onboarding-skjema så kan jeg tilpasse en konkret AI-anbefaling før jeg kontakter deg.',
     'home.cta.blog': 'Siste nytt',
-    'home.cta.resources': 'Nyttige AI Verktøy',
+    'home.cta.resources': 'Utforsk AI-verktøy',
     'home.cta.courses': 'Gratis kurs',
     'home.cta.community': 'Bli med i fellesskapet',
-    'home.cta.onboarding': 'Start AI Onboarding',
+    'home.cta.onboarding': 'Start AI onboarding',
     'home.featured.blog': 'Siste nytt',
     'home.featured.blog.desc': 'Utforsk praktiske AI-løsninger, verktøy og innsikter.',
     'home.featured.courses': 'Gratis kurs',
@@ -98,7 +103,7 @@ const translations: Record<Language, Record<string, string>> = {
     'community.description': 'Bli med i fellesskapet - Discord, nyhetsbrev, gratis kurs og mer.',
     'community.comingSoon': 'Fellesskap kommer snart.',
     'community.stayUpdated': 'Hold deg oppdatert',
-    'community.newsletterDesc': 'Abonner på vårt nyhetsbrev for de siste AI-innsiktene, verktøyvurderinger og eksklusivt innhold.',
+    'community.newsletterDesc': 'Få ukentlige oppdateringer om AI-verktøy, veiledninger og bransjeinnsikt rett i innboksen din.',
     'community.thankYouSubscribed': 'Takk for at du abonnerte! Sjekk e-posten din for å bekrefte.',
     'community.subscribing': 'Abonnerer...',
     'community.subscribe': 'Abonner',
@@ -110,7 +115,6 @@ const translations: Record<Language, Record<string, string>> = {
     'community.discordDesc': 'Bli med i vår Discord-server for sanntidsdiskusjoner, Q&A-økter og nettverk med andre AI-entusiaster.',
     'community.joinDiscord': 'Bli med i Discord',
     'community.newsletterTitle': 'Nyhetsbrev',
-    'community.newsletterDesc': 'Få ukentlige oppdateringer om AI-verktøy, veiledninger og bransjeinnsikter levert til innboksen din.',
     'community.keepUpdatedTitle': 'Hold deg oppdatert',
     'community.keepUpdatedDesc': 'Følg meg på Twitter og YouTube for de siste oppdateringene, tips og innsikter om AI.',
     'community.exclusiveTitle': 'Eksklusive ressurser',
@@ -123,6 +127,9 @@ const translations: Record<Language, Record<string, string>> = {
     'contact.title': 'Kontakt',
     'contact.getInTouch': 'Kontakt meg',
     'contact.description': 'Har du spørsmål eller vil du samarbeide? Send meg en melding, så svarer jeg så raskt jeg kan.',
+    'contact.modal.title': 'Takk for meldingen din!',
+    'contact.modal.message': 'Jeg kommer tilbake til deg så raskt jeg kan. I mellomtiden, sjekk ut disse ressursene:',
+    'contact.modal.viewResources': 'Se ressurser',
     
     // Onboarding
     'onboarding.title': 'AI Onboarding',
@@ -207,11 +214,6 @@ const translations: Record<Language, Record<string, string>> = {
     'portfolio.viewOnGitHub': 'Se på GitHub',
     'portfolio.projectGallery': 'Prosjektgalleri',
     
-    // Resources
-    'resources.all': 'Alle',
-    'resources.worthIt': 'Verdt det',
-    'resources.visit': 'Besøk',
-    
     // About
     'about.title': 'Om',
     'about.para1': 'Jeg heter Sebastian Saethre og jobber for å gjøre kunstig intelligens tilgjengelig og praktisk for alle. Målet mitt er å bygge en bro mellom komplekse AI-konsepter og virkelige applikasjoner på tvers av bransjer.',
@@ -237,6 +239,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.blog': 'News',
     'nav.courses': 'Courses',
     'nav.resources': 'Resources',
+    'nav.products': 'Products',
     'nav.community': 'Community',
     'nav.contact': 'Contact',
     
@@ -266,11 +269,18 @@ const translations: Record<Language, Record<string, string>> = {
     'home.title': 'Sebastian Saethre',
     'home.subtitle': '',
     'home.description': 'Making AI accessible, practical, and transformative across all industries.',
+    'home.hero.h1': 'Practical AI for everyday life and work.',
+    'home.hero.nameRole': 'Sebastian Saethre · AI educator and practitioner',
+    'home.hero.body': 'I help individuals, creators and teams use AI tools, coding with AI and automation to learn faster, save time and create better results.',
+    'contact.modal.title': 'Thanks for your message!',
+    'contact.modal.message': 'I will get back to you as fast as I can. In the meantime, check out these resources:',
+    'contact.modal.viewResources': 'View Resources',
+    'home.hero.helper': 'Fill out a short onboarding form so I can tailor a specific AI recommendation before I contact you.',
     'home.cta.blog': 'Latest news',
     'home.cta.resources': 'Useful AI Tools',
     'home.cta.courses': 'Free Courses',
     'home.cta.community': 'Join Community',
-    'home.cta.onboarding': 'Start AI Onboarding',
+    'home.cta.onboarding': 'Start AI onboarding',
     'home.featured.blog': 'Latest news',
     'home.featured.blog.desc': 'Explore practical AI applications, tools, and insights.',
     'home.featured.courses': 'Free Courses',
@@ -319,7 +329,6 @@ const translations: Record<Language, Record<string, string>> = {
     'community.description': 'Join our community - Discord, Newsletter, Free Courses, and more.',
     'community.comingSoon': 'Community features coming soon. Discord, newsletter signup, and community tiers will be available here.',
     'community.stayUpdated': 'Stay Updated',
-    'community.newsletterDesc': 'Subscribe to our newsletter for the latest AI insights, tool reviews, and exclusive content.',
     'community.thankYouSubscribed': 'Thank you for subscribing! Check your email to confirm.',
     'community.subscribing': 'Subscribing...',
     'community.subscribe': 'Subscribe',
@@ -429,9 +438,6 @@ const translations: Record<Language, Record<string, string>> = {
     'portfolio.projectGallery': 'Project Gallery',
     
     // Resources
-    'resources.all': 'All',
-    'resources.worthIt': 'Worth it',
-    'resources.visit': 'Visit',
     
     // About
     'about.title': 'About',
@@ -512,4 +518,3 @@ export const useLanguageStore = create<LanguageState>((set, get) => ({
     return translation;
   },
 }));
-
