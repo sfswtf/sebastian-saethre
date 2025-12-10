@@ -9,6 +9,7 @@ import { AnimatedNavbar } from './components/animations/AnimatedNavbar';
 import { AnimatedFooter } from './components/animations/AnimatedFooter';
 import { ParallaxHero } from './components/animations/ParallaxHero';
 import { AnimatedButton } from './components/animations/AnimatedButton';
+import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button';
 import { ProtectedRoute } from './components/ProtectedRoute'; // Not lazy - needs immediate access to auth state
 import { LocalStorageService } from './lib/localStorage';
 import { EventModal } from './components/EventModal';
@@ -137,70 +138,32 @@ function HomePage() {
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
                 {t('home.hero.h1')}
               </h1>
-              <p className="mt-3 text-sm md:text-base text-white/90">
+              <p className="mt-6 text-sm md:text-base text-white/90">
                 {t('home.hero.nameRole')}
               </p>
-              <p className="mt-4 md:mt-5 text-sm md:text-base text-slate-200 leading-relaxed">
+              <p className="mt-5 md:mt-6 text-sm md:text-base text-slate-200 leading-relaxed">
                 {t('home.hero.body')}
               </p>
             </div>
 
-            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 w-full max-w-md">
-              <a
-                href="/onboarding"
-                className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg px-6 md:px-8 py-2.5 md:py-3 text-sm md:text-base font-semibold bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-400"
-              >
-                {t('home.cta.onboarding')}
-              </a>
-              <p className="text-xs md:text-sm text-white/80 mt-1 sm:mt-0 sm:ml-2">
-                {t('home.hero.helper')}
-              </p>
-              <a
-                href="/resources"
-                className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg px-6 md:px-8 py-2.5 md:py-3 text-sm md:text-base font-semibold border-2 border-white/60 text-white hover:bg-white/10 hover:border-white transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-400"
-              >
-                {t('home.cta.resources')}
-              </a>
+            <div className="mt-6 w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 items-start">
+              <div className="flex flex-col items-stretch">
+                <a href="/onboarding" className="inline-block">
+                  <InteractiveHoverButton text={t('home.cta.onboarding')} className="bg-brand-600 text-white border-brand-700" />
+                </a>
+                
+              </div>
+              <div className="flex">
+                <a href="/resources" className="w-full inline-block">
+                  <InteractiveHoverButton text={t('home.cta.resources')} className="bg-background text-white border-white/40" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </ParallaxHero>
 
-      {/* Featured Section - positioned below fixed hero */}
-      <div className="bg-white py-24 sm:py-32 relative z-10" style={{ marginTop: '100vh' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto space-y-6">
-            <Link 
-              to="/blog" 
-              className="bg-brand-700 rounded-lg p-6 md:p-8 transition-all hover:scale-[1.02] flex flex-col justify-center items-center text-center min-h-[160px] md:min-h-[180px] shadow-lg hover:shadow-xl"
-            >
-              <h2 className="mt-4 md:mt-6 text-2xl md:text-3xl font-bold tracking-tight text-white">
-                {t('home.featured.blog')}
-              </h2>
-              <p className="mt-3 md:mt-4 text-base md:text-lg text-white">
-                {t('home.featured.blog.desc')}
-              </p>
-            </Link>
-            {/* Courses temporarily hidden */}
-            {/* <Link 
-              to="/courses" 
-              className="bg-brand-800 rounded-lg p-6 md:p-8 transition-all hover:scale-[1.02] flex flex-col justify-center items-center text-center min-h-[160px] md:min-h-[180px] shadow-lg hover:shadow-xl"
-            >
-              <h2 className="mt-4 md:mt-6 text-2xl md:text-3xl font-bold tracking-tight text-white">{t('home.featured.courses')}</h2>
-              <p className="mt-3 md:mt-4 text-base md:text-lg text-white">{t('home.featured.courses.desc')}</p>
-            </Link> */}
-            <Link 
-              to="/resources" 
-              className="bg-neutral-100 rounded-lg p-8 transition-transform hover:scale-105 flex flex-col justify-center items-center text-center min-h-[180px] shadow-md"
-            >
-              <h2 className="mt-6 text-3xl font-bold tracking-tight text-neutral-900">{t('home.featured.resources')}</h2>
-              <p className="mt-4 text-lg text-neutral-600">
-                {t('home.featured.resources.desc')}
-              </p>
-            </Link>
-          </div>
-        </div>
-      </div>
+      {/* Featured section removed for a cleaner front page */}
     </>
   );
 }

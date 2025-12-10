@@ -35,23 +35,25 @@ export function LanguageSelector() {
           <div className="py-1">
             <button
               onClick={() => { setLanguage('no'); setOpen(false); }}
-              className={`w-full text-left px-4 py-2 text-sm transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-400 ${
+              aria-label="Norsk"
+              className={`w-full px-4 py-2 text-sm transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-400 ${
                 language === 'no' 
                   ? 'bg-brand-100 text-brand-700 font-medium' 
                   : 'text-neutral-700 hover:bg-brand-50'
               }`}
             >
-              🇳🇴 Norsk
+              <span className="flex items-center justify-center text-xl">🇳🇴</span>
             </button>
             <button
               onClick={() => { setLanguage('en'); setOpen(false); }}
-              className={`w-full text-left px-4 py-2 text-sm transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-400 ${
+              aria-label="English"
+              className={`w-full px-4 py-2 text-sm transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-400 ${
                 language === 'en' 
                   ? 'bg-brand-100 text-brand-700 font-medium' 
                   : 'text-neutral-700 hover:bg-brand-50'
               }`}
             >
-              🇬🇧 English
+              <span className="flex items-center justify-center text-xl">🇬🇧</span>
             </button>
           </div>
         </div>

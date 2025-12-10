@@ -28,25 +28,11 @@ export function ContactMessages() {
     try {
       setLoading(true);
       // Try RPC function first (bypasses RLS)
-      const { data: rpcData, error: rpcError } = await supabase
-        .rpc('get_contact_messages');
+      const { data: rpcData, error: rpcError } = await supabase.rpc('get_contact_messages');
 
-      console.log('RPC call result:', { rpcData, rpcError });
-
-      if (!rpcError && rpcData) {
-        console.log('RPC returned data:', rpcData.length, 'messages');
-        // Map RPC data to ContactMessage format
-        type RpcMessage = {
-          id: string | number;
-          name?: string;
-          email?: string;
-          message?: string;
-          created_at?: string;
-          admin_notes?: string | null;
-          status?: MessageStatus;
-        };
-        const mappedData: ContactMessage[] = rpcData.map((msg: RpcMessage) => ({
-          id: msg.id.toString(),
+      if (!rpcError) {
+        const mappedData: ContactMessage[] = (rpcData || []).map((msg: any) => ({
+          id: String(msg.id),
           name: msg.name || '',
           email: msg.email || '',
           message: msg.message || '',
@@ -54,22 +40,13 @@ export function ContactMessages() {
           admin_notes: msg.admin_notes || null,
           status: (msg.status as MessageStatus) || 'unread',
         }));
-
-        const sorted = mappedData.sort((a, b) => 
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-
-        // Initialize editing notes with current values
+        const sorted = mappedData.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
         const notesState: { [key: string]: string } = {};
-        sorted.forEach(message => {
-          notesState[message.id] = message.admin_notes || '';
-        });
+        sorted.forEach(message => { notesState[message.id] = message.admin_notes || ''; });
         setEditingNotes(notesState);
         setMessages(sorted);
         setLoading(false);
         return;
-      } else {
-        console.warn('RPC error or no data:', rpcError);
       }
 
       // Fallback to direct select (requires RLS policy)
@@ -80,8 +57,8 @@ export function ContactMessages() {
 
       if (!supabaseError && supabaseData && supabaseData.length > 0) {
         // Map Supabase data to ContactMessage format
-        const mappedData: ContactMessage[] = supabaseData.map((msg: RpcMessage) => ({
-          id: msg.id.toString(),
+        const mappedData: ContactMessage[] = supabaseData.map((msg: any) => ({
+          id: String(msg.id),
           name: msg.name || '',
           email: msg.email || '',
           message: msg.message || '',
