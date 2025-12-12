@@ -190,28 +190,8 @@ export function BlogPage() {
           </div>
         )}
         
-        {posts.length > 0 && (
-          <div className="mt-12 text-center">
-            <AnimatedCard className="p-8 bg-brand-50 border-2 border-brand-200">
-              <h3 className="text-xl font-bold text-neutral-900 mb-2">
-                {t('blog.helpApply')}
-              </h3>
-              <p className="text-neutral-600 mb-4">
-                {t('blog.helpApplyDesc')}
-              </p>
-              <Link to="/onboarding">
-                <AnimatedButton
-                  variant="primary"
-                  className="bg-brand-600 text-white hover:bg-brand-700"
-                >
-                  {t('home.cta.onboarding')}
-                </AnimatedButton>
-              </Link>
-            </AnimatedCard>
-          </div>
-        )}
+        {/* Bottom onboarding card removed per request */}
       </div>
     </AnimatedSection>
   );
 }
-

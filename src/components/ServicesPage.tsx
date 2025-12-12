@@ -77,23 +77,8 @@ export function ServicesPage() {
           })}
         </div>
 
-        <div className="text-center">
-          <AnimatedCard className="p-8 bg-brand-50 border-2 border-brand-200">
-            <p className="text-lg text-neutral-700 mb-4">
-              {t('services.cta')}
-            </p>
-            <Link to="/onboarding">
-              <AnimatedButton
-                variant="primary"
-                className="bg-brand-600 text-white hover:bg-brand-700"
-              >
-                {t('home.cta.onboarding')}
-              </AnimatedButton>
-            </Link>
-          </AnimatedCard>
-        </div>
+        {/* Bottom onboarding card removed per request */}
       </div>
     </AnimatedSection>
   );
 }
-

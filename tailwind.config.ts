@@ -79,6 +79,8 @@ const config: Config = {
           900: '#171717',
           950: '#0a0a0a',
         },
+        background: '#0a0a0a',
+        'primary-foreground': '#ffffff',
       },
     },
   },
@@ -86,4 +88,3 @@ const config: Config = {
 };
 
 export default config;
-
