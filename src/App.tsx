@@ -47,6 +47,8 @@ function App() {
     if (!stored) {
       detectLanguageFromLocation().then(lang => {
         setLanguage(lang);
+      }).catch(error => {
+        console.error('Failed to detect language from location:', error);
       });
     }
   }, [setLanguage]);

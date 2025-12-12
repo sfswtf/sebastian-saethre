@@ -21,6 +21,16 @@ export default defineConfig({
         // Add more routes as needed
       ],
       readable: true, // Makes sitemap more readable
+      // Generate robots.txt instead of trying to read existing one
+      robots: [
+        {
+          userAgent: '*',
+          allow: '/',
+        },
+      ],
+      // Don't try to read existing robots.txt - generate it fresh
+      changefreq: 'daily',
+      priority: 1.0,
     }),
   ],
   optimizeDeps: {
@@ -30,5 +40,9 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+  },
+  build: {
+    // Ensure dist directory is created before plugins run
+    emptyOutDir: true,
   },
 });

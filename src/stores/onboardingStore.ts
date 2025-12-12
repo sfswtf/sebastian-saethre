@@ -104,8 +104,8 @@ export const useOnboardingStore = create<OnboardingState>(() => ({
           toast.success('Lagret lokalt (Supabase feilet)');
           // Still throw error so form knows submission had issues
           throw new Error(`Supabase failed: ${error.message}. Saved locally.`);
-        } catch {
-          throw new Error(`Failed to save: ${error.message}`);
+        } catch (localError) {
+          throw new Error(`Failed to save: ${error.message}. LocalStorage error: ${localError instanceof Error ? localError.message : String(localError)}`);
         }
       }
 

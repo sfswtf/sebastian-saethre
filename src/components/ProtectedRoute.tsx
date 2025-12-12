@@ -37,7 +37,7 @@ export const ProtectedRoute: React.FC<Props> = ({ children }) => {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [isAuthenticated, isAdmin, navigate]);
+  }, [isAuthenticated, isAdmin, navigate, devBypass, envBypass, localBypass]);
 
   // Show loading state while checking
   if (isChecking) {
