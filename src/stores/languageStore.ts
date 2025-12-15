@@ -88,7 +88,7 @@ const translations: Record<Language, Record<string, string>> = {
     'courses.comingSoon': 'Kurs kommer snart.',
     
     'resources.title': 'Ressurser',
-    'resources.description': 'Kuraterte AI-verktøy, ressurser og anbefalinger. Finn det som er verdt tiden din.',
+    'resources.description': 'AI-verktøy. Finn det som er verdt tiden din.',
     'resources.comingSoon': 'Ressurser kommer snart.',
     'resources.readMore': 'Les mer',
     'resources.visit': 'Besøk',
@@ -314,7 +314,7 @@ const translations: Record<Language, Record<string, string>> = {
     'courses.comingSoon': 'Course listings coming soon. Available courses will be displayed here.',
     
     'resources.title': 'Resources',
-    'resources.description': 'Curated AI tools, resources, and recommendations. Find what\'s worth your time.',
+    'resources.description': 'AI tools. Find what\'s worth your time.',
     'resources.comingSoon': 'Resources coming soon. Tools and recommendations will be displayed here.',
     'resources.readMore': 'Read more',
     'resources.visit': 'Visit',
