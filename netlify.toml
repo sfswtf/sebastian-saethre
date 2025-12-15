@@ -6,3 +6,9 @@
   NODE_VERSION = "18"
   NPM_VERSION = "10"
 
+# Redirect all routes to index.html for SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
