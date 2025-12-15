@@ -8,6 +8,45 @@ interface ParallaxHeroProps {
   videoUrl?: string;
 }
 
+// Hook to detect screen size and determine if video should be shown
+const useShouldShowVideo = () => {
+  const [shouldShowVideo, setShouldShowVideo] = useState(true);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const aspectRatio = width / height;
+      
+      // Hide video on mobile (< 640px) - too small and centered
+      // Hide video on tablets (640px - 1024px) if aspect ratio is problematic
+      // Show video on desktop (> 1024px) where it displays well
+      if (width < 640) {
+        // Mobile - hide video
+        setShouldShowVideo(false);
+      } else if (width >= 640 && width < 1024) {
+        // Tablet - hide if aspect ratio is too wide or too narrow
+        // Most tablets are between 1.3 and 1.6 aspect ratio
+        if (aspectRatio < 1.2 || aspectRatio > 1.8) {
+          setShouldShowVideo(false);
+        } else {
+          setShouldShowVideo(true);
+        }
+      } else {
+        // Desktop - show video
+        setShouldShowVideo(true);
+      }
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  return shouldShowVideo;
+};
+
 export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, videoUrl }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
@@ -15,6 +54,7 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
   const [videoPlaying, setVideoPlaying] = useState(false);
   const { setVideoEnded: setGlobalVideoEnded } = useVideoStore();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const shouldShowVideo = useShouldShowVideo();
 
   const showContent = () => {
     setVideoEnded(true);
@@ -23,7 +63,8 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
 
   useEffect(() => {
     const video = videoRef.current;
-    if (video && videoUrl) {
+    // Don't load video if we shouldn't show it on this screen size
+    if (video && videoUrl && shouldShowVideo) {
       // Reset all states when video URL changes
       setVideoEnded(false);
       setVideoError(false);
@@ -74,6 +115,10 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
         video.removeEventListener('playing', handlePlaying);
         video.removeEventListener('error', handleError);
       };
+    } else if (!shouldShowVideo && videoUrl) {
+      // Video disabled for this screen size - skip video and show image immediately
+      setVideoError(true);
+      showContent();
     } else {
       // No video, wait for image to load first
       if (!videoUrl) {
@@ -81,7 +126,7 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
         // Image loading will trigger content display
       }
     }
-  }, [videoUrl, setGlobalVideoEnded]);
+  }, [videoUrl, setGlobalVideoEnded, shouldShowVideo]);
 
   const handleVideoEnd = () => {
     // Show image background after video ends
@@ -101,21 +146,21 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
   // Determine if content should be visible
   // Only show content when:
   // 1. Video is playing and has ended, OR
-  // 2. Video error occurred and image is loaded, OR
+  // 2. Video error occurred (or disabled) and image is loaded, OR
   // 3. No video and image is loaded
   const shouldShowContent = 
-    (videoUrl && videoPlaying && videoEnded) ||
-    (videoUrl && videoError && imageLoaded) ||
+    (videoUrl && shouldShowVideo && videoPlaying && videoEnded) ||
+    (videoUrl && (videoError || !shouldShowVideo) && imageLoaded) ||
     (!videoUrl && imageLoaded);
 
   return (
     <div className="fixed top-0 left-0 w-full h-screen z-0 overflow-hidden">
       <div className="absolute inset-0">
-        {/* Video background - plays first if videoUrl is provided */}
-        {videoUrl && !videoEnded && !videoError && (
+        {/* Video background - plays first if videoUrl is provided and screen size supports it */}
+        {videoUrl && !videoEnded && !videoError && shouldShowVideo && (
           <video
             ref={videoRef}
-            className="w-full h-full object-contain sm:object-contain md:object-cover"
+            className="w-full h-full object-cover"
             playsInline
             muted
             onEnded={handleVideoEnd}
@@ -123,7 +168,8 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
             preload="auto"
             style={{
               opacity: videoPlaying ? 1 : 0,
-              transition: 'opacity 0.3s ease-in-out'
+              transition: 'opacity 0.3s ease-in-out',
+              objectFit: 'cover', // Use cover for better fill on supported devices
             }}
           >
             <source src={videoUrl} type="video/mp4" />
@@ -139,8 +185,8 @@ export const ParallaxHero: React.FC<ParallaxHeroProps> = ({ children, imageUrl, 
           decoding="async"
           onLoad={() => {
             setImageLoaded(true);
-            // If no video, show content when image loads
-            if (!videoUrl) {
+            // If no video OR video is disabled for this screen size, show content when image loads
+            if (!videoUrl || (!shouldShowVideo && videoUrl)) {
               showContent();
             }
           }}
