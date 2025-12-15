@@ -102,7 +102,7 @@ export function ResourcesPage() {
                 to={resource.id ? `/resources/${resource.id}` : '#'}
                 className="block"
               >
-                <AnimatedCard className="p-8 hover:shadow-xl transition-all hover:scale-[1.01] flex flex-col h-full cursor-pointer group">
+                <AnimatedCard className="p-8 hover:shadow-xl transition-all hover:scale-[1.01] flex flex-col h-full cursor-pointer group" withGlow={true}>
                   <div className="flex items-start justify-between mb-4">
                     <h3 className="text-2xl font-bold text-neutral-900 flex-1 group-hover:text-brand-600 transition-colors">{resource.name}</h3>
                     {resource.worth_it && (

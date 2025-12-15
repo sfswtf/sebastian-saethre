@@ -119,7 +119,7 @@ export function PortfolioPage() {
                 to={project.id ? `/portfolio/${project.id}` : '#'}
                 className="block"
               >
-                <AnimatedCard className="overflow-hidden hover:shadow-xl transition-all hover:scale-[1.01] flex flex-col h-full cursor-pointer group">
+                <AnimatedCard className="overflow-hidden hover:shadow-xl transition-all hover:scale-[1.01] flex flex-col h-full cursor-pointer group" withGlow={true}>
                   {project.image_urls && project.image_urls.length > 0 && (
                     <img 
                       src={project.image_urls[0]} 

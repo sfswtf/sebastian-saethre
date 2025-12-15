@@ -46,7 +46,7 @@ export function ServicesPage() {
           {services.map((service, index) => {
             const IconComponent = service.icon;
             return (
-              <AnimatedCard key={index} className="p-8 hover:shadow-xl transition-shadow">
+              <AnimatedCard key={index} className="p-8 hover:shadow-xl transition-shadow" withGlow={true}>
                 <div className="flex items-center justify-center w-16 h-16 bg-brand-100 rounded-full mb-6">
                   <IconComponent className="text-brand-600" size={32} />
                 </div>

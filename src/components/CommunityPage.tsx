@@ -147,7 +147,7 @@ export function CommunityPage() {
           {communityFeatures.map((feature, index) => {
             const IconComponent = feature.icon;
             return (
-              <AnimatedCard key={index} className="p-8 hover:shadow-xl transition-shadow">
+              <AnimatedCard key={index} className="p-8 hover:shadow-xl transition-shadow" withGlow={true}>
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center justify-center w-16 h-16 bg-brand-100 rounded-full">
                     {feature.iconImage ? (
