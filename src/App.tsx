@@ -14,6 +14,7 @@ import { ProtectedRoute } from './components/ProtectedRoute'; // Not lazy - need
 import { LocalStorageService } from './lib/localStorage';
 import { EventModal } from './components/EventModal';
 import { EventCardSkeleton } from './components/SkeletonLoader';
+import { BackgroundPaths } from './components/ui/background-paths';
 
 // Lazy load heavy components
 const AdminDashboard = lazy(() => import('./components/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
@@ -129,21 +130,27 @@ function HomePage() {
 
   return (
     <>
-      {/* Hero Section */}
+      {/* Hero Section with Borealis Background */}
       <ParallaxHero 
         imageUrl="/images/hero-background.jpg"
         videoUrl="/images/hero-intro.mp4"
       >
-        <div className="relative w-full mx-auto px-4 sm:px-6 lg:px-8 h-screen flex flex-col justify-center items-center">
+        {/* Borealis Background Paths - overlay on the hero */}
+        <div className="absolute inset-0 z-[1]">
+          <BackgroundPaths />
+        </div>
+        
+        {/* Content */}
+        <div className="relative w-full mx-auto px-4 sm:px-6 lg:px-8 h-screen flex flex-col justify-center items-center z-10">
           <div className="text-center w-full flex flex-col items-center gap-5 md:gap-6">
             <div className="max-w-2xl md:max-w-3xl mx-auto">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight drop-shadow-2xl">
                 {t('home.hero.h1')}
               </h1>
-              <p className="mt-6 text-sm md:text-base text-white/90">
+              <p className="mt-6 text-sm md:text-base text-white/90 drop-shadow-lg">
                 {t('home.hero.nameRole')}
               </p>
-              <p className="mt-5 md:mt-6 text-sm md:text-base text-slate-200 leading-relaxed">
+              <p className="mt-5 md:mt-6 text-sm md:text-base text-slate-200 leading-relaxed drop-shadow-lg">
                 {t('home.hero.body')}
               </p>
             </div>

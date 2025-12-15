@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
     "@supabase/supabase-js": "^2.39.7",
+    "class-variance-authority": "^0.7.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "framer-motion": "^12.16.0",
