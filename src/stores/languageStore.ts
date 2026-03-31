@@ -102,7 +102,6 @@ const translations: Record<Language, Record<string, string>> = {
     'community.description': 'Bli med i fellesskapet - Discord, nyhetsbrev, gratis kurs og mer.',
     'community.comingSoon': 'Fellesskap kommer snart.',
     'community.stayUpdated': 'Hold deg oppdatert',
-    'community.newsletterDesc': 'Abonner på vårt nyhetsbrev for de siste AI-innsiktene, verktøyvurderinger og eksklusivt innhold.',
     'community.thankYouSubscribed': 'Takk for at du abonnerte! Sjekk e-posten din for å bekrefte.',
     'community.subscribing': 'Abonnerer...',
     'community.subscribe': 'Abonner',
@@ -215,11 +214,6 @@ const translations: Record<Language, Record<string, string>> = {
     'portfolio.viewLiveDemo': 'Se live demo',
     'portfolio.viewOnGitHub': 'Se på GitHub',
     'portfolio.projectGallery': 'Prosjektgalleri',
-    
-    // Resources
-    'resources.all': 'Alle',
-    'resources.worthIt': 'Verdt det',
-    'resources.visit': 'Besøk',
     
     // About
     'about.title': 'Om',
@@ -356,7 +350,6 @@ const translations: Record<Language, Record<string, string>> = {
     'community.description': 'Join our community - Discord, Newsletter, Free Courses, and more.',
     'community.comingSoon': 'Community features coming soon. Discord, newsletter signup, and community tiers will be available here.',
     'community.stayUpdated': 'Stay Updated',
-    'community.newsletterDesc': 'Subscribe to our newsletter for the latest AI insights, tool reviews, and exclusive content.',
     'community.thankYouSubscribed': 'Thank you for subscribing! Check your email to confirm.',
     'community.subscribing': 'Subscribing...',
     'community.subscribe': 'Subscribe',
@@ -469,11 +462,6 @@ const translations: Record<Language, Record<string, string>> = {
     'portfolio.viewLiveDemo': 'View Live Demo',
     'portfolio.viewOnGitHub': 'View on GitHub',
     'portfolio.projectGallery': 'Project Gallery',
-    
-    // Resources
-    'resources.all': 'All',
-    'resources.worthIt': 'Worth it',
-    'resources.visit': 'Visit',
     
     // About
     'about.title': 'About',

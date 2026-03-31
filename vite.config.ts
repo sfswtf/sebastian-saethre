@@ -21,14 +21,14 @@ export default defineConfig({
         // Add more routes as needed
       ],
       readable: true, // Makes sitemap more readable
-      // Generate robots.txt instead of trying to read existing one
+      // Use public/robots.txt (copied to dist); plugin write can fail if dist/outDir is missing
+      generateRobotsTxt: false,
       robots: [
         {
           userAgent: '*',
           allow: '/',
         },
       ],
-      // Don't try to read existing robots.txt - generate it fresh
       changefreq: 'daily',
       priority: 1.0,
     }),
