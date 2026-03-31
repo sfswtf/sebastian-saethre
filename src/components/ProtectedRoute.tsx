@@ -1,29 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLocalAuthStore } from '../stores/localAuthStore';
+import React from 'react';
+// import { useEffect, useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import { useLocalAuthStore } from '../stores/localAuthStore';
 
 type Props = {
   children: React.ReactNode;
 };
 
 export const ProtectedRoute: React.FC<Props> = ({ children }) => {
+  // Temporarily disabled during development - allow direct access to admin dashboard path (siteConfig.adminPath)
+  // TODO: Re-enable authentication before production
+  return <>{children}</>;
+  
+  /* Original protected route code - re-enable for production:
   const navigate = useNavigate();
   const isAdmin = useLocalAuthStore((state) => state.isAdmin);
   const isAuthenticated = useLocalAuthStore((state) => state.isAuthenticated);
   const [isChecking, setIsChecking] = useState(true);
-  const devBypass = import.meta.env.DEV;
-  const envBypass = import.meta.env.VITE_BYPASS_AUTH === 'true';
-  const localBypass = typeof window !== 'undefined' && localStorage.getItem('dev-admin') === 'true';
 
   useEffect(() => {
     // Check auth state
     const checkAuth = () => {
-      if (devBypass || envBypass || localBypass) {
-        console.log('Auth bypass enabled for local development');
-        setIsChecking(false);
-        return;
-      }
-      
       if (!isAuthenticated || !isAdmin) {
         navigate('/login', { replace: true });
       } else {
@@ -37,7 +34,7 @@ export const ProtectedRoute: React.FC<Props> = ({ children }) => {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [isAuthenticated, isAdmin, navigate, devBypass, envBypass, localBypass]);
+  }, [isAuthenticated, isAdmin, navigate]);
 
   // Show loading state while checking
   if (isChecking) {
@@ -51,10 +48,11 @@ export const ProtectedRoute: React.FC<Props> = ({ children }) => {
     );
   }
 
-  // Only render children if authenticated (or bypass is enabled)
-  if (!(devBypass || envBypass || localBypass) && (!isAuthenticated || !isAdmin)) {
+  // Only render children if authenticated
+  if (!isAuthenticated || !isAdmin) {
     return null;
   }
 
   return <>{children}</>;
+  */
 }; 

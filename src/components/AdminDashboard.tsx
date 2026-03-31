@@ -1,16 +1,10 @@
 import { useState, useEffect } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
-import { ManualMemberAdd } from './ManualMemberAdd';
 import { EventManager } from './admin/EventManager';
-import { SocialMediaManager } from './admin/SocialMediaManager';
-import { ContactMessages } from './admin/ContactMessages';
-import { BlogManager } from './admin/BlogManager';
-import { CourseManager } from './admin/CourseManager';
-import { ResourceManager } from './admin/ResourceManager';
-import { PortfolioManager } from './admin/PortfolioManager';
-import { OnboardingResponses } from './admin/OnboardingResponses';
+import { ArtistManager } from './admin/ArtistManager';
+import { MerchManager } from './admin/MerchManager';
 import { OrdersManager } from './admin/OrdersManager';
-import { DigitalProductsManager } from './admin/DigitalProductsManager';
+import { ContactMessages } from './admin/ContactMessages';
 import { useLanguageStore } from '../stores/languageStore';
 
 interface Application {
@@ -42,7 +36,7 @@ export function AdminDashboard() {
   const [emailSubject, setEmailSubject] = useState('');
   const [emailContent, setEmailContent] = useState('');
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<'blog' | 'courses' | 'resources' | 'portfolio' | 'messages' | 'onboarding' | 'orders' | 'products'>('blog');
+  const [activeTab, setActiveTab] = useState<'artists' | 'merch' | 'orders' | 'events' | 'messages'>('artists');
   const { t } = useLanguageStore();
 
   useEffect(() => {
@@ -156,49 +150,49 @@ export function AdminDashboard() {
   const groupedMembers = groupMembers(applications);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 overflow-x-auto">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pb-32">
       <div className="bg-white shadow rounded-lg">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex flex-wrap overflow-x-auto">
             <button
-              onClick={() => setActiveTab('blog')}
+              onClick={() => setActiveTab('artists')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'blog'
+                activeTab === 'artists'
                   ? 'border-primary-600 text-primary-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              {t('admin.blog')}
+              {t('admin.artists')}
             </button>
             <button
-              onClick={() => setActiveTab('courses')}
+              onClick={() => setActiveTab('merch')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'courses'
+                activeTab === 'merch'
                   ? 'border-primary-600 text-primary-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              {t('admin.courses')}
+              {t('admin.merch')}
             </button>
             <button
-              onClick={() => setActiveTab('resources')}
+              onClick={() => setActiveTab('orders')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'resources'
+                activeTab === 'orders'
                   ? 'border-primary-600 text-primary-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              {t('admin.resources')}
+              {t('admin.orders')}
             </button>
             <button
-              onClick={() => setActiveTab('portfolio')}
+              onClick={() => setActiveTab('events')}
               className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'portfolio'
+                activeTab === 'events'
                   ? 'border-primary-600 text-primary-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              {t('admin.portfolio')}
+              {t('admin.events')}
             </button>
             <button
               onClick={() => setActiveTab('messages')}
@@ -210,50 +204,15 @@ export function AdminDashboard() {
             >
               {t('admin.messages')}
             </button>
-            <button
-              onClick={() => setActiveTab('onboarding')}
-              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'onboarding'
-                  ? 'border-primary-600 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Onboarding
-            </button>
-            <button
-              onClick={() => setActiveTab('orders')}
-              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'orders'
-                  ? 'border-primary-600 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Bestillinger
-            </button>
-            <button
-              onClick={() => setActiveTab('products')}
-              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                activeTab === 'products'
-                  ? 'border-primary-600 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Produkter
-            </button>
           </nav>
         </div>
 
         <div className="p-6">
-          {activeTab === 'blog' && <BlogManager />}
-          {activeTab === 'courses' && <CourseManager />}
-          {activeTab === 'resources' && <ResourceManager />}
-          {activeTab === 'portfolio' && <PortfolioManager />}
-          {activeTab === 'messages' && <ContactMessages />}
-          {activeTab === 'onboarding' && <OnboardingResponses />}
+          {activeTab === 'artists' && <ArtistManager />}
+          {activeTab === 'merch' && <MerchManager />}
           {activeTab === 'orders' && <OrdersManager />}
-          {activeTab === 'products' && <DigitalProductsManager />}
-          {/* Temporarily hidden - can be re-enabled later */}
-          {false && activeTab === 'events' && <EventManager />}
+          {activeTab === 'events' && <EventManager />}
+          {activeTab === 'messages' && <ContactMessages />}
           {false && activeTab === 'members' && (
             <div className="space-y-8">
               <div className="flex justify-between items-center">
@@ -296,8 +255,8 @@ export function AdminDashboard() {
                   onClick={() => setSelectedStatus('pending')}
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
                     selectedStatus === 'pending'
-                      ? 'bg-yellow-200 text-yellow-800'
-                      : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
+                      ? 'bg-red-orange-200 text-red-orange-800'
+                      : 'bg-red-orange-100 text-red-orange-800 hover:bg-red-orange-200'
                   }`}
                 >
                   Venter
@@ -374,7 +333,7 @@ export function AdminDashboard() {
                             }
                             className={`rounded-full px-3 py-1 text-sm font-medium ${
                               application.status === 'pending'
-                                ? 'bg-yellow-100 text-yellow-800'
+                                ? 'bg-red-orange-100 text-red-orange-800'
                                 : application.status === 'approved'
                                 ? 'bg-green-100 text-green-800'
                                 : 'bg-red-100 text-red-800'
@@ -512,7 +471,33 @@ export function AdminDashboard() {
           </div>
         </div>
       )}
-      <Toaster position="top-center" />
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#10b981',
+            color: 'white',
+            fontSize: '18px',
+            padding: '16px 24px',
+            minWidth: '300px',
+            borderRadius: '8px',
+            fontWeight: '500',
+          },
+          success: {
+            duration: 4000,
+            style: {
+              background: '#10b981',
+              color: 'white',
+              fontSize: '18px',
+              padding: '16px 24px',
+              minWidth: '300px',
+              borderRadius: '8px',
+              fontWeight: '500',
+            },
+          },
+        }}
+      />
     </div>
   );
 } 

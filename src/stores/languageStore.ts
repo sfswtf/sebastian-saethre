@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { siteConfig } from '../config/siteConfig';
 
 type Language = 'no' | 'en';
 
@@ -12,11 +13,13 @@ const translations: Record<Language, Record<string, string>> = {
   no: {
     // Navigation
     'nav.home': 'Hjem',
+    'nav.artists': 'Artister',
+    'nav.merch': 'Merch',
+    'nav.events': 'Tour/Events',
     'nav.portfolio': 'Portefølje',
     'nav.blog': 'Nyheter',
     'nav.courses': 'Kurs',
     'nav.resources': 'Ressurser',
-    'nav.products': 'Produkter',
     'nav.community': 'Fellesskap',
     'nav.contact': 'Kontakt',
     
@@ -43,18 +46,14 @@ const translations: Record<Language, Record<string, string>> = {
     'common.backToHome': 'Tilbake til hjem',
     
     // Homepage
-    'home.title': 'Sebastian Saethre',
+    'home.title': siteConfig.name,
     'home.subtitle': '',
-    'home.description': 'Gjør AI tilgjengelig, praktisk og revolusjonerende på tvers av bransjer.',
-    'home.hero.h1': 'Praktisk AI for hverdagen og jobb.',
-    'home.hero.nameRole': 'Sebastian Saethre · AI-ekspert og praktiker',
-    'home.hero.body': 'Jeg hjelper privatpersoner, skapere og team å bruke AI-verktøy, koding med AI og automasjon for å lære raskere, spare tid og skape bedre resultater.',
-    'home.hero.helper': 'Fyll ut et kort onboarding-skjema så kan jeg tilpasse en konkret AI-anbefaling før jeg kontakter deg.',
+    'home.description': siteConfig.description || 'Gjør AI tilgjengelig, praktisk og revolusjonerende på tvers av bransjer.',
     'home.cta.blog': 'Siste nytt',
-    'home.cta.resources': 'Utforsk AI-verktøy',
+    'home.cta.resources': 'Nyttige AI Verktøy',
     'home.cta.courses': 'Gratis kurs',
     'home.cta.community': 'Bli med i fellesskapet',
-    'home.cta.onboarding': 'Start AI onboarding',
+    'home.cta.onboarding': 'Start AI Onboarding',
     'home.featured.blog': 'Siste nytt',
     'home.featured.blog.desc': 'Utforsk praktiske AI-løsninger, verktøy og innsikter.',
     'home.featured.courses': 'Gratis kurs',
@@ -88,7 +87,7 @@ const translations: Record<Language, Record<string, string>> = {
     'courses.comingSoon': 'Kurs kommer snart.',
     
     'resources.title': 'Ressurser',
-    'resources.description': 'AI-verktøy. Finn det som er verdt tiden din.',
+    'resources.description': 'Kuraterte AI-verktøy, ressurser og anbefalinger. Finn det som er verdt tiden din.',
     'resources.comingSoon': 'Ressurser kommer snart.',
     'resources.readMore': 'Les mer',
     'resources.visit': 'Besøk',
@@ -103,7 +102,7 @@ const translations: Record<Language, Record<string, string>> = {
     'community.description': 'Bli med i fellesskapet - Discord, nyhetsbrev, gratis kurs og mer.',
     'community.comingSoon': 'Fellesskap kommer snart.',
     'community.stayUpdated': 'Hold deg oppdatert',
-    'community.newsletterDesc': 'Få ukentlige oppdateringer om AI-verktøy, veiledninger og bransjeinnsikt rett i innboksen din.',
+    'community.newsletterDesc': 'Abonner på vårt nyhetsbrev for de siste AI-innsiktene, verktøyvurderinger og eksklusivt innhold.',
     'community.thankYouSubscribed': 'Takk for at du abonnerte! Sjekk e-posten din for å bekrefte.',
     'community.subscribing': 'Abonnerer...',
     'community.subscribe': 'Abonner',
@@ -115,6 +114,7 @@ const translations: Record<Language, Record<string, string>> = {
     'community.discordDesc': 'Bli med i vår Discord-server for sanntidsdiskusjoner, Q&A-økter og nettverk med andre AI-entusiaster.',
     'community.joinDiscord': 'Bli med i Discord',
     'community.newsletterTitle': 'Nyhetsbrev',
+    'community.newsletterDesc': 'Få ukentlige oppdateringer om AI-verktøy, veiledninger og bransjeinnsikter levert til innboksen din.',
     'community.keepUpdatedTitle': 'Hold deg oppdatert',
     'community.keepUpdatedDesc': 'Følg meg på Twitter og YouTube for de siste oppdateringene, tips og innsikter om AI.',
     'community.exclusiveTitle': 'Eksklusive ressurser',
@@ -124,12 +124,14 @@ const translations: Record<Language, Record<string, string>> = {
     'community.joinMessage': 'Start din AI-reise i dag og koble til med et fellesskap av likesinnede personer.',
     'community.getStarted': 'Kom i gang',
     
+    // Events
+    'events.title': 'Tour/Events',
+    'events.description': 'Se våre kommende konserter og events.',
+    'events.comingSoon': 'Events kommer snart.',
+    
     'contact.title': 'Kontakt',
     'contact.getInTouch': 'Kontakt meg',
     'contact.description': 'Har du spørsmål eller vil du samarbeide? Send meg en melding, så svarer jeg så raskt jeg kan.',
-    'contact.modal.title': 'Takk for meldingen din!',
-    'contact.modal.message': 'Jeg kommer tilbake til deg så raskt jeg kan. I mellomtiden, sjekk ut disse ressursene:',
-    'contact.modal.viewResources': 'Se ressurser',
     
     // Onboarding
     'onboarding.title': 'AI Onboarding',
@@ -214,11 +216,38 @@ const translations: Record<Language, Record<string, string>> = {
     'portfolio.viewOnGitHub': 'Se på GitHub',
     'portfolio.projectGallery': 'Prosjektgalleri',
     
+    // Resources
+    'resources.all': 'Alle',
+    'resources.worthIt': 'Verdt det',
+    'resources.visit': 'Besøk',
+    
     // About
     'about.title': 'Om',
-    'about.para1': 'Jeg heter Sebastian Saethre og jobber for å gjøre kunstig intelligens tilgjengelig og praktisk for alle. Målet mitt er å bygge en bro mellom komplekse AI-konsepter og virkelige applikasjoner på tvers av bransjer.',
+    'about.para1': `Jeg heter ${siteConfig.name} og jobber for å gjøre kunstig intelligens tilgjengelig og praktisk for alle. Målet mitt er å bygge en bro mellom komplekse AI-konsepter og virkelige applikasjoner på tvers av bransjer.`,
     'about.para2': 'Gjennom denne plattformen deler jeg praktiske innsikter, verktøygjennomganger, kurs og ressurser som hjelper enkeltpersoner og organisasjoner med å utnytte AI effektivt. Enten du er interessert i bildegenerering, videokreering, programmering med AI eller utforsking av banebrytende verktøy, finner du verdifullt innhold her.',
     'about.para3': 'Tilnærmingen min til AI-utdanning fokuserer på "vibe coding" - en praktisk, hands-on metodikk som legger vekt på eksperimentering og virkelig anvendelse fremfor teori. Bli med i fellesskapet for å koble til, lære og utforske det revolusjonerende potensialet til AI sammen.',
+    
+    // Artists
+    'artists.title': 'Artister',
+    'artists.description': 'Utforsk våre artister og deres musikk.',
+    'artists.comingSoon': 'Artister kommer snart.',
+    'artists.featured': 'Utvalgt',
+    'artists.listenOnSpotify': 'Lytt på Spotify',
+    'artists.notFound': 'Artist ikke funnet',
+    'artists.notFoundDesc': 'Artisten du leter etter finnes ikke.',
+    'artists.backToArtists': 'Tilbake til artister',
+    
+    // Merch
+    'merch.title': 'Merch',
+    'merch.description': 'Bestill merch direkte fra oss.',
+    'merch.comingSoon': 'Merch kommer snart.',
+    'merch.addToCart': 'Legg i handlekurv',
+    'merch.outOfStock': 'Utsolgt',
+    'merch.selectSize': 'Velg størrelse',
+    'merch.selectColor': 'Velg farge',
+    'merch.quantity': 'Antall',
+    'merch.checkout': 'Til kassen',
+    'merch.orderSuccess': 'Bestilling mottatt!',
     
     // Admin
     'admin.dashboard': 'Admin Dashboard',
@@ -231,15 +260,20 @@ const translations: Record<Language, Record<string, string>> = {
     'admin.members': 'Medlemmer',
     'admin.social': 'Sosiale medier',
     'admin.content': 'Innhold',
+    'admin.artists': 'Artister',
+    'admin.merch': 'Merch',
+    'admin.orders': 'Bestillinger',
   },
   en: {
     // Navigation
     'nav.home': 'Home',
+    'nav.artists': 'Artists',
+    'nav.merch': 'Merch',
+    'nav.events': 'Tour/Events',
     'nav.portfolio': 'Portfolio',
     'nav.blog': 'News',
     'nav.courses': 'Courses',
     'nav.resources': 'Resources',
-    'nav.products': 'Products',
     'nav.community': 'Community',
     'nav.contact': 'Contact',
     
@@ -266,21 +300,14 @@ const translations: Record<Language, Record<string, string>> = {
     'common.backToHome': 'Back to Home',
     
     // Homepage
-    'home.title': 'Sebastian Saethre',
+    'home.title': siteConfig.name,
     'home.subtitle': '',
-    'home.description': 'Making AI accessible, practical, and transformative across all industries.',
-    'home.hero.h1': 'Practical AI for everyday life and work.',
-    'home.hero.nameRole': 'Sebastian Saethre · AI educator and practitioner',
-    'home.hero.body': 'I help individuals, creators and teams use AI tools, coding with AI and automation to learn faster, save time and create better results.',
-    'contact.modal.title': 'Thanks for your message!',
-    'contact.modal.message': 'I will get back to you as fast as I can. In the meantime, check out these resources:',
-    'contact.modal.viewResources': 'View Resources',
-    'home.hero.helper': 'Fill out a short onboarding form so I can tailor a specific AI recommendation before I contact you.',
+    'home.description': siteConfig.description || 'Making AI accessible, practical, and transformative across all industries.',
     'home.cta.blog': 'Latest news',
     'home.cta.resources': 'Useful AI Tools',
     'home.cta.courses': 'Free Courses',
     'home.cta.community': 'Join Community',
-    'home.cta.onboarding': 'Start AI onboarding',
+    'home.cta.onboarding': 'Start AI Onboarding',
     'home.featured.blog': 'Latest news',
     'home.featured.blog.desc': 'Explore practical AI applications, tools, and insights.',
     'home.featured.courses': 'Free Courses',
@@ -314,7 +341,7 @@ const translations: Record<Language, Record<string, string>> = {
     'courses.comingSoon': 'Course listings coming soon. Available courses will be displayed here.',
     
     'resources.title': 'Resources',
-    'resources.description': 'AI tools. Find what\'s worth your time.',
+    'resources.description': 'Curated AI tools, resources, and recommendations. Find what\'s worth your time.',
     'resources.comingSoon': 'Resources coming soon. Tools and recommendations will be displayed here.',
     'resources.readMore': 'Read more',
     'resources.visit': 'Visit',
@@ -329,6 +356,7 @@ const translations: Record<Language, Record<string, string>> = {
     'community.description': 'Join our community - Discord, Newsletter, Free Courses, and more.',
     'community.comingSoon': 'Community features coming soon. Discord, newsletter signup, and community tiers will be available here.',
     'community.stayUpdated': 'Stay Updated',
+    'community.newsletterDesc': 'Subscribe to our newsletter for the latest AI insights, tool reviews, and exclusive content.',
     'community.thankYouSubscribed': 'Thank you for subscribing! Check your email to confirm.',
     'community.subscribing': 'Subscribing...',
     'community.subscribe': 'Subscribe',
@@ -349,6 +377,11 @@ const translations: Record<Language, Record<string, string>> = {
     'community.readyToJoin': 'Ready to Join?',
     'community.joinMessage': 'Start your AI journey today and connect with a community of like-minded individuals.',
     'community.getStarted': 'Get Started',
+    
+    // Events
+    'events.title': 'Tour/Events',
+    'events.description': 'See our upcoming concerts and events.',
+    'events.comingSoon': 'Events coming soon.',
     
     'contact.title': 'Contact',
     'contact.getInTouch': 'Get in Touch',
@@ -438,12 +471,37 @@ const translations: Record<Language, Record<string, string>> = {
     'portfolio.projectGallery': 'Project Gallery',
     
     // Resources
+    'resources.all': 'All',
+    'resources.worthIt': 'Worth it',
+    'resources.visit': 'Visit',
     
     // About
     'about.title': 'About',
-    'about.para1': 'I\'m Sebastian Saethre, dedicated to making artificial intelligence accessible and practical for everyone. My mission is to bridge the gap between complex AI concepts and real-world applications across all industries.',
+    'about.para1': `I'm ${siteConfig.name}, dedicated to making artificial intelligence accessible and practical for everyone. My mission is to bridge the gap between complex AI concepts and real-world applications across all industries.`,
     'about.para2': 'Through this platform, I share practical insights, tool reviews, courses, and resources that help individuals and organizations leverage AI effectively. Whether you\'re interested in image generation, video creation, coding with AI, or exploring cutting-edge tools, you\'ll find valuable content here.',
     'about.para3': 'My approach to AI education focuses on "vibe coding" - a practical, hands-on methodology that emphasizes experimentation and real-world application over theory. Join our community to connect, learn, and explore the transformative potential of AI together.',
+    
+    // Artists
+    'artists.title': 'Artists',
+    'artists.description': 'Explore our artists and their music.',
+    'artists.comingSoon': 'Artists coming soon.',
+    'artists.featured': 'Featured',
+    'artists.listenOnSpotify': 'Listen on Spotify',
+    'artists.notFound': 'Artist Not Found',
+    'artists.notFoundDesc': 'The artist you\'re looking for doesn\'t exist.',
+    'artists.backToArtists': 'Back to Artists',
+    
+    // Merch
+    'merch.title': 'Merch',
+    'merch.description': 'Order merch directly from us.',
+    'merch.comingSoon': 'Merch coming soon.',
+    'merch.addToCart': 'Add to Cart',
+    'merch.outOfStock': 'Out of Stock',
+    'merch.selectSize': 'Select Size',
+    'merch.selectColor': 'Select Color',
+    'merch.quantity': 'Quantity',
+    'merch.checkout': 'Checkout',
+    'merch.orderSuccess': 'Order received!',
     
     // Admin
     'admin.dashboard': 'Admin Dashboard',
@@ -456,6 +514,9 @@ const translations: Record<Language, Record<string, string>> = {
     'admin.members': 'Members',
     'admin.social': 'Social Media',
     'admin.content': 'Content',
+    'admin.artists': 'Artists',
+    'admin.merch': 'Merch',
+    'admin.orders': 'Orders',
   },
 };
 
@@ -518,3 +579,4 @@ export const useLanguageStore = create<LanguageState>((set, get) => ({
     return translation;
   },
 }));
+

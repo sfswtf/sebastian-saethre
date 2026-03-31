@@ -4,6 +4,7 @@ import { AnimatedSection } from './animations/AnimatedSection';
 import { AnimatedButton } from './animations/AnimatedButton';
 import { useLanguageStore } from '../stores/languageStore';
 import { CheckCircle } from 'lucide-react';
+import { siteConfig } from '../config/siteConfig';
 
 export function OnboardingThanksPage() {
   const { t } = useLanguageStore();
@@ -29,7 +30,7 @@ export function OnboardingThanksPage() {
               {t('onboarding.thanks.calendly')}
             </p>
             <a
-              href="mailto:sebastian.saethre@gmail.com?subject=Schedule%20a%20Meeting&body=Hi%20Sebastian%2C%0A%0AI%27d%20like%20to%20schedule%20a%20meeting%20to%20discuss%20AI%20consulting.%0A%0AThank%20you!"
+              href={`mailto:${siteConfig.email}?subject=Schedule%20a%20Meeting&body=Hi%2C%0A%0AI%27d%20like%20to%20schedule%20a%20meeting.%0A%0AThank%20you!`}
               className="text-brand-600 hover:text-brand-700 font-semibold underline"
             >
               {t('onboarding.thanks.schedule')}
@@ -37,10 +38,10 @@ export function OnboardingThanksPage() {
             <p className="text-sm text-gray-600 mt-2">
               Or email directly at{' '}
               <a 
-                href="mailto:sebastian.saethre@gmail.com" 
+                href={`mailto:${siteConfig.email}`} 
                 className="text-brand-600 hover:text-brand-700 underline"
               >
-                sebastian.saethre@gmail.com
+                {siteConfig.email}
               </a>
             </p>
           </div>

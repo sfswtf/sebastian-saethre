@@ -311,7 +311,7 @@ export function BlogPostDetailPage() {
                 >
                   <span className="font-medium">{link.text}</span>
                   {link.isAffiliate && (
-                    <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-xs font-semibold">
+                    <span className="bg-red-orange-100 text-red-orange-800 px-2 py-0.5 rounded text-xs font-semibold">
                       {t('blog.affiliate')}
                     </span>
                   )}

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatedSection } from './animations/AnimatedSection';
 import { useCartStore } from '../stores/cartStore';
-import { ShoppingCart, ArrowLeft, CheckCircle, Copy, QrCode, Wallet, X } from 'lucide-react';
+import { LocalStorageService } from '../lib/localStorage';
+import { ShoppingCart, ArrowLeft, CheckCircle, Copy, QrCode, Wallet } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { siteConfig } from '../config/siteConfig';
 import { QRCodeSVG } from 'qrcode.react';
@@ -11,7 +12,7 @@ type PaymentMethod = 'manual' | 'crypto' | 'paypal';
 
 export function CheckoutPage() {
   const navigate = useNavigate();
-  const { items, clearCart, getTotal, removeItem } = useCartStore();
+  const { items, clearCart, getTotal } = useCartStore();
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('manual');
   const [showCryptoModal, setShowCryptoModal] = useState(false);
@@ -19,6 +20,10 @@ export function CheckoutPage() {
     customer_name: '',
     customer_email: '',
     customer_phone: '',
+    customer_address: '',
+    customer_postal_code: '',
+    customer_city: '',
+    customer_country: 'Norway',
     notes: '',
   });
 
@@ -34,8 +39,8 @@ export function CheckoutPage() {
     setLoading(true);
 
     try {
-      // Get existing orders from localStorage (without admin_ prefix for orders)
-      const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+      // Get next order number
+      const existingOrders = LocalStorageService.get<any>('orders');
       const orderNumbers = existingOrders
         .map((o: any) => {
           const match = o.order_number?.match(/^ORD-(\d+)$/);
@@ -53,13 +58,17 @@ export function CheckoutPage() {
         customer_name: formData.customer_name,
         customer_email: formData.customer_email,
         customer_phone: formData.customer_phone || undefined,
+        customer_address: formData.customer_address,
+        customer_postal_code: formData.customer_postal_code,
+        customer_city: formData.customer_city,
+        customer_country: formData.customer_country,
         order_items: items.map(item => ({
-          product_id: item.product_id,
+          merch_id: item.merch_id,
           name: item.name,
           price: item.price,
           quantity: item.quantity,
-          product_type: item.product_type,
-          delivery_method: item.delivery_method,
+          size: item.size,
+          color: item.color,
         })),
         total_amount: finalTotal,
         original_amount: baseTotal,
@@ -72,8 +81,8 @@ export function CheckoutPage() {
         updated_at: new Date().toISOString(),
       };
 
-      // Save to localStorage (without admin_ prefix)
-      localStorage.setItem('orders', JSON.stringify([...existingOrders, order]));
+      // Save to localStorage (will be migrated to Supabase later)
+      LocalStorageService.set('orders', [...existingOrders, order]);
 
       // Clear cart
       clearCart();
@@ -97,10 +106,10 @@ export function CheckoutPage() {
             <h1 className="text-3xl font-bold mb-4">Handlekurven er tom</h1>
             <p className="text-neutral-600 mb-6">Legg til produkter i handlekurven før du går til kassen.</p>
             <button
-              onClick={() => navigate('/products')}
-              className="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 transition-colors font-semibold"
+              onClick={() => navigate('/merch')}
+              className="bg-[#FF4D00] text-white px-6 py-3 rounded-lg hover:bg-[#e64400] transition-colors font-semibold"
             >
-              Gå til produkter
+              Gå til merch
             </button>
           </div>
         </div>
@@ -112,11 +121,11 @@ export function CheckoutPage() {
     <AnimatedSection>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <button
-          onClick={() => navigate('/products')}
+          onClick={() => navigate('/merch')}
           className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-900 mb-8 transition-colors"
         >
           <ArrowLeft size={20} />
-          <span>Tilbake til produkter</span>
+          <span>Tilbake til merch</span>
         </button>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -136,20 +145,12 @@ export function CheckoutPage() {
                     )}
                     <div className="flex-grow">
                       <p className="font-medium">{item.name}</p>
-                      {item.product_type && (
-                        <p className="text-sm text-neutral-500">Type: {item.product_type}</p>
-                      )}
+                      {item.size && <p className="text-sm text-neutral-500">Størrelse: {item.size}</p>}
+                      {item.color && <p className="text-sm text-neutral-500">Farge: {item.color}</p>}
                       <p className="text-sm text-neutral-600">Antall: {item.quantity}</p>
                     </div>
-                    <div className="text-right flex flex-col items-end gap-2">
+                    <div className="text-right">
                       <p className="font-semibold">{item.price * item.quantity} NOK</p>
-                      <button
-                        onClick={() => removeItem(item.product_id)}
-                        className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50 transition-colors"
-                        title="Fjern fra handlekurv"
-                      >
-                        <X size={16} />
-                      </button>
                     </div>
                   </div>
                 ))}
@@ -178,7 +179,7 @@ export function CheckoutPage() {
           {/* Checkout Form */}
           <div className="md:col-span-2">
             <div className="bg-white rounded-lg shadow-lg p-8">
-              <h2 className="text-2xl font-bold mb-6">Kontaktinformasjon</h2>
+              <h2 className="text-2xl font-bold mb-6">Leveringsinformasjon</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -217,6 +218,58 @@ export function CheckoutPage() {
                     onChange={(e) => setFormData({ ...formData, customer_phone: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-600 focus:border-transparent"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Adresse *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.customer_address}
+                    onChange={(e) => setFormData({ ...formData, customer_address: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-600 focus:border-transparent"
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Postnummer *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.customer_postal_code}
+                      onChange={(e) => setFormData({ ...formData, customer_postal_code: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-600 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      By *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.customer_city}
+                      onChange={(e) => setFormData({ ...formData, customer_city: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-600 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Land *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.customer_country}
+                      onChange={(e) => setFormData({ ...formData, customer_country: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-600 focus:border-transparent"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -310,10 +363,19 @@ export function CheckoutPage() {
                   </div>
                 )}
 
+                {/* PayPal Payment Info */}
+                {paymentMethod === 'paypal' && (
+                  <div className="bg-red-orange-50 border border-red-orange-200 rounded-lg p-4 mb-6">
+                    <p className="text-sm text-red-orange-800">
+                      <strong>PayPal:</strong> Du vil bli videresendt til PayPal for å fullføre betalingen etter at du har sendt inn bestillingen.
+                    </p>
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-yellow-400 text-black py-4 px-6 rounded-lg hover:bg-yellow-500 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg"
+                  className="w-full bg-[#FF4D00] text-white py-4 px-6 rounded-lg hover:bg-[#e64400] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg"
                 >
                   {loading ? (
                     <>
@@ -355,6 +417,13 @@ export function CheckoutPage() {
                     size={192}
                     level="H"
                     includeMargin={true}
+                    imageSettings={{
+                      src: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzAwMCIvPgo8cGF0aCBkPSJNMTAgMTJIMzBWMTZIMTZWMjRIMTJWMTJIMTBaIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjEwIiB5MT0iMTIiIHgyPSIzMCIgeTI9IjI0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMxNEJERUYiLz4KPHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9IiM5NDQ3RjUiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRkY2QzQ0Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+",
+                      height: 40,
+                      width: 40,
+                      excavate: true,
+                    }}
+                    className="mx-auto"
                   />
                 )}
               </div>
@@ -379,6 +448,17 @@ export function CheckoutPage() {
                 <Copy size={18} />
                 <span>Kopier adresse</span>
               </button>
+            </div>
+            
+            <div className="text-center">
+              <a
+                href={`https://solscan.io/account/${siteConfig.payment.solanaAddress}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-700 text-sm"
+              >
+                Se på Solscan →
+              </a>
             </div>
           </div>
         </div>

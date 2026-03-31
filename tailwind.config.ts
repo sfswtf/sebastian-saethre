@@ -79,8 +79,20 @@ const config: Config = {
           900: '#171717',
           950: '#0a0a0a',
         },
-        background: '#0a0a0a',
-        'primary-foreground': '#ffffff',
+        // Red-orange accent color (#FF4D00)
+        'red-orange': {
+          50: '#fff5f2',
+          100: '#ffe5d9',
+          200: '#ffd4c0',
+          300: '#ffb899',
+          400: '#ff8c66',
+          500: '#FF4D00',
+          600: '#e64400',
+          700: '#cc3a00',
+          800: '#b83300',
+          900: '#992b00',
+          950: '#7a2200',
+        },
       },
     },
   },
@@ -88,3 +100,4 @@ const config: Config = {
 };
 
 export default config;
+

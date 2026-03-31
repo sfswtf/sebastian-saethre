@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { MembershipForm } from './MembershipForm';
 import { MembershipFormSkeleton } from './SkeletonLoader';
+import { siteConfig } from '../config/siteConfig';
 
 interface PageContent {
   id: string;
@@ -66,8 +67,8 @@ export function MembershipPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
           <img
-            src="/images/logo.jpg"
-            alt="Sebastian Saethre"
+            src={siteConfig.logo.primary}
+            alt={siteConfig.name}
             className="w-64 h-64 mx-auto mb-8 rounded-full"
             style={{
               filter: 'contrast(1.1)'
