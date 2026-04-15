@@ -80,11 +80,19 @@ export function CourseManager() {
     
     try {
       if (editingCourse?.id) {
-        // Update existing course
+        // Update existing course - explicitly include all fields
         console.log('Updating course:', editingCourse.id);
+        const updateData = {
+          title: formData.title,
+          description: formData.description,
+          price: formData.price,
+          currency: formData.currency,
+          course_image: formData.course_image,
+          status: formData.status,
+        };
         const { error } = await supabase
           .from('courses')
-          .update(formData)
+          .update(updateData)
           .eq('id', editingCourse.id);
         if (error) throw error;
         toast.success('Kurs oppdatert');
@@ -105,7 +113,15 @@ export function CourseManager() {
       console.warn('Supabase save failed, using localStorage:', error);
       try {
         if (editingCourse?.id) {
-          LocalStorageService.update('courses', editingCourse.id, formData);
+          const updateData = {
+            title: formData.title,
+            description: formData.description,
+            price: formData.price,
+            currency: formData.currency,
+            course_image: formData.course_image,
+            status: formData.status,
+          };
+          LocalStorageService.update('courses', editingCourse.id, updateData);
           toast.success('Kurs oppdatert (lokal lagring)');
         } else {
           LocalStorageService.add('courses', formData);
@@ -136,10 +152,11 @@ export function CourseManager() {
 
   function handleEdit(course: Course) {
     // Set editing course and form data
+    console.log('Editing course:', course.id);
+    console.log('Course data:', JSON.stringify(course, null, 2));
     setEditingCourse(course);
+    // Explicitly set each field - don't use spread to avoid issues
     setFormData({
-      ...course,
-      // Ensure all fields are set
       title: course.title || '',
       description: course.description || '',
       price: course.price || 0,

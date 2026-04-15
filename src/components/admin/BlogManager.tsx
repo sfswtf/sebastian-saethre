@@ -149,10 +149,21 @@ export function BlogManager() {
       };
 
       if (editingPost?.id) {
-        // Try Supabase first
+        // Try Supabase first - explicitly include all fields
+        const updateData = {
+          title: submitData.title,
+          slug: submitData.slug,
+          content: submitData.content,
+          category: submitData.category,
+          tags: submitData.tags,
+          featured_image: submitData.featured_image,
+          published_at: submitData.published_at,
+          status: submitData.status,
+          affiliate_links: submitData.affiliate_links || [],
+        };
         const { error } = await supabase
           .from('blog_posts')
-          .update(submitData)
+          .update(updateData)
           .eq('id', editingPost.id);
 
         if (error) throw error;

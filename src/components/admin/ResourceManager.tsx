@@ -79,13 +79,26 @@ export function ResourceManager() {
     
     try {
       if (editingResource?.id) {
-        // Update existing resource
+        // Update existing resource - explicitly include all fields
         console.log('Updating resource:', editingResource.id);
+        console.log('Current formData:', JSON.stringify(formData, null, 2));
+        const updateData = {
+          name: formData.name || '',
+          description: formData.description || '',
+          category: formData.category || '',
+          affiliate_url: formData.affiliate_url || null,
+          rating: formData.rating || 5,
+          worth_it: formData.worth_it !== undefined ? formData.worth_it : true,
+        };
+        console.log('Update data being sent:', JSON.stringify(updateData, null, 2));
         const { error } = await supabase
           .from('tools_resources')
-          .update(formData)
+          .update(updateData)
           .eq('id', editingResource.id);
-        if (error) throw error;
+        if (error) {
+          console.error('Supabase update error:', error);
+          throw error;
+        }
         toast.success('Ressurs oppdatert');
       } else {
         // Insert new resource
@@ -104,7 +117,15 @@ export function ResourceManager() {
       console.warn('Supabase save failed, using localStorage:', error);
       try {
         if (editingResource?.id) {
-          LocalStorageService.update('tools_resources', editingResource.id, formData);
+          const updateData = {
+            name: formData.name || '',
+            description: formData.description || '',
+            category: formData.category || '',
+            affiliate_url: formData.affiliate_url || null,
+            rating: formData.rating || 5,
+            worth_it: formData.worth_it !== undefined ? formData.worth_it : true,
+          };
+          LocalStorageService.update('tools_resources', editingResource.id, updateData);
           toast.success('Ressurs oppdatert (lokal lagring)');
         } else {
           LocalStorageService.add('tools_resources', formData);
@@ -137,10 +158,10 @@ export function ResourceManager() {
   function handleEdit(resource: Resource) {
     // Set editing resource and form data
     console.log('Editing resource:', resource.id);
+    console.log('Resource data:', JSON.stringify(resource, null, 2));
     setEditingResource(resource);
+    // Explicitly set each field - don't use spread to avoid issues
     setFormData({
-      ...resource,
-      // Ensure all fields are set
       name: resource.name || '',
       description: resource.description || '',
       category: resource.category || '',
@@ -148,6 +169,14 @@ export function ResourceManager() {
       rating: resource.rating || 5,
       worth_it: resource.worth_it !== undefined ? resource.worth_it : true,
     });
+    console.log('FormData set to:', JSON.stringify({
+      name: resource.name || '',
+      description: resource.description || '',
+      category: resource.category || '',
+      affiliate_url: resource.affiliate_url || null,
+      rating: resource.rating || 5,
+      worth_it: resource.worth_it !== undefined ? resource.worth_it : true,
+    }, null, 2));
   }
   
   function handleNewResource() {

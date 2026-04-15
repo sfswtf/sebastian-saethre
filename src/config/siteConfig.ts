@@ -90,4 +90,3 @@ export const siteConfig: SiteConfig = {
     cryptoDiscountPercent: 10, // 10% discount for crypto payments
   },
 };
-

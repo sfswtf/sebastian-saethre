@@ -108,13 +108,28 @@ export function PortfolioManager() {
     
     try {
       if (editingProject?.id) {
-        // Update existing project
+        // Update existing project - explicitly include all fields
         console.log('Updating portfolio project:', editingProject.id);
+        console.log('Current formData:', JSON.stringify(formData, null, 2));
+        const updateData = {
+          title: formData.title || '',
+          description: formData.description || '',
+          category: formData.category || '',
+          tech_stack: formData.tech_stack || [],
+          image_urls: formData.image_urls || [],
+          live_url: formData.live_url || null,
+          github_url: formData.github_url || null,
+          featured: formData.featured !== undefined ? formData.featured : false,
+        };
+        console.log('Update data being sent:', JSON.stringify(updateData, null, 2));
         const { error } = await supabase
           .from('portfolio_projects')
-          .update(formData)
+          .update(updateData)
           .eq('id', editingProject.id);
-        if (error) throw error;
+        if (error) {
+          console.error('Supabase update error:', error);
+          throw error;
+        }
         toast.success('Prosjekt oppdatert');
       } else {
         // Insert new project
@@ -133,7 +148,17 @@ export function PortfolioManager() {
       console.warn('Supabase save failed, using localStorage:', error);
       try {
         if (editingProject?.id) {
-          LocalStorageService.update('portfolio_projects', editingProject.id, formData);
+          const updateData = {
+            title: formData.title || '',
+            description: formData.description || '',
+            category: formData.category || '',
+            tech_stack: formData.tech_stack || [],
+            image_urls: formData.image_urls || [],
+            live_url: formData.live_url || null,
+            github_url: formData.github_url || null,
+            featured: formData.featured !== undefined ? formData.featured : false,
+          };
+          LocalStorageService.update('portfolio_projects', editingProject.id, updateData);
           toast.success('Prosjekt oppdatert (lokal lagring)');
         } else {
           LocalStorageService.add('portfolio_projects', formData);
@@ -170,19 +195,29 @@ export function PortfolioManager() {
   function handleEdit(project: PortfolioProject) {
     // Set editing project and form data
     console.log('Editing portfolio project:', project.id);
+    console.log('Project data:', JSON.stringify(project, null, 2));
     setEditingProject(project);
+    // Explicitly set each field - don't use spread to avoid issues
     setFormData({
-      ...project,
-      // Ensure all fields are set
       title: project.title || '',
       description: project.description || '',
       category: project.category || '',
-      tech_stack: project.tech_stack || [],
-      image_urls: project.image_urls || [],
+      tech_stack: Array.isArray(project.tech_stack) ? project.tech_stack : [],
+      image_urls: Array.isArray(project.image_urls) ? project.image_urls : [],
       live_url: project.live_url || null,
       github_url: project.github_url || null,
-      featured: project.featured || false,
+      featured: project.featured !== undefined ? project.featured : false,
     });
+    console.log('FormData set to:', JSON.stringify({
+      title: project.title || '',
+      description: project.description || '',
+      category: project.category || '',
+      tech_stack: Array.isArray(project.tech_stack) ? project.tech_stack : [],
+      image_urls: Array.isArray(project.image_urls) ? project.image_urls : [],
+      live_url: project.live_url || null,
+      github_url: project.github_url || null,
+      featured: project.featured !== undefined ? project.featured : false,
+    }, null, 2));
   }
   
   function handleNewProject() {

@@ -191,9 +191,21 @@ export function EventManager() {
       let eventId: string;
       
       if (editingEvent?.id) {
+        // Update existing event - explicitly include all fields
+        const updateData = {
+          title: formData.title || '',
+          description: formData.description || '',
+          event_date: formData.event_date || '',
+          location: formData.location || null,
+          status: formData.status || 'draft',
+          image_url: formData.image_url || null,
+          ticket_price: formData.ticket_price || null,
+          tickets_url: formData.tickets_url || null,
+          festival: formData.festival || null,
+        };
         const { error } = await supabase
           .from('events')
-          .update(formData)
+          .update(updateData)
           .eq('id', editingEvent.id);
         if (error) throw error;
         eventId = editingEvent.id;
@@ -397,7 +409,10 @@ export function EventManager() {
   }
 
   function handleEdit(event: Event) {
+    console.log('Editing event:', event.id);
+    console.log('Event data:', JSON.stringify(event, null, 2));
     setEditingEvent(event);
+    // Explicitly set each field - don't use spread to avoid issues
     setFormData({
       title: event.title || event.title_nb || '',
       title_nb: event.title_nb || event.title || '',

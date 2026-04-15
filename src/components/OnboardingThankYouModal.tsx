@@ -11,6 +11,9 @@ interface OnboardingThankYouModalProps {
   titleOverride?: string;
   messageOverride?: string;
   primaryLabelOverride?: string;
+  promptGuideSummary?: string;
+  promptGuideMailtoHref?: string;
+  promptGuideMailtoLabel?: string;
 }
 
 export function OnboardingThankYouModal({
@@ -20,6 +23,9 @@ export function OnboardingThankYouModal({
   titleOverride,
   messageOverride,
   primaryLabelOverride,
+  promptGuideSummary,
+  promptGuideMailtoHref,
+  promptGuideMailtoLabel,
 }: OnboardingThankYouModalProps) {
   const { t } = useLanguageStore();
 
@@ -69,15 +75,41 @@ export function OnboardingThankYouModal({
                   {messageOverride || t('onboarding.modal.message')}
                 </p>
 
+                {promptGuideSummary && (
+                  <div className="text-left bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+                    <div className="font-semibold text-gray-900 mb-2">Din AI-prompt guide</div>
+                    <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono">{promptGuideSummary}</pre>
+                  </div>
+                )}
+
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <AnimatedButton
-                    variant="primary"
-                    onClick={onViewResources}
-                    className="px-6 py-3 rounded-lg font-semibold bg-brand-600 text-white hover:bg-brand-700 transition-colors"
-                  >
-                    {primaryLabelOverride || t('onboarding.modal.viewResources')}
-                  </AnimatedButton>
+                  {promptGuideMailtoHref ? (
+                    <a
+                      href={promptGuideMailtoHref}
+                      className="px-6 py-3 rounded-lg font-semibold bg-brand-600 text-white hover:bg-brand-700 transition-colors inline-flex justify-center"
+                    >
+                      {promptGuideMailtoLabel || 'Send guiden på e-post'}
+                    </a>
+                  ) : (
+                    <AnimatedButton
+                      variant="primary"
+                      onClick={onViewResources}
+                      className="px-6 py-3 rounded-lg font-semibold bg-brand-600 text-white hover:bg-brand-700 transition-colors"
+                    >
+                      {primaryLabelOverride || t('onboarding.modal.viewResources')}
+                    </AnimatedButton>
+                  )}
                   
+                  {promptGuideMailtoHref ? (
+                    <AnimatedButton
+                      variant="outline"
+                      onClick={onViewResources}
+                      className="px-6 py-3 rounded-lg font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+                    >
+                      {primaryLabelOverride || t('onboarding.modal.viewResources')}
+                    </AnimatedButton>
+                  ) : null}
+
                   <button
                     onClick={onClose}
                     className="px-6 py-3 rounded-lg font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"

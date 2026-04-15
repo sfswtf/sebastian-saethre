@@ -6,14 +6,16 @@ import { useLanguageStore } from '../stores/languageStore';
 import { AnimatedButton } from './animations/AnimatedButton';
 import { OnboardingThankYouModal } from './OnboardingThankYouModal';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { buildOnboardingPromptGuide } from '../lib/onboardingPromptGuide';
 
 export function OnboardingForm() {
   const navigate = useNavigate();
-  const { t } = useLanguageStore();
+  const { t, language } = useLanguageStore();
   const { submitOnboardingForm } = useOnboardingStore();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showThankYouModal, setShowThankYouModal] = useState(false);
+  const [promptGuide, setPromptGuide] = useState<ReturnType<typeof buildOnboardingPromptGuide> | null>(null);
   const [formData, setFormData] = useState<OnboardingFormData>({
     type: 'personal',
     goals: [],
@@ -59,6 +61,11 @@ export function OnboardingForm() {
       setIsSubmitting(true);
       try {
         await submitOnboardingForm(formData);
+
+        // Create the prompt guide from their answers (template-based, no LLM).
+        const guide = buildOnboardingPromptGuide(formData, language);
+        setPromptGuide(guide);
+
         // Show thank you modal
         setIsSubmitting(false);
         setShowThankYouModal(true);
@@ -109,6 +116,9 @@ export function OnboardingForm() {
         isOpen={showThankYouModal}
         onClose={() => setShowThankYouModal(false)}
         onViewResources={handleViewResources}
+        promptGuideSummary={promptGuide?.summary}
+        promptGuideMailtoHref={promptGuide?.mailtoHref}
+        promptGuideMailtoLabel={language === 'no' ? 'Send guiden på e-post (ferdig utfylt)' : 'Send the guide via email (prefilled)'}
       />
       <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl w-full mx-auto px-4">
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 overflow-x-hidden">

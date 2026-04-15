@@ -76,10 +76,20 @@ export function DigitalProductsManager() {
     
     try {
       if (editingProduct?.id) {
-        // Update existing product
+        // Update existing product - explicitly include all fields
+        const updateData = {
+          name: formData.name,
+          description: formData.description,
+          price: formData.price,
+          product_type: formData.product_type,
+          delivery_method: formData.delivery_method,
+          image_url: formData.image_url,
+          category: formData.category,
+          rating: formData.rating,
+        };
         const { error } = await supabase
           .from('digital_products')
-          .update(formData)
+          .update(updateData)
           .eq('id', editingProduct.id);
         if (error) throw error;
         toast.success('Produkt oppdatert');
@@ -99,7 +109,17 @@ export function DigitalProductsManager() {
       console.warn('Supabase save failed, using localStorage:', error);
       try {
         if (editingProduct?.id) {
-          LocalStorageService.update('digital_products', editingProduct.id, formData);
+          const updateData = {
+            name: formData.name,
+            description: formData.description,
+            price: formData.price,
+            product_type: formData.product_type,
+            delivery_method: formData.delivery_method,
+            image_url: formData.image_url,
+            category: formData.category,
+            rating: formData.rating,
+          };
+          LocalStorageService.update('digital_products', editingProduct.id, updateData);
           toast.success('Produkt oppdatert (lokal lagring)');
         } else {
           LocalStorageService.add('digital_products', formData);
@@ -129,9 +149,11 @@ export function DigitalProductsManager() {
   }
 
   function handleEdit(product: DigitalProduct) {
+    console.log('Editing product:', product.id);
+    console.log('Product data:', JSON.stringify(product, null, 2));
     setEditingProduct(product);
+    // Explicitly set each field - don't use spread to avoid issues
     setFormData({
-      ...product,
       name: product.name || '',
       description: product.description || '',
       price: product.price || 0,

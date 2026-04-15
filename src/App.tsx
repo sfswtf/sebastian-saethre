@@ -6,7 +6,6 @@ import { Navigation } from './components/Navigation';
 import { ScrollToTop } from './components/ScrollToTop';
 import { useLanguageStore, detectLanguageFromLocation } from './stores/languageStore';
 import { HeroSkeleton } from './components/SkeletonLoader';
-import { AnimatedNavbar } from './components/animations/AnimatedNavbar';
 import { AnimatedFooter } from './components/animations/AnimatedFooter';
 import { ParallaxHero } from './components/animations/ParallaxHero';
 import { AnimatedButton } from './components/animations/AnimatedButton';
