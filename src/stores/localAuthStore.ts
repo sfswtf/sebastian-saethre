@@ -8,9 +8,9 @@ interface LocalAuthState {
   logout: () => void;
 }
 
-// Local admin credentials - loaded from environment variables
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'admin@example.com';
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin';
+// Local admin credentials for testing
+const ADMIN_EMAIL = 'sebastian.saethre@gmail.com';
+const ADMIN_PASSWORD = 'Lykkeigris92';
 
 // Load from localStorage on init
 const loadAuthState = () => {

@@ -147,7 +147,7 @@ export function ResourceDetailPage() {
                       <Star
                         key={i}
                         size={20}
-                        className={i < resource.rating ? 'fill-red-orange-500 text-red-orange-500' : 'text-neutral-300'}
+                        className={i < resource.rating ? 'fill-yellow-400 text-yellow-400' : 'text-neutral-300'}
                       />
                     ))}
                     <span className="ml-2 text-lg text-neutral-600 font-medium">{resource.rating}/5</span>

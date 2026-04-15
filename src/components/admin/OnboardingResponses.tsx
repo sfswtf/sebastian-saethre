@@ -3,7 +3,6 @@ import { supabase } from '../../lib/supabase';
 import { Download, Mail, FileText, Eye, X, ChevronDown, ChevronUp } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
-import { siteConfig } from '../../config/siteConfig';
 
 interface OnboardingResponse {
   id: string;
@@ -87,18 +86,6 @@ export function OnboardingResponses() {
     }
   };
 
-  // Generate email signature from siteConfig
-  const getEmailSignature = (): string => {
-    const socialLinks: string[] = [];
-    if (siteConfig.social.twitter) socialLinks.push(`Twitter: ${siteConfig.social.twitter}`);
-    if (siteConfig.social.youtube) socialLinks.push(`YouTube: ${siteConfig.social.youtube}`);
-    
-    if (socialLinks.length > 0) {
-      return `\n\nMed vennlig hilsen,\n${siteConfig.name}\n\n---\n${socialLinks.join('\n')}`;
-    }
-    return `\n\nMed vennlig hilsen,\n${siteConfig.name}`;
-  };
-
   // Email templates for each persona
   const emailTemplates: Record<PersonaType, EmailTemplate> = {
     beginnerPersonal: {
@@ -114,7 +101,15 @@ Jeg hjelper deg gjerne med å komme i gang med praktisk AI-bruk. Her er noen res
 • Steg-for-steg tutorials for nybegynnere
 • Eksempler på praktiske bruksområder
 
-Jeg sender ut nyhetsbrev med tips og triks spesielt for nybegynnere. Hvis du har spørsmål, kan du bare sende meg en e-post.${getEmailSignature()}`
+Jeg sender ut nyhetsbrev med tips og triks spesielt for nybegynnere. Hvis du har spørsmål, kan du bare sende meg en e-post.
+
+Med vennlig hilsen,
+Sebastian Saethre
+AI Educator & Practitioner
+
+---
+Twitter: @seb_fs_ai
+YouTube: @sebfsai`
     },
     advancedPersonal: {
       subject: 'Takk for din interesse! 🎯',
@@ -129,7 +124,15 @@ Jeg kan hjelpe deg med å ta neste steg og utforske mer avanserte teknikker og v
 • Avanserte teknikker og workflows
 • Nyheter om nye verktøy og muligheter
 
-Jeg sender ut nyhetsbrev med avanserte tips, nye verktøy og case studies. Hvis du har spørsmål eller ønsker å diskutere noe spesifikt, kan du bare sende meg en e-post.${getEmailSignature()}`
+Jeg sender ut nyhetsbrev med avanserte tips, nye verktøy og case studies. Hvis du har spørsmål eller ønsker å diskutere noe spesifikt, kan du bare sende meg en e-post.
+
+Med vennlig hilsen,
+Sebastian Saethre
+AI Educator & Practitioner
+
+---
+Twitter: @seb_fs_ai
+YouTube: @sebfsai`
     },
     beginnerBusiness: {
       subject: 'Velkommen – la oss ta bedriften din til neste nivå med AI 💼',
@@ -145,7 +148,15 @@ Jeg hjelper bedrifter med å implementere AI på en praktisk og forretningsfokus
 • Best practices for AI-adopsjon
 • Verktøy spesielt for forretningsbruk
 
-Jeg sender ut nyhetsbrev med forretningsfokuserte AI-nyheter, case studies og tips for implementering. Hvis du ønsker å diskutere hvordan AI kan hjelpe bedriften din spesifikt, kan vi avtale et møte.${getEmailSignature()}`
+Jeg sender ut nyhetsbrev med forretningsfokuserte AI-nyheter, case studies og tips for implementering. Hvis du ønsker å diskutere hvordan AI kan hjelpe bedriften din spesifikt, kan vi avtale et møte.
+
+Med vennlig hilsen,
+Sebastian Saethre
+AI Educator & Practitioner
+
+---
+Twitter: @seb_fs_ai
+YouTube: @sebfsai`
     },
     advancedBusiness: {
       subject: 'Takk for din interesse – la oss utvide AI-kompetansen din 💼',
@@ -161,7 +172,15 @@ Jeg kan hjelpe dere med å ta neste steg og maksimere verdien av AI i bedriften.
 • Integrasjon med eksisterende systemer
 • Nyheter om enterprise AI-verktøy
 
-Jeg sender ut nyhetsbrev med avanserte forretningsfokuserte AI-nyheter, case studies og best practices. Hvis du ønsker å diskutere spesifikke utfordringer eller muligheter, kan vi avtale et møte.${getEmailSignature()}`
+Jeg sender ut nyhetsbrev med avanserte forretningsfokuserte AI-nyheter, case studies og best practices. Hvis du ønsker å diskutere spesifikke utfordringer eller muligheter, kan vi avtale et møte.
+
+Med vennlig hilsen,
+Sebastian Saethre
+AI Educator & Practitioner
+
+---
+Twitter: @seb_fs_ai
+YouTube: @sebfsai`
     }
   };
 
@@ -454,7 +473,7 @@ ${(response.pain_points_options || []).length > 0 ? `Utfordringsalternativer: ${
                             </span>
                             <span className={`px-2 py-1 rounded-full text-xs text-center ${
                               determinePersona(response).includes('beginner')
-                                ? 'bg-red-orange-100 text-red-orange-800'
+                                ? 'bg-yellow-100 text-yellow-800'
                                 : 'bg-purple-100 text-purple-800'
                             }`}>
                               {determinePersona(response).includes('beginner') ? 'Nybegynner' : 'Erfaren'}
@@ -759,7 +778,7 @@ ${(response.pain_points_options || []).length > 0 ? `Utfordringsalternativer: ${
                   <div className="flex items-center gap-2 mb-2">
                     <span className={`px-3 py-1 rounded-full text-sm ${
                       determinePersona(selectedResponse).includes('beginner')
-                        ? 'bg-red-orange-100 text-red-orange-800'
+                        ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-purple-100 text-purple-800'
                     }`}>
                       {determinePersona(selectedResponse).includes('beginner') ? '🆕 Nybegynner' : '⭐ Erfaren'}

@@ -1,5 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 import { toast, Toaster } from 'react-hot-toast';
+import { OnboardingThankYouModal } from './OnboardingThankYouModal';
+import { useLanguageStore } from '../stores/languageStore';
 
 interface ContactFormData {
   name: string;
@@ -8,12 +12,15 @@ interface ContactFormData {
 }
 
 export function ContactForm() {
+  const navigate = useNavigate();
+  const { t } = useLanguageStore();
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,21 +29,30 @@ export function ContactForm() {
     try {
       console.log('Submitting contact form:', formData);
       
-      // Use localStorage directly (Supabase will be set up later)
-      const existingMessages = JSON.parse(localStorage.getItem('contact_messages') || '[]');
-      const newMessage = {
-        id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        name: formData.name,
-        email: formData.email,
-        message: formData.message,
-        status: 'unread',
-        created_at: new Date().toISOString(),
-        admin_notes: null,
-      };
-      localStorage.setItem('contact_messages', JSON.stringify([...existingMessages, newMessage]));
+      // Don't send status - let database default handle it
+      // The DB might use 'unread' or enum type, so we let it default
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert([{
+          name: formData.name,
+          email: formData.email,
+          message: formData.message
+          // status will use database default
+        }]);
 
-      toast.success('Meldingen din er sendt! Vi tar kontakt snart.');
+      if (error) {
+        console.error('Error submitting contact form:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
+        });
+        throw error;
+      }
+
       setFormData({ name: '', email: '', message: '' });
+      setShowThankYou(true);
     } catch (error) {
       console.error('Error submitting contact form:', error);
       toast.error('Beklager, noe gikk galt. Vennligst prøv igjen senere.');
@@ -46,6 +62,15 @@ export function ContactForm() {
   };
 
   return (
+    <>
+    <OnboardingThankYouModal
+      isOpen={showThankYou}
+      onClose={() => setShowThankYou(false)}
+      onViewResources={() => { setShowThankYou(false); navigate('/resources'); }}
+      titleOverride={t('contact.modal.title')}
+      messageOverride={t('contact.modal.message')}
+      primaryLabelOverride={t('contact.modal.viewResources')}
+    />
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-8">
       <div className="space-y-6">
         <div>
@@ -98,33 +123,8 @@ export function ContactForm() {
           {isSubmitting ? 'Sender...' : 'Send Melding'}
         </button>
       </div>
-      <Toaster 
-        position="top-center"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: '#10b981',
-            color: 'white',
-            fontSize: '18px',
-            padding: '16px 24px',
-            minWidth: '300px',
-            borderRadius: '8px',
-            fontWeight: '500',
-          },
-          success: {
-            duration: 4000,
-            style: {
-              background: '#10b981',
-              color: 'white',
-              fontSize: '18px',
-              padding: '16px 24px',
-              minWidth: '300px',
-              borderRadius: '8px',
-              fontWeight: '500',
-            },
-          },
-        }}
-      />
+      <Toaster position="top-center" />
     </form>
+    </>
   );
 }

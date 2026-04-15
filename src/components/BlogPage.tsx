@@ -163,7 +163,7 @@ export function BlogPage() {
                             >
                               {link.text}
                               {link.isAffiliate && (
-                                <span className="bg-red-orange-100 text-red-orange-800 px-1.5 py-0.5 rounded text-[10px]">{t('blog.affiliate')}</span>
+                                <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-[10px]">{t('blog.affiliate')}</span>
                               )}
                               <ExternalLink size={12} />
                             </a>

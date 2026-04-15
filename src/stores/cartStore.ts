@@ -2,20 +2,20 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 export interface CartItem {
-  merch_id: string;
+  product_id: string;
   name: string;
   price: number;
   quantity: number;
-  size?: string;
-  color?: string;
+  product_type?: 'download' | 'access_code' | 'subscription' | 'service';
+  delivery_method?: 'email' | 'instant' | 'manual';
   image_url?: string;
 }
 
 interface CartStore {
   items: CartItem[];
   addItem: (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => void;
-  removeItem: (merchId: string, size?: string, color?: string) => void;
-  updateQuantity: (merchId: string, quantity: number, size?: string, color?: string) => void;
+  removeItem: (productId: string) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   getTotal: () => number;
   getItemCount: () => number;
@@ -27,9 +27,8 @@ export const useCartStore = create<CartStore>()(
       items: [],
       addItem: (item) => {
         const existingItems = get().items;
-        const key = `${item.merch_id}-${item.size || ''}-${item.color || ''}`;
         const existingIndex = existingItems.findIndex(
-          i => `${i.merch_id}-${i.size || ''}-${i.color || ''}` === key
+          i => i.product_id === item.product_id
         );
 
         if (existingIndex >= 0) {
@@ -40,23 +39,19 @@ export const useCartStore = create<CartStore>()(
           set({ items: [...existingItems, { ...item, quantity: item.quantity || 1 }] });
         }
       },
-      removeItem: (merchId, size, color) => {
-        const key = `${merchId}-${size || ''}-${color || ''}`;
+      removeItem: (productId) => {
         set({
-          items: get().items.filter(
-            i => `${i.merch_id}-${i.size || ''}-${i.color || ''}` !== key
-          ),
+          items: get().items.filter(i => i.product_id !== productId),
         });
       },
-      updateQuantity: (merchId, quantity, size, color) => {
+      updateQuantity: (productId, quantity) => {
         if (quantity <= 0) {
-          get().removeItem(merchId, size, color);
+          get().removeItem(productId);
           return;
         }
-        const key = `${merchId}-${size || ''}-${color || ''}`;
         set({
           items: get().items.map(item =>
-            `${item.merch_id}-${item.size || ''}-${item.color || ''}` === key
+            item.product_id === productId
               ? { ...item, quantity }
               : item
           ),

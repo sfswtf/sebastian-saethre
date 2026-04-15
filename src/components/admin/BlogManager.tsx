@@ -431,7 +431,7 @@ export function BlogManager() {
                     {link.url}
                   </a>
                   {link.isAffiliate && (
-                    <span className="bg-red-orange-100 text-red-orange-800 px-2 py-0.5 rounded text-xs">Affiliate</span>
+                    <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-xs">Affiliate</span>
                   )}
                 </div>
                 <button

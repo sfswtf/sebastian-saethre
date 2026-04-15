@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Mail, Save, Trash2 } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 
 type MessageStatus = 'unread' | 'read' | 'replied';
 
@@ -26,14 +27,38 @@ export function ContactMessages() {
   const fetchMessages = async () => {
     try {
       setLoading(true);
-      
-      // Use localStorage directly (Supabase will be set up later)
-      const localData = JSON.parse(localStorage.getItem('contact_messages') || '[]');
-      
-      if (localData && localData.length > 0) {
-        // Map localStorage data to ContactMessage format
-        const mappedData: ContactMessage[] = localData.map((msg: any) => ({
-          id: msg.id?.toString() || `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      // Try RPC function first (bypasses RLS)
+      const { data: rpcData, error: rpcError } = await supabase.rpc('get_contact_messages');
+
+      if (!rpcError) {
+        const mappedData: ContactMessage[] = (rpcData || []).map((msg: any) => ({
+          id: String(msg.id),
+          name: msg.name || '',
+          email: msg.email || '',
+          message: msg.message || '',
+          created_at: msg.created_at || new Date().toISOString(),
+          admin_notes: msg.admin_notes || null,
+          status: (msg.status as MessageStatus) || 'unread',
+        }));
+        const sorted = mappedData.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        const notesState: { [key: string]: string } = {};
+        sorted.forEach(message => { notesState[message.id] = message.admin_notes || ''; });
+        setEditingNotes(notesState);
+        setMessages(sorted);
+        setLoading(false);
+        return;
+      }
+
+      // Fallback to direct select (requires RLS policy)
+      const { data: supabaseData, error: supabaseError } = await supabase
+        .from('contact_messages')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!supabaseError && supabaseData && supabaseData.length > 0) {
+        // Map Supabase data to ContactMessage format
+        const mappedData: ContactMessage[] = supabaseData.map((msg: any) => ({
+          id: String(msg.id),
           name: msg.name || '',
           email: msg.email || '',
           message: msg.message || '',
@@ -71,12 +96,16 @@ export function ContactMessages() {
 
   const updateStatus = async (id: string, status: MessageStatus) => {
     try {
-      // Use localStorage directly
-      const localData = JSON.parse(localStorage.getItem('contact_messages') || '[]');
-      const updated = localData.map((msg: any) => 
-        msg.id === id ? { ...msg, status } : msg
-      );
-      localStorage.setItem('contact_messages', JSON.stringify(updated));
+      const { error: supabaseError } = await supabase
+        .from('contact_messages')
+        .update({ status })
+        .eq('id', id);
+
+      if (supabaseError) {
+        console.error('Error updating status:', supabaseError);
+        toast.error('Kunne ikke oppdatere status');
+        return;
+      }
       toast.success('Status oppdatert');
       fetchMessages();
     } catch (error) {
@@ -87,16 +116,21 @@ export function ContactMessages() {
 
   const updateAdminNotes = async (id: string) => {
     try {
-      // Use localStorage directly
-      const localData = JSON.parse(localStorage.getItem('contact_messages') || '[]');
-      const updated = localData.map((msg: any) => 
-        msg.id === id ? { ...msg, admin_notes: editingNotes[id] || null } : msg
-      );
-      localStorage.setItem('contact_messages', JSON.stringify(updated));
+      const notes = editingNotes[id] || null;
+      const { error: supabaseError } = await supabase
+        .from('contact_messages')
+        .update({ admin_notes: notes })
+        .eq('id', id);
+
+      if (supabaseError) {
+        console.error('Error updating notes:', supabaseError);
+        toast.error('Kunne ikke oppdatere notater');
+        return;
+      }
       toast.success('Notater oppdatert');
       fetchMessages();
     } catch (error) {
-      console.error('Error updating admin notes:', error);
+      console.error('Error updating notes:', error);
       toast.error('Kunne ikke oppdatere notater');
     }
   };
@@ -112,21 +146,6 @@ export function ContactMessages() {
       return;
     }
 
-    try {
-      // Use localStorage directly
-      const localData = JSON.parse(localStorage.getItem('contact_messages') || '[]');
-      const filtered = localData.filter((msg: any) => msg.id !== id);
-      localStorage.setItem('contact_messages', JSON.stringify(filtered));
-      toast.success('Melding slettet');
-      fetchMessages();
-    } catch (error) {
-      console.error('Error deleting message:', error);
-      toast.error('Kunne ikke slette melding');
-    }
-  };
-
-  // Legacy function - keeping for compatibility but not used
-  const _legacyDeleteMessage = async (id: string) => {
     try {
       const { error: supabaseError } = await supabase
         .from('contact_messages')
@@ -195,7 +214,7 @@ export function ContactMessages() {
                   onChange={(e) => updateStatus(message.id, e.target.value as MessageStatus)}
                   className={`rounded-full px-3 py-1 text-sm font-medium ${
                     message.status === 'unread'
-                      ? 'bg-red-orange-100 text-red-orange-800'
+                      ? 'bg-yellow-100 text-yellow-800'
                       : message.status === 'read'
                       ? 'bg-blue-100 text-blue-800'
                       : 'bg-green-100 text-green-800'

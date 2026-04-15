@@ -1,9 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AnimatedSection } from './animations/AnimatedSection';
 import { CheckCircle, Mail, Home } from 'lucide-react';
 
 export function OrderSuccessPage() {
+  const [searchParams] = useSearchParams();
+  const orderNumber = searchParams.get('order');
+
   return (
     <AnimatedSection>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 min-h-[60vh] flex items-center">
@@ -12,6 +15,11 @@ export function OrderSuccessPage() {
           <h1 className="text-4xl font-bold mb-4 text-neutral-900">
             Tusen takk for din bestilling!
           </h1>
+          {orderNumber && (
+            <p className="text-xl text-neutral-700 mb-4 font-mono">
+              Ordrenummer: {orderNumber}
+            </p>
+          )}
           <p className="text-xl text-neutral-600 mb-8">
             Du vil motta deg en e-post med ordreinformasjon.
           </p>
@@ -21,8 +29,8 @@ export function OrderSuccessPage() {
           </div>
           <div className="flex gap-4 justify-center">
             <Link
-              to="/merch"
-              className="bg-[#FF4D00] text-white px-8 py-3 rounded-lg hover:bg-[#e64400] transition-colors font-semibold inline-flex items-center gap-2"
+              to="/products"
+              className="bg-yellow-400 text-black px-8 py-3 rounded-lg hover:bg-yellow-500 transition-colors font-semibold inline-flex items-center gap-2"
             >
               Fortsett shopping
             </Link>

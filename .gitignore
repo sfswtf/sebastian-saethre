@@ -27,8 +27,3 @@ dist-ssr
 .env
 .env.local
 .env.*.local
-
-# Credentials and sensitive files
-nordicboard
-*.credentials
-*.keys

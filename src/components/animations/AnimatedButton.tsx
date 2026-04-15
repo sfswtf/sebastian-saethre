@@ -20,9 +20,9 @@ export const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButton
     const baseClasses = "px-6 py-3 rounded-lg font-medium transition-all duration-300 transform";
     
     const variantClasses = {
-      primary: "bg-[#FF4D00] text-white hover:bg-[#e64400]",
-      secondary: "bg-[#FF4D00] text-white hover:bg-[#e64400]",
-      outline: "border-2 border-[#FF4D00] text-[#FF4D00] hover:bg-[#FF4D00] hover:text-white"
+      primary: "bg-[#1d4f4d] text-white hover:bg-[#2a6f6d]",
+      secondary: "bg-[#f8f9fa] text-[#1d4f4d] hover:bg-[#e9ecef]",
+      outline: "border-2 border-[#1d4f4d] text-[#1d4f4d] hover:bg-[#1d4f4d] hover:text-white"
     };
 
     return (

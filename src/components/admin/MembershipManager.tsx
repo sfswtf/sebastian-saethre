@@ -131,8 +131,8 @@ export function MembershipManager() {
           onClick={() => setSelectedStatus('pending')}
           className={`px-3 py-1 rounded-full text-sm font-medium ${
             selectedStatus === 'pending'
-              ? 'bg-red-orange-200 text-red-orange-800'
-              : 'bg-red-orange-100 text-red-orange-800 hover:bg-red-orange-200'
+              ? 'bg-yellow-200 text-yellow-800'
+              : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
           }`}
         >
           Venter
@@ -311,7 +311,7 @@ export function MembershipManager() {
                         onChange={e => updateApplicationStatus(application.id, e.target.value as 'pending' | 'approved' | 'rejected')}
                         className={`rounded-full px-3 py-1 text-sm font-medium ${
                           application.status === 'pending'
-                            ? 'bg-red-orange-100 text-red-orange-800'
+                            ? 'bg-yellow-100 text-yellow-800'
                             : application.status === 'approved'
                             ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'

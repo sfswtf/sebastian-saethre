@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { Eye, EyeOff, Copy, Check } from 'lucide-react';
 import { useLocalAuthStore } from '../stores/localAuthStore';
-import { siteConfig } from '../config/siteConfig';
 
 export function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -22,7 +21,7 @@ export function AdminLogin() {
   // Redirect if already logged in
   useEffect(() => {
     if (isAdmin) {
-      navigate(siteConfig.adminPath, { replace: true });
+      navigate('/admin', { replace: true });
     }
   }, [isAdmin, navigate]);
 
@@ -63,7 +62,7 @@ export function AdminLogin() {
         
         // Use window.location for more reliable navigation
         setTimeout(() => {
-          window.location.href = siteConfig.adminPath;
+          window.location.href = '/admin';
         }, 200);
       } else {
         toast.error('Invalid email or password');

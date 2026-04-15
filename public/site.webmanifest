@@ -1,7 +1,7 @@
 {
-  "name": "Site Name",
-  "short_name": "Site",
-  "description": "Website description - customize in siteConfig",
+  "name": "Sebastian Saethre - AI Educator & Practitioner",
+  "short_name": "Sebastian Saethre",
+  "description": "AI educator and practitioner. Learn practical AI applications, vibe coding, and explore tools that transform industries.",
   "icons": [
     {
       "src": "/favicon-16x16.png",
