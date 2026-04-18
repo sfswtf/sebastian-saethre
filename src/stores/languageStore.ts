@@ -16,6 +16,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.blog': 'Nyheter',
     'nav.courses': 'Kurs',
     'nav.resources': 'Ressurser',
+    'nav.events': 'Arrangementer',
     'nav.products': 'Produkter',
     'nav.community': 'Fellesskap',
     'nav.contact': 'Kontakt',
@@ -98,6 +99,10 @@ const translations: Record<Language, Record<string, string>> = {
     'resources.notFoundDesc': 'Ressursen du leter etter finnes ikke.',
     'resources.backToResources': 'Tilbake til ressurser',
     'resources.needHelp': 'Trenger hjelp?',
+    
+    'events.title': 'Arrangementer',
+    'events.empty': 'Ingen kommende arrangementer for øyeblikket.',
+    'events.locationLabel': 'Sted:',
     
     'community.title': 'Fellesskap',
     'community.description': 'Bli med i fellesskapet - Discord, nyhetsbrev, gratis kurs og mer.',
@@ -239,6 +244,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.blog': 'News',
     'nav.courses': 'Courses',
     'nav.resources': 'Resources',
+    'nav.events': 'Events',
     'nav.products': 'Products',
     'nav.community': 'Community',
     'nav.contact': 'Contact',
@@ -324,6 +330,10 @@ const translations: Record<Language, Record<string, string>> = {
     'resources.notFoundDesc': 'The resource you\'re looking for doesn\'t exist.',
     'resources.backToResources': 'Back to Resources',
     'resources.needHelp': 'Need help?',
+    
+    'events.title': 'Events',
+    'events.empty': 'No upcoming events at the moment.',
+    'events.locationLabel': 'Location:',
     
     'community.title': 'Community',
     'community.description': 'Join our community - Discord, Newsletter, Free Courses, and more.',

@@ -1,19 +1,13 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Menu, X, Facebook, Instagram, Mail, MapPin, Sparkles, Linkedin, Twitter } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { Navigation } from './components/Navigation';
 import { ScrollToTop } from './components/ScrollToTop';
 import { useLanguageStore, detectLanguageFromLocation } from './stores/languageStore';
-import { HeroSkeleton } from './components/SkeletonLoader';
-import { AnimatedNavbar } from './components/animations/AnimatedNavbar';
 import { AnimatedFooter } from './components/animations/AnimatedFooter';
 import { ParallaxHero } from './components/animations/ParallaxHero';
-import { AnimatedButton } from './components/animations/AnimatedButton';
 import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button';
 import { ProtectedRoute } from './components/ProtectedRoute'; // Not lazy - needs immediate access to auth state
-import { LocalStorageService } from './lib/localStorage';
-import { EventModal } from './components/EventModal';
-import { EventCardSkeleton } from './components/SkeletonLoader';
 import { BackgroundPaths } from './components/ui/background-paths';
 
 // Lazy load heavy components
@@ -24,7 +18,6 @@ const BlogPage = lazy(() => import('./components/BlogPage').then(m => ({ default
 const CoursesPage = lazy(() => import('./components/CoursesPage').then(m => ({ default: m.CoursesPage })));
 const ResourcesPage = lazy(() => import('./components/ResourcesPage').then(m => ({ default: m.ResourcesPage })));
 const CommunityPage = lazy(() => import('./components/CommunityPage').then(m => ({ default: m.CommunityPage })));
-const ContactForm = lazy(() => import('./components/ContactForm').then(m => ({ default: m.ContactForm })));
 const OnboardingForm = lazy(() => import('./components/OnboardingForm').then(m => ({ default: m.OnboardingForm })));
 const OnboardingThanksPage = lazy(() => import('./components/OnboardingThanksPage').then(m => ({ default: m.OnboardingThanksPage })));
 const ServicesPage = lazy(() => import('./components/ServicesPage').then(m => ({ default: m.ServicesPage })));
@@ -37,7 +30,7 @@ const OrderSuccessPage = lazy(() => import('./components/OrderSuccessPage').then
 const DigitalProductsPage = lazy(() => import('./components/DigitalProductsPage').then(m => ({ default: m.DigitalProductsPage })));
 const DigitalProductDetailPage = lazy(() => import('./components/DigitalProductDetailPage').then(m => ({ default: m.DigitalProductDetailPage })));
 const ContactPage = lazy(() => import('./components/ContactPage').then(m => ({ default: m.ContactPage })));
-const MembershipPage = lazy(() => import('./components/MembershipPage').then(m => ({ default: m.MembershipPage })));
+const EventsPage = lazy(() => import('./components/EventsPage').then(m => ({ default: m.EventsPage })));
 
 function App() {
   const { t, setLanguage } = useLanguageStore();
@@ -74,6 +67,7 @@ function App() {
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/resources/:id" element={<ResourceDetailPage />} />
               <Route path="/community" element={<CommunityPage />} />
+              <Route path="/events" element={<EventsPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/onboarding" element={<OnboardingPage />} />
               <Route path="/onboarding/thanks" element={<OnboardingThanksPage />} />
@@ -107,7 +101,7 @@ function App() {
                 </a>
               </div>
               <p className="text-neutral-400 text-sm">
-                &copy; 2025 Sebastian Saethre. {t('footer.rights')}
+                &copy; 2026 Sebastian Saethre. {t('footer.rights')}
                 <Link to="/login" className="ml-4 text-neutral-500 hover:text-neutral-400 text-sm">
                   {t('footer.admin')}
                 </Link>
@@ -176,149 +170,6 @@ function HomePage() {
     </>
   );
 }
-
-interface Event {
-  id: string;
-  title: string;
-  description: string;
-  event_date: string;
-  location: string | null;
-  image_url: string | null;
-  status: 'draft' | 'published';
-  festival: string | null;
-  created_at: string;
-  ticket_price: number | null;
-  capacity: number | null;
-  tickets_url: string | null;
-}
-
-function EventsPage() {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-
-  useEffect(() => {
-    function fetchEvents() {
-      try {
-        const allEvents = LocalStorageService.get<Event>('events');
-        const published = allEvents.filter(event => event.status === 'published');
-        setEvents(published.sort((a, b) => 
-          new Date(a.event_date).getTime() - new Date(b.event_date).getTime()
-        ));
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchEvents();
-  }, []);
-
-  // Group events by month
-  const eventsByMonth = events.reduce((acc, event) => {
-    const date = new Date(event.event_date);
-    const monthKey = date.toLocaleString('no-NO', {
-      timeZone: 'Europe/Oslo',
-      year: 'numeric',
-      month: 'long'
-    });
-    
-    if (!acc[monthKey]) {
-      acc[monthKey] = [];
-    }
-    acc[monthKey].push(event);
-    return acc;
-  }, {} as Record<string, Event[]>);
-
-  // Sort months chronologically
-  const sortedMonths = Object.keys(eventsByMonth).sort((a, b) => {
-    const dateA = new Date(eventsByMonth[a][0].event_date);
-    const dateB = new Date(eventsByMonth[b][0].event_date);
-    return dateA.getTime() - dateB.getTime();
-  });
-
-  if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {[...Array(6)].map((_, index) => (
-            <EventCardSkeleton key={index} />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold mb-8">Events</h1>
-      {events.length === 0 ? (
-        <div className="text-center py-12 text-neutral-500">
-          No upcoming events at the moment.
-        </div>
-      ) : (
-        <div className="space-y-12">
-          {sortedMonths.map(month => (
-            <div key={month} className="space-y-6">
-              <h2 className="text-2xl font-bold text-neutral-900 border-b-2 border-primary-600 pb-2">
-                {month}
-              </h2>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {eventsByMonth[month].map(event => (
-                  <div
-                    key={event.id}
-                    className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow flex flex-col"
-                    onClick={() => setSelectedEvent(event)}
-                  >
-                    {event.image_url && (
-                      <div className="w-full h-48 bg-stone-100 flex items-center justify-center flex-shrink-0">
-                        <img
-                          className="w-full h-48 object-contain"
-                          src={event.image_url}
-                          alt={event.title}
-                        />
-                      </div>
-                    )}
-                    <div className="p-6 flex-grow flex flex-col">
-                      <h3 className="text-xl font-bold mb-2">{event.title}</h3>
-                      <p className="text-neutral-600 mb-4">
-                        {new Date(event.event_date).toLocaleString('en-US', {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </p>
-                      <p className="text-neutral-700 line-clamp-3 mb-4">{event.description}</p>
-                      {event.location && (
-                        <p className="text-neutral-600 mt-auto">
-                          <span className="font-semibold">Location:</span> {event.location}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-      
-      {selectedEvent && (
-        <EventModal
-          event={selectedEvent}
-          onClose={() => setSelectedEvent(null)}
-        />
-      )}
-    </div>
-  );
-}
-
-
-
 
 function OnboardingPage() {
   return (

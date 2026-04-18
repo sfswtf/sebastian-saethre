@@ -16,6 +16,7 @@ export function Navigation() {
 
   const leftLinks = [
     { path: '/portfolio', key: 'nav.portfolio' },
+    { path: '/events', key: 'nav.events' },
     { path: '/resources', key: 'nav.resources' },
   ];
   const rightNavLinks = [

@@ -7,10 +7,12 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 let supabase: SupabaseClient;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Missing Supabase environment variables. Using fallback mode:', {
-    url: supabaseUrl ? 'Present' : 'Missing',
-    key: supabaseAnonKey ? 'Present' : 'Missing',
-  });
+  if (import.meta.env.DEV) {
+    console.warn('Missing Supabase environment variables. Using fallback mode:', {
+      url: supabaseUrl ? 'Present' : 'Missing',
+      key: supabaseAnonKey ? 'Present' : 'Missing',
+    });
+  }
   
   // Create a dummy client that will fail gracefully
   supabase = createClient('https://placeholder.supabase.co', 'placeholder-key', {
@@ -21,10 +23,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
     },
   });
 } else {
-  console.log('Supabase client initialized:', {
-    url: supabaseUrl,
-    keyLength: supabaseAnonKey?.length || 0,
-  });
+  if (import.meta.env.DEV) {
+    console.log('Supabase client initialized');
+  }
 
   supabase = createClient(supabaseUrl, supabaseAnonKey, {
     auth: {

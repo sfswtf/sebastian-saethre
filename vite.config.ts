@@ -15,6 +15,7 @@ export default defineConfig({
         '/courses',
         '/resources',
         '/community',
+        '/events',
         '/services',
         '/contact',
         '/onboarding',
